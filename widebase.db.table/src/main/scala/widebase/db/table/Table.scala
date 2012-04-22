@@ -72,6 +72,16 @@ case class Table(
         f(for(column <- columns)
           yield(column(r)))
 
+    /** Get first record */
+    def head =
+      for(column <- columns)
+        yield(column.head)
+
+    /** Get last record */
+    def last =
+      for(column <- columns)
+        yield(column.last)
+
     /** Amount of records.
      *
      * @return the amount of records
