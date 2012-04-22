@@ -5,7 +5,7 @@ Column-oriented database for large time series...
 
 # Build from source
 
-To build this code, get and install SBT from https://github.com/harrah/xsbt and Vario from https://github.com/vario/vario.
+To build this code, get and install Vario from https://github.com/vario/vario.
 
 Use these commands to build:
 
