@@ -16,8 +16,16 @@ Use these commands to build:
 And specify as a dependency in your project file:
 
 ```scala
-libraryDependencies ++= "widebase" %% "widebase-db" % "0.1.0-SNAPSHOT"
+libraryDependencies += "widebase" %% "widebase-db" % "0.1.0-SNAPSHOT"
 ```
+
+# Demos/Testing
+
+Some demo/test codes are in `widebase.db/src/test/scala/widebase/db/test`. Example how to run `Record.scala` test:
+
+    > sbt
+    > project widebase-db
+    > test:run-main widebase.db.test.Record
 
 # Generating ScalaDoc
 
