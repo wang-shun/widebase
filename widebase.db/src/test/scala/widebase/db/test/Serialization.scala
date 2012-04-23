@@ -32,12 +32,6 @@ object Serialization extends Logger with Loggable {
   protected var debug: Boolean = _
   protected var records: Int = _
 
-  // Init DB
-  val dbi = widebase.db.instance(System.getProperty("user.dir") + "/usr/wdb")
-
-  // Init API
-  import dbi.tables._
-
   val millis = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S")
     .parse("2012-01-23 12:34:56.789").getTime
 
