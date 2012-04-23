@@ -1,5 +1,6 @@
 package widebase.db.test
 
+import java.io.File
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
@@ -34,7 +35,18 @@ object Record extends Logger with Loggable {
   protected var records: Int = _
 
   // Init DB
-  val dbi = widebase.db.instance(System.getProperty("user.dir") + "/usr/wdb")
+  var dir = new File("usr")
+
+  if(!dir.exists)
+    dir.mkdir
+
+  dir = new File(dir.getPath + "/wdb")
+
+  if(!dir.exists)
+    dir.mkdir
+
+  val dbi =
+    widebase.db.instance(System.getProperty("user.dir") + "/" + dir.getPath)
 
   // Init API
   import dbi.tables._
