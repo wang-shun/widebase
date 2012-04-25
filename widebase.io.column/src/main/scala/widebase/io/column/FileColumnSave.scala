@@ -7,7 +7,7 @@ import vario.data.Datatype
 import vario.filter.StreamFilter
 import vario.io.VariantWriter
 
-import widebase.db.column.VariantColumn
+import widebase.db.column.TypedColumn
 
 /** Saves columns into directory table.
  *
@@ -25,10 +25,10 @@ abstract class FileColumnSave(path: String) {
     * @param parted partition name
     * @param segmented path of segment
    */
-  def apply(
+  def apply[A](
     name: String,
     label: Any,
-    column: VariantColumn,
+    column: TypedColumn[A],
     seamless: Boolean = false)
     (implicit parted: String = null, segmented: File = null) {
 

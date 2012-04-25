@@ -15,20 +15,40 @@ import org.joda.time. {
 
 }
 
-import scala.collection.mutable. {
+import scala.collection.mutable. { Buffer, LinkedHashMap, WrappedArray }
 
-  LinkedHashMap,
-  LinkedHashSet,
-  WrappedArray
-
-}
-
+import vario.collection.mutable.HybridBufferLike
 import vario.data.Datatype
 import vario.io. { VariantReader, VariantWriter }
 import vario.filter.StreamFilter
 import vario.filter.StreamFilter.StreamFilter
 
-import widebase.db.column.VariantColumn
+import widebase.db.column. {
+
+  AnyColumn,
+  BoolColumn,
+  ByteColumn,
+  CharColumn,
+  DoubleColumn,
+  FloatColumn,
+  IntColumn,
+  LongColumn,
+  ShortColumn,
+  MonthColumn,
+  DateColumn,
+  MinuteColumn,
+  SecondColumn,
+  TimeColumn,
+  DateTimeColumn,
+  TimestampColumn,
+  SymbolColumn,
+  StringColumn,
+
+  TypedColumn,
+  MixedTypeException
+
+}
+
 import widebase.io.column. { ColumnReader, ColumnWriter }
 
 /** Column based table.
@@ -39,20 +59,20 @@ import widebase.io.column. { ColumnReader, ColumnWriter }
  * @author myst3r10n
  */
 case class Table(
-  protected val l: VariantColumn,
-  protected val c: VariantColumn*) {
+  protected val l: TypedColumn[_],
+  protected val c: TypedColumn[_]*) {
 
-  def this() = this(new VariantColumn)
+  def this() = this(null)
 
   /** Columns. */
-  protected var map = LinkedHashMap[Any, VariantColumn]()
+  protected var map = LinkedHashMap[Any, TypedColumn[_]]()
 
   {
 
     var labelIndex = 0
     var columnIndex = 0
 
-    while(labelIndex < l.length && columnIndex < c.length) {
+    while(l != null && labelIndex < l.length && columnIndex < c.length) {
 
       map += l(labelIndex) -> c(columnIndex)
 
@@ -61,9 +81,9 @@ case class Table(
 
     }
 
-    while(labelIndex < l.length) {
+    while(l != null && labelIndex < l.length) {
 
-      map += l(labelIndex) -> new VariantColumn
+      map += l(labelIndex) -> new AnyColumn
 
       labelIndex += 1
       columnIndex += 1
@@ -72,7 +92,7 @@ case class Table(
 
     while(columnIndex < c.length) {
 
-      map += new VariantColumn -> c(columnIndex)
+      map += "" -> c(columnIndex)
 
       labelIndex += 1
       columnIndex += 1
@@ -235,7 +255,27 @@ case class Table(
 
           if(trigger) {
 
-            columns.foreach(column => column(j + 1) = column(j))
+            columns.foreach {
+
+              case column: BoolColumn => column(j + 1) = column(j)
+              case column: ByteColumn => column(j + 1) = column(j)
+              case column: CharColumn => column(j + 1) = column(j)
+              case column: DoubleColumn => column(j + 1) = column(j)
+              case column: FloatColumn => column(j + 1) = column(j)
+              case column: IntColumn => column(j + 1) = column(j)
+              case column: LongColumn => column(j + 1) = column(j)
+              case column: ShortColumn => column(j + 1) = column(j)
+              case column: MonthColumn => column(j + 1) = column(j)
+              case column: DateColumn => column(j + 1) = column(j)
+              case column: MinuteColumn => column(j + 1) = column(j)
+              case column: SecondColumn => column(j + 1) = column(j)
+              case column: TimeColumn => column(j + 1) = column(j)
+              case column: DateTimeColumn => column(j + 1) = column(j)
+              case column: TimestampColumn => column(j + 1) = column(j)
+              case column: SymbolColumn =>column(j + 1) = column(j)
+              case column: StringColumn =>column(j + 1) = column(j)
+
+            }
 
             j -= 1
 
@@ -249,9 +289,25 @@ case class Table(
 
         var k = 0
 
-        columns.foreach { column =>
+        columns.foreach {
 
-          column(j + 1) = values(k)
+          case column: BoolColumn => column(j + 1) = values(k).asInstanceOf[Boolean]
+          case column: ByteColumn => column(j + 1) = values(k).asInstanceOf[Byte]
+          case column: CharColumn => column(j + 1) = values(k).asInstanceOf[Char]
+          case column: DoubleColumn => column(j + 1) = values(k).asInstanceOf[Double]
+          case column: FloatColumn => column(j + 1) = values(k).asInstanceOf[Float]
+          case column: IntColumn => column(j + 1) = values(k).asInstanceOf[Int]
+          case column: LongColumn => column(j + 1) = values(k).asInstanceOf[Long]
+          case column: ShortColumn => column(j + 1) = values(k).asInstanceOf[Short]
+          case column: MonthColumn => column(j + 1) = values(k).asInstanceOf[YearMonth]
+          case column: DateColumn => column(j + 1) = values(k).asInstanceOf[LocalDate]
+          case column: MinuteColumn => column(j + 1) = values(k).asInstanceOf[Minutes]
+          case column: SecondColumn => column(j + 1) = values(k).asInstanceOf[Seconds]
+          case column: TimeColumn => column(j + 1) = values(k).asInstanceOf[LocalTime]
+          case column: DateTimeColumn => column(j + 1) = values(k).asInstanceOf[LocalDateTime]
+          case column: TimestampColumn => column(j + 1) = values(k).asInstanceOf[Timestamp]
+          case column: SymbolColumn => column(j + 1) = values(k).asInstanceOf[Symbol]
+          case column: StringColumn => column(j + 1) = values(k).asInstanceOf[String]
 
           k += 1
 
@@ -332,11 +388,92 @@ case class Table(
         }
 
         if(i != pos)
-          columns.foreach { column =>
+          columns.foreach {
 
-            val backup = column(pos)
-            column(pos) = column(i)
-            column(i) = backup
+            case column: BoolColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: ByteColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: CharColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: DoubleColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: FloatColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: IntColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: LongColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: ShortColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: MonthColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: DateColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: MinuteColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: SecondColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: TimeColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: DateTimeColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: TimestampColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: SymbolColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
+
+            case column: StringColumn =>
+              val backup = column(pos)
+              column(pos) = column(i)
+              column(i) = backup
 
           }
       }
@@ -362,7 +499,7 @@ case class Table(
    *
    * @return the table itself
    */
-  def ++=(pair: (Any, VariantColumn)) = {
+  def ++=(pair: (Any, TypedColumn[_])) = {
 
     if(map.values.size > 0 && map.values.head.length != pair._2.length)
       throw RecordsMismatchException(map.values.head.length, pair._2.length)
@@ -382,10 +519,35 @@ case class Table(
   def ++=(table: Table) = {
 
     val columns = this.columns.toBuffer
-    val other = table.columns.toBuffer
+    val others = table.columns.toBuffer
 
-    for(i <- 0 to columns.size - 1)
-      columns(i) ++= other(i)
+    for(i <- 0 to columns.size - 1) {
+
+      if(columns(i).typeOf != others(i).typeOf)
+        throw new MixedTypeException(columns(i).typeOf, others(i).typeOf)
+
+      columns(i) match {
+
+        case column: BoolColumn => column ++= others(i).asInstanceOf[BoolColumn]
+        case column: ByteColumn => column ++= others(i).asInstanceOf[ByteColumn]
+        case column: CharColumn => column ++= others(i).asInstanceOf[CharColumn]
+        case column: DoubleColumn => column ++= others(i).asInstanceOf[DoubleColumn]
+        case column: FloatColumn => column ++= others(i).asInstanceOf[FloatColumn]
+        case column: IntColumn => column ++= others(i).asInstanceOf[IntColumn]
+        case column: LongColumn => column ++= others(i).asInstanceOf[LongColumn]
+        case column: ShortColumn => column ++= others(i).asInstanceOf[ShortColumn]
+        case column: MonthColumn => column ++= others(i).asInstanceOf[MonthColumn]
+        case column: DateColumn => column ++= others(i).asInstanceOf[DateColumn]
+        case column: MinuteColumn => column ++= others(i).asInstanceOf[MinuteColumn]
+        case column: SecondColumn => column ++= others(i).asInstanceOf[SecondColumn]
+        case column: TimeColumn => column ++= others(i).asInstanceOf[TimeColumn]
+        case column: DateTimeColumn => column ++= others(i).asInstanceOf[DateTimeColumn]
+        case column: TimestampColumn => column ++= others(i).asInstanceOf[TimestampColumn]
+        case column: SymbolColumn => column ++= others(i).asInstanceOf[SymbolColumn]
+        case column: StringColumn => column ++= others(i).asInstanceOf[StringColumn]
+
+      }
+    }
 
     this
 
@@ -428,23 +590,25 @@ case class Table(
 
     def insert(n: Int, value: Any) {
 
-      value match {
+      iterator.next match {
 
-        case value: Byte => iterator.next += value
-        case value: Char => iterator.next += value
-        case value: Double => iterator.next += value
-        case value: Float => iterator.next += value
-        case value: Int => iterator.next += value
-        case value: Long => iterator.next += value
-        case value: Short => iterator.next += value
-        case value: YearMonth => iterator.next += value
-        case value: LocalDate => iterator.next += value
-        case value: Minutes => iterator.next += value
-        case value: Seconds => iterator.next += value
-        case value: LocalTime => iterator.next += value
-        case value: LocalDateTime => iterator.next += value
-        case value: Timestamp => iterator.next += value
-        case value: String => iterator.next += value
+        case column: BoolColumn => column.insert(n, value.asInstanceOf[Boolean])
+        case column: ByteColumn => column.insert(n, value.asInstanceOf[Byte])
+        case column: CharColumn => column.insert(n, value.asInstanceOf[Char])
+        case column: DoubleColumn => column.insert(n, value.asInstanceOf[Double])
+        case column: FloatColumn => column.insert(n, value.asInstanceOf[Float])
+        case column: IntColumn => column.insert(n, value.asInstanceOf[Int])
+        case column: LongColumn => column.insert(n, value.asInstanceOf[Long])
+        case column: ShortColumn => column.insert(n, value.asInstanceOf[Short])
+        case column: MonthColumn => column.insert(n, value.asInstanceOf[YearMonth])
+        case column: DateColumn => column.insert(n, value.asInstanceOf[LocalDate])
+        case column: MinuteColumn => column.insert(n, value.asInstanceOf[Minutes])
+        case column: SecondColumn => column.insert(n, value.asInstanceOf[Seconds])
+        case column: TimeColumn => column.insert(n, value.asInstanceOf[LocalTime])
+        case column: DateTimeColumn => column.insert(n, value.asInstanceOf[LocalDateTime])
+        case column: TimestampColumn => column.insert(n, value.asInstanceOf[Timestamp])
+        case column: SymbolColumn => column.insert(n, value.asInstanceOf[Symbol])
+        case column: StringColumn => column.insert(n, value.asInstanceOf[String])
 
       }
     }
@@ -457,8 +621,7 @@ case class Table(
           values.foreach(insert(n, _))
           iterator = map.values.toIterator
 
-        case value: Any =>
-          insert(n, value)
+        case value: Any => insert(n, value)
 
       }
     }
@@ -474,15 +637,36 @@ case class Table(
    *
    * @param f self-explanatory
    */
-  def foreach[U](f: ((Any, VariantColumn)) =>  U) = map.foreach(f)
+  def foreach[U](f: ((Any, TypedColumn[_])) =>  U) = map.foreach(f)
 
   /** labels of columns.
    *
    * @return The labels of columns.
    */
-  def labels = map.keys
+  def labels =
+    map.keys.head match {
 
-  def update(label: Any, column: VariantColumn) {
+      case label: Boolean => new BoolColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Boolean]]
+      case label: Byte => new ByteColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Byte]]
+      case label: Char => new CharColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Char]]
+      case label: Double => new DoubleColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Double]]
+      case label: Float => new FloatColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Float]]
+      case label: Int => new IntColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Int]]
+      case label: Long => new LongColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Long]]
+      case label: Short => new ShortColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Short]]
+      case label: YearMonth => new MonthColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[YearMonth]]
+      case label: LocalDate => new DateColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[LocalDate]]
+      case label: Minutes => new MinuteColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Minutes]]
+      case label: Seconds => new SecondColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Seconds]]
+      case label: LocalTime => new TimeColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[LocalTime]]
+      case label: LocalDateTime => new DateTimeColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[LocalDateTime]]
+      case label: Timestamp => new TimestampColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Timestamp]]
+      case label: Symbol => new SymbolColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Symbol]]
+      case label: String => new StringColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[String]]
+
+    }
+
+  def update(label: Any, column: TypedColumn[_]) {
 
     map(label) = column
 
@@ -510,9 +694,6 @@ case class Table(
     val writer = new ColumnWriter(vwriter)
 
     // Write column labels
-    val labels = new VariantColumn('S)
-    for(label <- this.labels)
-      labels += label
     writer.write(labels)
 
     // Write columns
@@ -540,50 +721,50 @@ case class Table(
 
     def insert(value: Any) {
 
-      if(buffer(i).typeOf == Datatype.None)
+      if(buffer(i).isInstanceOf[AnyColumn])
         value match {
 
-          case typedValue: Boolean => buffer(i) += typedValue
-          case typedValue: Byte => buffer(i) += typedValue
-          case typedValue: Char => buffer(i) += typedValue
-          case typedValue: Double => buffer(i) += typedValue
-          case typedValue: Float => buffer(i) += typedValue
-          case typedValue: Int => buffer(i) += typedValue
-          case typedValue: Long => buffer(i) += typedValue
-          case typedValue: Short => buffer(i) += typedValue
-          case typedValue: YearMonth => buffer(i) += typedValue
-          case typedValue: LocalDate => buffer(i) += typedValue
-          case typedValue: Minutes => buffer(i) += typedValue
-          case typedValue: Seconds => buffer(i) += typedValue
-          case typedValue: LocalTime => buffer(i) += typedValue
-          case typedValue: LocalDateTime => buffer(i) += typedValue
-          case typedValue: Timestamp => buffer(i) += typedValue
-          case typedValue: Symbol => buffer(i) += typedValue
-          case typedValue: String => buffer(i) += typedValue
+          case value: Boolean => buffer(i) = new BoolColumn
+          case value: Byte => buffer(i) = new ByteColumn
+          case value: Char => buffer(i) = new CharColumn
+          case value: Double => buffer(i) = new DoubleColumn
+          case value: Float => buffer(i) = new FloatColumn
+          case value: Int => buffer(i) = new IntColumn
+          case value: Long => buffer(i) = new LongColumn
+          case value: Short => buffer(i) = new ShortColumn
+          case value: YearMonth => buffer(i) = new MonthColumn
+          case value: LocalDate => buffer(i) = new DateColumn
+          case value: Minutes => buffer(i) = new MinuteColumn
+          case value: Seconds => buffer(i) = new SecondColumn
+          case value: LocalTime => buffer(i) = new TimeColumn
+          case value: LocalDateTime => buffer(i) = new DateTimeColumn
+          case value: Timestamp => buffer(i) = new TimestampColumn
+          case value: Symbol => buffer(i) = new SymbolColumn
+          case value: String => buffer(i) = new StringColumn
 
         }
-      else
-        value match {
 
-          case typedValue: Boolean => buffer(i).bools += typedValue
-          case typedValue: Byte => buffer(i).bytes += typedValue
-          case typedValue: Char => buffer(i).chars += typedValue
-          case typedValue: Double => buffer(i).doubles += typedValue
-          case typedValue: Float => buffer(i).floats += typedValue
-          case typedValue: Int => buffer(i).ints += typedValue
-          case typedValue: Long => buffer(i).longs += typedValue
-          case typedValue: Short => buffer(i).shorts += typedValue
-          case typedValue: YearMonth => buffer(i).months += typedValue
-          case typedValue: LocalDate => buffer(i).dates += typedValue
-          case typedValue: Minutes => buffer(i).minutes += typedValue
-          case typedValue: Seconds => buffer(i).seconds += typedValue
-          case typedValue: LocalTime => buffer(i).times += typedValue
-          case typedValue: LocalDateTime => buffer(i).dateTimes += typedValue
-          case typedValue: Timestamp => buffer(i).timestamps += typedValue
-          case typedValue: Symbol => buffer(i).symbols += typedValue
-          case typedValue: String => buffer(i).strings += typedValue
+      buffer(i) match {
 
-        }
+        case column: BoolColumn => column += value.asInstanceOf[Boolean]
+        case column: ByteColumn => column += value.asInstanceOf[Byte]
+        case column: CharColumn => column += value.asInstanceOf[Char]
+        case column: DoubleColumn => column += value.asInstanceOf[Double]
+        case column: FloatColumn => column += value.asInstanceOf[Float]
+        case column: IntColumn => column += value.asInstanceOf[Int]
+        case column: LongColumn => column += value.asInstanceOf[Long]
+        case column: ShortColumn => column += value.asInstanceOf[Short]
+        case column: MonthColumn => column += value.asInstanceOf[YearMonth]
+        case column: DateColumn => column += value.asInstanceOf[LocalDate]
+        case column: MinuteColumn => column += value.asInstanceOf[Minutes]
+        case column: SecondColumn => column += value.asInstanceOf[Seconds]
+        case column: TimeColumn => column += value.asInstanceOf[LocalTime]
+        case column: DateTimeColumn => column += value.asInstanceOf[LocalDateTime]
+        case column: TimestampColumn => column += value.asInstanceOf[Timestamp]
+        case column: SymbolColumn => column += value.asInstanceOf[Symbol]
+        case column: StringColumn => column += value.asInstanceOf[String]
+
+      }
     }
 
     records.foreach { record =>

@@ -19,7 +19,28 @@ import org.joda.time. {
 
 import vario.data.Datatype
 
-import widebase.db.column.VariantColumn
+import widebase.db.column. {
+
+  BoolColumn,
+  ByteColumn,
+  CharColumn,
+  DoubleColumn,
+  FloatColumn,
+  IntColumn,
+  LongColumn,
+  ShortColumn,
+  MonthColumn,
+  DateColumn,
+  MinuteColumn,
+  SecondColumn,
+  TimeColumn,
+  DateTimeColumn,
+  TimestampColumn,
+  SymbolColumn,
+  StringColumn
+
+}
+
 import widebase.db.table.Table
 
 /* Test of load, map and save operations with native columns.
@@ -106,7 +127,7 @@ object Column extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(VariantColumn(
+    val table = new Table(StringColumn(
       "Bool",
       "Byte",
       "Char",
@@ -124,41 +145,41 @@ object Column extends Logger with Loggable {
       "Timestamp",
       "Symbol",
       "String"),
-      new VariantColumn(Datatype.Bool),
-      new VariantColumn(Datatype.Byte),
-      new VariantColumn(Datatype.Char),
-      new VariantColumn(Datatype.Double),
-      new VariantColumn(Datatype.Float),
-      new VariantColumn(Datatype.Int),
-      new VariantColumn(Datatype.Long),
-      new VariantColumn(Datatype.Short),
-      new VariantColumn(Datatype.Month),
-      new VariantColumn(Datatype.Date),
-      new VariantColumn(Datatype.Minute),
-      new VariantColumn(Datatype.Second),
-      new VariantColumn(Datatype.Time),
-      new VariantColumn(Datatype.DateTime),
-      new VariantColumn(Datatype.Timestamp),
-      new VariantColumn(Datatype.Symbol),
-      new VariantColumn(Datatype.String))
+      new BoolColumn,
+      new ByteColumn,
+      new CharColumn,
+      new DoubleColumn,
+      new FloatColumn,
+      new IntColumn,
+      new LongColumn,
+      new ShortColumn,
+      new MonthColumn,
+      new DateColumn,
+      new MinuteColumn,
+      new SecondColumn,
+      new TimeColumn,
+      new DateTimeColumn,
+      new TimestampColumn,
+      new SymbolColumn,
+      new StringColumn)
 
-    var bools = table("Bool").bools
-    var bytes = table("Byte").bytes
-    var chars = table("Char").chars
-    var doubles = table("Double").doubles
-    var floats = table("Float").floats
-    var ints = table("Int").ints
-    var longs = table("Long").longs
-    var shorts = table("Short").shorts
-    var months = table("Month").months
-    var dates = table("Date").dates
-    var minutes = table("Minute").minutes
-    var seconds = table("Second").seconds
-    var times = table("Time").times
-    var dateTimes = table("DateTime").dateTimes
-    var timestamps = table("Timestamp").timestamps
-    var symbols = table("Symbol").symbols
-    var strings = table("String").strings
+    var bools = table("Bool").asInstanceOf[BoolColumn]
+    var bytes = table("Byte").asInstanceOf[ByteColumn]
+    var chars = table("Char").asInstanceOf[CharColumn]
+    var doubles = table("Double").asInstanceOf[DoubleColumn]
+    var floats = table("Float").asInstanceOf[FloatColumn]
+    var ints = table("Int").asInstanceOf[IntColumn]
+    var longs = table("Long").asInstanceOf[LongColumn]
+    var shorts = table("Short").asInstanceOf[ShortColumn]
+    var months = table("Month").asInstanceOf[MonthColumn]
+    var dates = table("Date").asInstanceOf[DateColumn]
+    var minutes = table("Minute").asInstanceOf[MinuteColumn]
+    var seconds = table("Second").asInstanceOf[SecondColumn]
+    var times = table("Time").asInstanceOf[TimeColumn]
+    var dateTimes = table("DateTime").asInstanceOf[DateTimeColumn]
+    var timestamps = table("Timestamp").asInstanceOf[TimestampColumn]
+    var symbols = table("Symbol").asInstanceOf[SymbolColumn]
+    var strings = table("String").asInstanceOf[StringColumn]
 
     started = System.currentTimeMillis
     for(r <- 1 to records) {
@@ -197,23 +218,23 @@ object Column extends Logger with Loggable {
     info("Table loaded " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
-    bools = loaded("Bool").bools
-    bytes = loaded("Byte").bytes
-    chars = loaded("Char").chars
-    doubles = loaded("Double").doubles
-    floats = loaded("Float").floats
-    ints = loaded("Int").ints
-    longs = loaded("Long").longs
-    shorts = loaded("Short").shorts
-    months = loaded("Month").months
-    dates = loaded("Date").dates
-    minutes = loaded("Minute").minutes
-    seconds = loaded("Second").seconds
-    times = loaded("Time").times
-    dateTimes = loaded("DateTime").dateTimes
-    timestamps = loaded("Timestamp").timestamps
-    symbols = loaded("Symbol").symbols
-    strings = loaded("String").strings
+    bools = loaded("Bool").asInstanceOf[BoolColumn]
+    bytes = loaded("Byte").asInstanceOf[ByteColumn]
+    chars = loaded("Char").asInstanceOf[CharColumn]
+    doubles = loaded("Double").asInstanceOf[DoubleColumn]
+    floats = loaded("Float").asInstanceOf[FloatColumn]
+    ints = loaded("Int").asInstanceOf[IntColumn]
+    longs = loaded("Long").asInstanceOf[LongColumn]
+    shorts = loaded("Short").asInstanceOf[ShortColumn]
+    months = loaded("Month").asInstanceOf[MonthColumn]
+    dates = loaded("Date").asInstanceOf[DateColumn]
+    minutes = loaded("Minute").asInstanceOf[MinuteColumn]
+    seconds = loaded("Second").asInstanceOf[SecondColumn]
+    times = loaded("Time").asInstanceOf[TimeColumn]
+    dateTimes = loaded("DateTime").asInstanceOf[DateTimeColumn]
+    timestamps = loaded("Timestamp").asInstanceOf[TimestampColumn]
+    symbols = loaded("Symbol").asInstanceOf[SymbolColumn]
+    strings = loaded("String").asInstanceOf[StringColumn]
 
     started = System.currentTimeMillis
     for(r <- 0 to records - 1)
@@ -268,7 +289,7 @@ object Column extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(VariantColumn(
+    val table = new Table(StringColumn(
       "Bool",
       "Byte",
       "Char",
@@ -286,41 +307,41 @@ object Column extends Logger with Loggable {
       "Timestamp",
       "Symbol",
       "String"),
-      new VariantColumn(Datatype.Bool),
-      new VariantColumn(Datatype.Byte),
-      new VariantColumn(Datatype.Char),
-      new VariantColumn(Datatype.Double),
-      new VariantColumn(Datatype.Float),
-      new VariantColumn(Datatype.Int),
-      new VariantColumn(Datatype.Long),
-      new VariantColumn(Datatype.Short),
-      new VariantColumn(Datatype.Month),
-      new VariantColumn(Datatype.Date),
-      new VariantColumn(Datatype.Minute),
-      new VariantColumn(Datatype.Second),
-      new VariantColumn(Datatype.Time),
-      new VariantColumn(Datatype.DateTime),
-      new VariantColumn(Datatype.Timestamp),
-      new VariantColumn(Datatype.Symbol),
-      new VariantColumn(Datatype.String))
+      new BoolColumn,
+      new ByteColumn,
+      new CharColumn,
+      new DoubleColumn,
+      new FloatColumn,
+      new IntColumn,
+      new LongColumn,
+      new ShortColumn,
+      new MonthColumn,
+      new DateColumn,
+      new MinuteColumn,
+      new SecondColumn,
+      new TimeColumn,
+      new DateTimeColumn,
+      new TimestampColumn,
+      new SymbolColumn,
+      new StringColumn)
 
-    var bools = table("Bool").bools
-    var bytes = table("Byte").bytes
-    var chars = table("Char").chars
-    var doubles = table("Double").doubles
-    var floats = table("Float").floats
-    var ints = table("Int").ints
-    var longs = table("Long").longs
-    var shorts = table("Short").shorts
-    var months = table("Month").months
-    var dates = table("Date").dates
-    var minutes = table("Minute").minutes
-    var seconds = table("Second").seconds
-    var times = table("Time").times
-    var dateTimes = table("DateTime").dateTimes
-    var timestamps = table("Timestamp").timestamps
-    var symbols = table("Symbol").symbols
-    var strings = table("String").strings
+    var bools = table("Bool").asInstanceOf[BoolColumn]
+    var bytes = table("Byte").asInstanceOf[ByteColumn]
+    var chars = table("Char").asInstanceOf[CharColumn]
+    var doubles = table("Double").asInstanceOf[DoubleColumn]
+    var floats = table("Float").asInstanceOf[FloatColumn]
+    var ints = table("Int").asInstanceOf[IntColumn]
+    var longs = table("Long").asInstanceOf[LongColumn]
+    var shorts = table("Short").asInstanceOf[ShortColumn]
+    var months = table("Month").asInstanceOf[MonthColumn]
+    var dates = table("Date").asInstanceOf[DateColumn]
+    var minutes = table("Minute").asInstanceOf[MinuteColumn]
+    var seconds = table("Second").asInstanceOf[SecondColumn]
+    var times = table("Time").asInstanceOf[TimeColumn]
+    var dateTimes = table("DateTime").asInstanceOf[DateTimeColumn]
+    var timestamps = table("Timestamp").asInstanceOf[TimestampColumn]
+    var symbols = table("Symbol").asInstanceOf[SymbolColumn]
+    var strings = table("String").asInstanceOf[StringColumn]
 
     started = System.currentTimeMillis
     for(r <- 1 to records) {
@@ -359,23 +380,23 @@ object Column extends Logger with Loggable {
     info("Dir table mapped " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
-    bools = mapped("Bool").bools
-    bytes = mapped("Byte").bytes
-    chars = mapped("Char").chars
-    doubles = mapped("Double").doubles
-    floats = mapped("Float").floats
-    ints = mapped("Int").ints
-    longs = mapped("Long").longs
-    shorts = mapped("Short").shorts
-    months = mapped("Month").months
-    dates = mapped("Date").dates
-    minutes = mapped("Minute").minutes
-    seconds = mapped("Second").seconds
-    times = mapped("Time").times
-    dateTimes = mapped("DateTime").dateTimes
-    timestamps = mapped("Timestamp").timestamps
-    symbols = mapped("Symbol").symbols
-    strings = mapped("String").strings
+    bools = mapped("Bool").asInstanceOf[BoolColumn]
+    bytes = mapped("Byte").asInstanceOf[ByteColumn]
+    chars = mapped("Char").asInstanceOf[CharColumn]
+    doubles = mapped("Double").asInstanceOf[DoubleColumn]
+    floats = mapped("Float").asInstanceOf[FloatColumn]
+    ints = mapped("Int").asInstanceOf[IntColumn]
+    longs = mapped("Long").asInstanceOf[LongColumn]
+    shorts = mapped("Short").asInstanceOf[ShortColumn]
+    months = mapped("Month").asInstanceOf[MonthColumn]
+    dates = mapped("Date").asInstanceOf[DateColumn]
+    minutes = mapped("Minute").asInstanceOf[MinuteColumn]
+    seconds = mapped("Second").asInstanceOf[SecondColumn]
+    times = mapped("Time").asInstanceOf[TimeColumn]
+    dateTimes = mapped("DateTime").asInstanceOf[DateTimeColumn]
+    timestamps = mapped("Timestamp").asInstanceOf[TimestampColumn]
+    symbols = mapped("Symbol").asInstanceOf[SymbolColumn]
+    strings = mapped("String").asInstanceOf[StringColumn]
 
     started = System.currentTimeMillis
     for(r <- 0 to records - 1)
@@ -433,7 +454,7 @@ object Column extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(VariantColumn(
+    val table = new Table(StringColumn(
       "Partition",
       "Bool",
       "Byte",
@@ -452,43 +473,43 @@ object Column extends Logger with Loggable {
       "Timestamp",
       "Symbol",
       "String"),
-      new VariantColumn(Datatype.Date),
-      new VariantColumn(Datatype.Bool),
-      new VariantColumn(Datatype.Byte),
-      new VariantColumn(Datatype.Char),
-      new VariantColumn(Datatype.Double),
-      new VariantColumn(Datatype.Float),
-      new VariantColumn(Datatype.Int),
-      new VariantColumn(Datatype.Long),
-      new VariantColumn(Datatype.Short),
-      new VariantColumn(Datatype.Month),
-      new VariantColumn(Datatype.Date),
-      new VariantColumn(Datatype.Minute),
-      new VariantColumn(Datatype.Second),
-      new VariantColumn(Datatype.Time),
-      new VariantColumn(Datatype.DateTime),
-      new VariantColumn(Datatype.Timestamp),
-      new VariantColumn(Datatype.Symbol),
-      new VariantColumn(Datatype.String))
+      new DateColumn,
+      new BoolColumn,
+      new ByteColumn,
+      new CharColumn,
+      new DoubleColumn,
+      new FloatColumn,
+      new IntColumn,
+      new LongColumn,
+      new ShortColumn,
+      new MonthColumn,
+      new DateColumn,
+      new MinuteColumn,
+      new SecondColumn,
+      new TimeColumn,
+      new DateTimeColumn,
+      new TimestampColumn,
+      new SymbolColumn,
+      new StringColumn)
 
-    var partitions = table("Partition").dates
-    var bools = table("Bool").bools
-    var bytes = table("Byte").bytes
-    var chars = table("Char").chars
-    var doubles = table("Double").doubles
-    var floats = table("Float").floats
-    var ints = table("Int").ints
-    var longs = table("Long").longs
-    var shorts = table("Short").shorts
-    var months = table("Month").months
-    var dates = table("Date").dates
-    var minutes = table("Minute").minutes
-    var seconds = table("Second").seconds
-    var times = table("Time").times
-    var dateTimes = table("DateTime").dateTimes
-    var timestamps = table("Timestamp").timestamps
-    var symbols = table("Symbol").symbols
-    var strings = table("String").strings
+    var partitions = table("Partition").asInstanceOf[DateColumn]
+    var bools = table("Bool").asInstanceOf[BoolColumn]
+    var bytes = table("Byte").asInstanceOf[ByteColumn]
+    var chars = table("Char").asInstanceOf[CharColumn]
+    var doubles = table("Double").asInstanceOf[DoubleColumn]
+    var floats = table("Float").asInstanceOf[FloatColumn]
+    var ints = table("Int").asInstanceOf[IntColumn]
+    var longs = table("Long").asInstanceOf[LongColumn]
+    var shorts = table("Short").asInstanceOf[ShortColumn]
+    var months = table("Month").asInstanceOf[MonthColumn]
+    var dates = table("Date").asInstanceOf[DateColumn]
+    var minutes = table("Minute").asInstanceOf[MinuteColumn]
+    var seconds = table("Second").asInstanceOf[SecondColumn]
+    var times = table("Time").asInstanceOf[TimeColumn]
+    var dateTimes = table("DateTime").asInstanceOf[DateTimeColumn]
+    var timestamps = table("Timestamp").asInstanceOf[TimestampColumn]
+    var symbols = table("Symbol").asInstanceOf[SymbolColumn]
+    var strings = table("String").asInstanceOf[StringColumn]
 
     var partition = new LocalDate(millis)
 
@@ -546,24 +567,24 @@ object Column extends Logger with Loggable {
 
       p += 1
 
-      partitions = table("Partition").dates
-      bools = table("Bool").bools
-      bytes = table("Byte").bytes
-      chars = table("Char").chars
-      doubles = table("Double").doubles
-      floats = table("Float").floats
-      ints = table("Int").ints
-      longs = table("Long").longs
-      shorts = table("Short").shorts
-      months = table("Month").months
-      dates = table("Date").dates
-      minutes = table("Minute").minutes
-      seconds = table("Second").seconds
-      times = table("Time").times
-      dateTimes = table("DateTime").dateTimes
-      timestamps = table("Timestamp").timestamps
-      symbols = table("Symbol").symbols
-      strings = table("String").strings
+      partitions = table("Partition").asInstanceOf[DateColumn]
+      bools = table("Bool").asInstanceOf[BoolColumn]
+      bytes = table("Byte").asInstanceOf[ByteColumn]
+      chars = table("Char").asInstanceOf[CharColumn]
+      doubles = table("Double").asInstanceOf[DoubleColumn]
+      floats = table("Float").asInstanceOf[FloatColumn]
+      ints = table("Int").asInstanceOf[IntColumn]
+      longs = table("Long").asInstanceOf[LongColumn]
+      shorts = table("Short").asInstanceOf[ShortColumn]
+      months = table("Month").asInstanceOf[MonthColumn]
+      dates = table("Date").asInstanceOf[DateColumn]
+      minutes = table("Minute").asInstanceOf[MinuteColumn]
+      seconds = table("Second").asInstanceOf[SecondColumn]
+      times = table("Time").asInstanceOf[TimeColumn]
+      dateTimes = table("DateTime").asInstanceOf[DateTimeColumn]
+      timestamps = table("Timestamp").asInstanceOf[TimestampColumn]
+      symbols = table("Symbol").asInstanceOf[SymbolColumn]
+      strings = table("String").asInstanceOf[StringColumn]
 
       for(r <- 0 to records / parts - 1)
         if(debug || (p == parts && r == records / parts - 1)) {

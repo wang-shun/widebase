@@ -1,17 +1,48 @@
 package widebase.io.table
 
 import java.io. { File, RandomAccessFile }
+import java.sql.Timestamp
 
-import org.joda.time.LocalDate
+import org.joda.time. {
 
-import scala.collection.mutable. { ArrayBuffer, Map }
+  LocalDate,
+  LocalDateTime,
+  LocalTime,
+  Minutes,
+  Seconds,
+  YearMonth
+
+}
+
+import scala.collection.mutable. { ArrayBuffer, Buffer, Map }
 
 import vario.data.Datatype
 import vario.file.FileVariantWriter
 import vario.filter.StreamFilter
 import vario.io.VariantWriter
 
-import widebase.db.column.VariantColumn
+import widebase.db.column. {
+
+  BoolColumn,
+  ByteColumn,
+  CharColumn,
+  DoubleColumn,
+  FloatColumn,
+  IntColumn,
+  LongColumn,
+  ShortColumn,
+  MonthColumn,
+  DateColumn,
+  MinuteColumn,
+  SecondColumn,
+  TimeColumn,
+  DateTimeColumn,
+  TimestampColumn,
+  SymbolColumn,
+  StringColumn
+
+}
+
 import widebase.db.table.Table
 import widebase.io.column. { ColumnWriter, FileColumnSaver }
 import widebase.io.filter.MagicId
@@ -73,10 +104,7 @@ abstract class FileTableSave(path: String) {
     val writer = new ColumnWriter(vwriter)
 
     // Write column labels
-    val labels = new VariantColumn('S)
-    for(label <- table.labels)
-      labels += label
-    writer.write(labels)
+    writer.write(table.labels)
 
     // Write column values
     table.columns.foreach(column => writer.write(column))
@@ -123,10 +151,7 @@ abstract class FileTableSave(path: String) {
     val saver = new FileColumnSaver(path)
 
     // Save column labels
-    val labels = new VariantColumn('S)
-    for(label <- table.labels)
-      labels += label
-    saver.save(name, ".d", labels, true)(null, segmented)
+    saver.save(name, ".d", table.labels, true)(null, segmented)
 
     // Save column values
     table.foreach { case (label, column) =>
@@ -273,10 +298,6 @@ abstract class FileTableSave(path: String) {
 
     }
 
-    val labels = new VariantColumn('S)
-    for(label <- table.labels)
-      labels += label
-
     val saver = new FileColumnSaver(path)
     var numberOfRecordsOnPart = 0
     var lastInt: Option[Int] = scala.None
@@ -289,7 +310,7 @@ abstract class FileTableSave(path: String) {
       domain match {
 
         case PartitionDomain.Int =>
-          val int = table.columns.head.ints(r)
+          val int = table.columns.head(r).asInstanceOf[Int]
 
           var newPartition = false
 
@@ -318,12 +339,12 @@ abstract class FileTableSave(path: String) {
 
           val dateTime = table.columns.head.typeOf match {
 
-            case Datatype.Long => table.columns.head.longs(r)
-            case Datatype.Month => table.columns.head.months(r).toLocalDate(1).toDateMidnight.getMillis
-            case Datatype.Date => table.columns.head.dates(r).toDateMidnight.getMillis
-            case Datatype.Time => table.columns.head.times(r).getMillisOfDay
-            case Datatype.DateTime => table.columns.head.dateTimes(r).toDateTime.getMillis
-            case Datatype.Timestamp => table.columns.head.timestamps(r).getTime
+            case Datatype.Long => table.columns.head(r).asInstanceOf[Long]
+            case Datatype.Month => table.columns.head(r).asInstanceOf[YearMonth].toLocalDate(1).toDateMidnight.getMillis
+            case Datatype.Date => table.columns.head(r).asInstanceOf[LocalDate].toDateMidnight.getMillis
+            case Datatype.Time => table.columns.head(r).asInstanceOf[LocalTime].getMillisOfDay
+            case Datatype.DateTime => table.columns.head(r).asInstanceOf[LocalDateTime].toDateTime.getMillis
+            case Datatype.Timestamp => table.columns.head(r).asInstanceOf[Timestamp].getTime
 
           }
 
@@ -394,7 +415,7 @@ abstract class FileTableSave(path: String) {
         releaseWriters
 
         // Set column labels
-        saver.save(name, ".d", labels, true)(partition)
+        saver.save(name, ".d", table.labels, true)(partition)
 
         dir =
           if(segmented == null)
@@ -410,71 +431,42 @@ abstract class FileTableSave(path: String) {
       var i = 0
 
       // Write column values
-      table.columns.foreach { column => 
+      table.columns.foreach { column =>
 
-        column.typeOf match {
+        // foreach { case column: BoolColumn => ... } not working!
 
-          case Datatype.Bool =>
-            writers(i).write(column.bools(r))
+        column match {
 
-          case Datatype.Byte =>
-            writers(i).write(column.bytes(r))
+          case column: BoolColumn => writers(i).write(column(r))
+          case column: ByteColumn => writers(i).write(column(r))
+          case column: CharColumn => writers(i).write(column(r))
+          case column: DoubleColumn => writers(i).write(column(r))
+          case column: FloatColumn => writers(i).write(column(r))
+          case column: IntColumn => writers(i).write(column(r))
+          case column: LongColumn => writers(i).write(column(r))
+          case column: ShortColumn => writers(i).write(column(r))
+          case column: MonthColumn => writers(i).write(column(r))
+          case column: DateColumn => writers(i).write(column(r))
+          case column: MinuteColumn => writers(i).write(column(r))
+          case column: SecondColumn => writers(i).write(column(r))
+          case column: TimeColumn => writers(i).write(column(r))
+          case column: DateTimeColumn => writers(i).write(column(r))
+          case column: TimestampColumn => writers(i).write(column(r))
 
-          case Datatype.Char =>
-            writers(i).write(column.chars(r))
-
-          case Datatype.Double =>
-            writers(i).write(column.doubles(r))
-
-          case Datatype.Float =>
-            writers(i).write(column.floats(r))
-
-          case Datatype.Int =>
-            writers(i).write(column.ints(r))
-
-          case Datatype.Long =>
-            writers(i).write(column.longs(r))
-
-          case Datatype.Short =>
-            writers(i).write(column.shorts(r))
-
-          case Datatype.Month =>
-            writers(i).write(column.months(r))
-
-          case Datatype.Date =>
-            writers(i).write(column.dates(r))
-
-          case Datatype.Minute =>
-            writers(i).write(column.minutes(r))
-
-          case Datatype.Second =>
-            writers(i).write(column.seconds(r))
-
-          case Datatype.Time =>
-            writers(i).write(column.times(r))
-
-          case Datatype.DateTime =>
-            writers(i).write(column.dateTimes(r))
-
-          case Datatype.Timestamp =>
-            writers(i).write(column.timestamps(r))
-
-          case Datatype.Symbol =>
+          case column: SymbolColumn =>
             symbolCompanions(i).lastEnded +=
-              column.symbols(r).toString.getBytes(
+              column(r).toString.getBytes(
                 symbolCompanions(i).writer.charset).size - 1
 
             writers(i).write(symbolCompanions(i).lastEnded)
-            symbolCompanions(i).writer.write(column.symbols(r))
+            symbolCompanions(i).writer.write(column(r))
 
-          case Datatype.String =>
+          case column: StringColumn =>
             stringCompanions(i).lastEnded +=
-              column.strings(r).getBytes(
-                stringCompanions(i).writer.charset).size
+              column(r).getBytes(stringCompanions(i).writer.charset).size
 
             writers(i).write(stringCompanions(i).lastEnded)
-            stringCompanions(i).writer.write(column.strings(r))
-
+            stringCompanions(i).writer.write(column(r))
         }
 
         i += 1

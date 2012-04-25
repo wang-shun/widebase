@@ -2,7 +2,7 @@ package widebase.db
 
 import java.io.File
 
-import widebase.db.column.VariantColumn
+import widebase.db.column.TypedColumn
 
 import widebase.io.column. {
 
@@ -67,7 +67,7 @@ class Database protected[db](val path: String, val segment: SegmentMap) {
         * @param parted partition name
         * @param segmented path of segment
         *
-        * @return [[widebase.db.column.VariantColumn]]
+        * @return [[widebase.db.column.TypedColumn]]
        */
       def col(
         name: String,
@@ -89,7 +89,7 @@ class Database protected[db](val path: String, val segment: SegmentMap) {
         * @param parted partition name
         * @param segmented path of segment
         *
-        * @return [[widebase.db.column.VariantColumn]]
+        * @return [[widebase.db.column.TypedColumn]]
        */
       def col(
         name: String,
@@ -112,10 +112,10 @@ class Database protected[db](val path: String, val segment: SegmentMap) {
         * @param parted partition name
         * @param segmented path of segment
        */
-      def col(
+      def col[A](
         name: String,
         label: String,
-        column: VariantColumn,
+        column: TypedColumn[A],
         seamless: Boolean = false)
         (implicit parted: String = null, segmented: File = null) {
 

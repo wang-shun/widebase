@@ -19,7 +19,28 @@ import org.joda.time. {
 
 import vario.data.Datatype
 
-import widebase.db.column.VariantColumn
+import widebase.db.column. {
+
+  BoolColumn,
+  ByteColumn,
+  CharColumn,
+  DoubleColumn,
+  FloatColumn,
+  IntColumn,
+  LongColumn,
+  ShortColumn,
+  MonthColumn,
+  DateColumn,
+  MinuteColumn,
+  SecondColumn,
+  TimeColumn,
+  DateTimeColumn,
+  TimestampColumn,
+  SymbolColumn,
+  StringColumn
+
+}
+
 import widebase.db.table.Table
 
 /* Test of load, map and save operations with records.
@@ -106,7 +127,7 @@ object Record extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(VariantColumn(
+    val table = new Table(StringColumn(
       "Bool",
       "Byte",
       "Char",
@@ -124,23 +145,23 @@ object Record extends Logger with Loggable {
       "Timestamp",
       "Symbol",
       "String"),
-      new VariantColumn(Datatype.Bool),
-      new VariantColumn(Datatype.Byte),
-      new VariantColumn(Datatype.Char),
-      new VariantColumn(Datatype.Double),
-      new VariantColumn(Datatype.Float),
-      new VariantColumn(Datatype.Int),
-      new VariantColumn(Datatype.Long),
-      new VariantColumn(Datatype.Short),
-      new VariantColumn(Datatype.Month),
-      new VariantColumn(Datatype.Date),
-      new VariantColumn(Datatype.Minute),
-      new VariantColumn(Datatype.Second),
-      new VariantColumn(Datatype.Time),
-      new VariantColumn(Datatype.DateTime),
-      new VariantColumn(Datatype.Timestamp),
-      new VariantColumn(Datatype.Symbol),
-      new VariantColumn(Datatype.String))
+      new BoolColumn,
+      new ByteColumn,
+      new CharColumn,
+      new DoubleColumn,
+      new FloatColumn,
+      new IntColumn,
+      new LongColumn,
+      new ShortColumn,
+      new MonthColumn,
+      new DateColumn,
+      new MinuteColumn,
+      new SecondColumn,
+      new TimeColumn,
+      new DateTimeColumn,
+      new TimestampColumn,
+      new SymbolColumn,
+      new StringColumn)
 
     started = System.currentTimeMillis
     for(r <- 1 to records)
@@ -199,7 +220,7 @@ object Record extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(VariantColumn(
+    val table = new Table(StringColumn(
       "Bool",
       "Byte",
       "Char",
@@ -217,23 +238,23 @@ object Record extends Logger with Loggable {
       "Timestamp",
       "Symbol",
       "String"),
-      new VariantColumn(Datatype.Bool),
-      new VariantColumn(Datatype.Byte),
-      new VariantColumn(Datatype.Char),
-      new VariantColumn(Datatype.Double),
-      new VariantColumn(Datatype.Float),
-      new VariantColumn(Datatype.Int),
-      new VariantColumn(Datatype.Long),
-      new VariantColumn(Datatype.Short),
-      new VariantColumn(Datatype.Month),
-      new VariantColumn(Datatype.Date),
-      new VariantColumn(Datatype.Minute),
-      new VariantColumn(Datatype.Second),
-      new VariantColumn(Datatype.Time),
-      new VariantColumn(Datatype.DateTime),
-      new VariantColumn(Datatype.Timestamp),
-      new VariantColumn(Datatype.Symbol),
-      new VariantColumn(Datatype.String))
+      new BoolColumn,
+      new ByteColumn,
+      new CharColumn,
+      new DoubleColumn,
+      new FloatColumn,
+      new IntColumn,
+      new LongColumn,
+      new ShortColumn,
+      new MonthColumn,
+      new DateColumn,
+      new MinuteColumn,
+      new SecondColumn,
+      new TimeColumn,
+      new DateTimeColumn,
+      new TimestampColumn,
+      new SymbolColumn,
+      new StringColumn)
 
     started = System.currentTimeMillis
     for(r <- 1 to records)
@@ -295,7 +316,7 @@ object Record extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(VariantColumn(
+    val table = new Table(StringColumn(
       "Partition",
       "Bool",
       "Byte",
@@ -314,24 +335,24 @@ object Record extends Logger with Loggable {
       "Timestamp",
       "Symbol",
       "String"),
-      new VariantColumn(Datatype.Date),
-      new VariantColumn(Datatype.Bool),
-      new VariantColumn(Datatype.Byte),
-      new VariantColumn(Datatype.Char),
-      new VariantColumn(Datatype.Double),
-      new VariantColumn(Datatype.Float),
-      new VariantColumn(Datatype.Int),
-      new VariantColumn(Datatype.Long),
-      new VariantColumn(Datatype.Short),
-      new VariantColumn(Datatype.Month),
-      new VariantColumn(Datatype.Date),
-      new VariantColumn(Datatype.Minute),
-      new VariantColumn(Datatype.Second),
-      new VariantColumn(Datatype.Time),
-      new VariantColumn(Datatype.DateTime),
-      new VariantColumn(Datatype.Timestamp),
-      new VariantColumn(Datatype.Symbol),
-      new VariantColumn(Datatype.String))
+      new DateColumn,
+      new BoolColumn,
+      new ByteColumn,
+      new CharColumn,
+      new DoubleColumn,
+      new FloatColumn,
+      new IntColumn,
+      new LongColumn,
+      new ShortColumn,
+      new MonthColumn,
+      new DateColumn,
+      new MinuteColumn,
+      new SecondColumn,
+      new TimeColumn,
+      new DateTimeColumn,
+      new TimestampColumn,
+      new SymbolColumn,
+      new StringColumn)
 
     var partition = new LocalDate(millis)
 

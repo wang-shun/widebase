@@ -7,7 +7,29 @@ import vario.data.Datatype
 import vario.file. { FileVariantMapper, FileVariantReader }
 import vario.filter. { MapFilter, StreamFilter }
 
-import widebase.db.column.VariantColumn
+import widebase.db.column. {
+
+  AnyColumn,
+  BoolColumn,
+  ByteColumn,
+  CharColumn,
+  DoubleColumn,
+  FloatColumn,
+  IntColumn,
+  LongColumn,
+  ShortColumn,
+  MonthColumn,
+  DateColumn,
+  MinuteColumn,
+  SecondColumn,
+  TimeColumn,
+  DateTimeColumn,
+  TimestampColumn,
+  SymbolColumn,
+  StringColumn,
+  TypedColumn
+
+}
 
 import widebase.io.filter. {
 
@@ -35,12 +57,12 @@ class FileColumnMap(path: String) {
     * @param parted partition name
     * @param segmented path of segment
     *
-    * @return [[widebase.db.column.VariantColumn]]
+    * @return [[widebase.db.column.TypedColumn]]
    */
   def apply(
     name: String,
     label: Any)
-    (implicit parted: String = null, segmented: File = null): VariantColumn = {
+    (implicit parted: String = null, segmented: File = null) = {
 
     var filename =
       if(segmented == null)
@@ -109,15 +131,37 @@ class FileColumnMap(path: String) {
 
     mapper.close // Only file channel ;)
 
-    var companion: FileChannel = null
+    typeOf match {
 
-    if(typeOf == Datatype.String)
-      companion = new RandomAccessFile(filename + ".str", "rw").getChannel
-    else if(typeOf == Datatype.Symbol)
-      companion = new RandomAccessFile(filename + ".sym", "rw").getChannel
+      case Datatype.None => new AnyColumn
+      case Datatype.Bool => new BoolColumn(mapper, records)
+      case Datatype.Byte => new ByteColumn(mapper, records)
+      case Datatype.Char => new CharColumn(mapper, records)
+      case Datatype.Double => new DoubleColumn(mapper, records)
+      case Datatype.Float => new FloatColumn(mapper, records)
+      case Datatype.Int => new IntColumn(mapper, records)
+      case Datatype.Long => new LongColumn(mapper, records)
+      case Datatype.Short => new ShortColumn(mapper, records)
+      case Datatype.Month => new MonthColumn(mapper, records)
+      case Datatype.Date => new DateColumn(mapper, records)
+      case Datatype.Minute => new MinuteColumn(mapper, records)
+      case Datatype.Second => new SecondColumn(mapper, records)
+      case Datatype.Time => new TimeColumn(mapper, records)
+      case Datatype.DateTime => new DateTimeColumn(mapper, records)
+      case Datatype.Timestamp => new TimestampColumn(mapper, records)
+      case Datatype.Symbol =>
+        new SymbolColumn(
+          mapper,
+          records,
+          new RandomAccessFile(filename + ".sym", "rw").getChannel)
 
-    new VariantColumn(typeOf)(mapper, records, companion)
+      case Datatype.String =>
+        new StringColumn(
+          mapper,
+          records,
+          new RandomAccessFile(filename + ".str", "rw").getChannel)
 
+    }
   }
 }
 

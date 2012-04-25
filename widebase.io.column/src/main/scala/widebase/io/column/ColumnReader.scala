@@ -11,7 +11,29 @@ import vario.filter.StreamFilter
 import vario.filter.StreamFilter.StreamFilter
 import vario.io.VariantReader
 
-import widebase.db.column.VariantColumn
+import widebase.db.column. {
+
+  AnyColumn,
+  BoolColumn,
+  ByteColumn,
+  CharColumn,
+  DoubleColumn,
+  FloatColumn,
+  IntColumn,
+  LongColumn,
+  ShortColumn,
+  MonthColumn,
+  DateColumn,
+  MinuteColumn,
+  SecondColumn,
+  TimeColumn,
+  DateTimeColumn,
+  TimestampColumn,
+  SymbolColumn,
+  StringColumn,
+  TypedColumn
+
+}
 
 import widebase.io.filter. {
 
@@ -42,7 +64,7 @@ class ColumnReader(reader: VariantReader)(implicit filename: String = "") {
     *
     * @return [[widebase.db.column.VariantColumn]]
    */
-  def read: VariantColumn = {
+  def read: TypedColumn[_] = {
 
     // Read magic
     if(reader.mode != Datatype.String)
@@ -73,86 +95,149 @@ class ColumnReader(reader: VariantReader)(implicit filename: String = "") {
     val length = reader.readInt
 
     // Read column values
-    val column = new VariantColumn(typeOf)
-
     reader.mode = typeOf
 
     typeOf match {
 
-      case Datatype.None =>
+      case Datatype.None => new AnyColumn
 
       case Datatype.Bool =>
-        while(column.bools.length < length)
-          column.bools += reader.readBool
+        val column = new BoolColumn
+
+        while(column.length < length)
+          column += reader.readBool
+
+        column
 
       case Datatype.Byte =>
-        while(column.bytes.length < length)
-          column.bytes += reader.read
+        val column = new ByteColumn
+
+        while(column.length < length)
+          column += reader.read
+
+        column
 
       case Datatype.Char =>
-        while(column.chars.length < length)
-          column.chars += reader.readChar
+        val column = new CharColumn
+
+        while(column.length < length)
+          column += reader.readChar
+
+        column
 
       case Datatype.Double =>
-        while(column.doubles.length < length)
-          column.doubles += reader.readDouble
+        val column = new DoubleColumn
+
+        while(column.length < length)
+          column += reader.readDouble
+
+        column
 
       case Datatype.Float =>
-        while(column.floats.length < length)
-          column.floats += reader.readFloat
+        val column = new FloatColumn
+
+        while(column.length < length)
+          column += reader.readFloat
+
+        column
 
       case Datatype.Int =>
-        while(column.ints.length < length)
-          column.ints += reader.readInt
+        val column = new IntColumn
+
+        while(column.length < length)
+          column += reader.readInt
+
+         column
 
       case Datatype.Long =>
-        while(column.longs.length < length)
-          column.longs += reader.readLong
+        val column = new LongColumn
+
+        while(column.length < length)
+          column += reader.readLong
+
+        column
 
       case Datatype.Short =>
-        while(column.shorts.length < length)
-          column.shorts += reader.readShort
+        val column = new ShortColumn
+
+        while(column.length < length)
+          column += reader.readShort
+
+        column
 
       case Datatype.Month =>
-        while(column.months.length < length)
-          column.months += reader.readMonth
+        val column = new MonthColumn
+
+        while(column.length < length)
+          column += reader.readMonth
+
+        column
 
       case Datatype.Date =>
-        while(column.dates.length < length)
-          column.dates += reader.readDate
+        val column = new DateColumn
+
+        while(column.length < length)
+          column += reader.readDate
+
+        column
 
       case Datatype.Minute =>
-        while(column.minutes.length < length)
-          column.minutes += reader.readMinute
+        val column = new MinuteColumn
+
+        while(column.length < length)
+          column += reader.readMinute
+
+        column
 
       case Datatype.Second =>
-        while(column.seconds.length < length)
-          column.seconds += reader.readSecond
+        val column = new SecondColumn
+
+        while(column.length < length)
+          column += reader.readSecond
+
+        column
 
       case Datatype.Time =>
-        while(column.times.length < length)
-          column.times += reader.readTime
+        val column = new TimeColumn
+
+        while(column.length < length)
+          column += reader.readTime
+
+        column
 
       case Datatype.DateTime =>
-        while(column.dateTimes.length < length)
-          column.dateTimes += reader.readDateTime
+        val column = new DateTimeColumn
+
+        while(column.length < length)
+          column += reader.readDateTime
+
+        column
 
       case Datatype.Timestamp =>
-        while(column.timestamps.length < length)
-          column.timestamps += reader.readTimestamp
+        val column = new TimestampColumn
+
+        while(column.length < length)
+          column += reader.readTimestamp
+
+        column
 
       case Datatype.Symbol =>
-        while(column.symbols.length < length)
-          column.symbols += reader.readSymbol
+        val column = new SymbolColumn
+
+        while(column.length < length)
+          column += reader.readSymbol
+
+        column
 
       case Datatype.String =>
-        while(column.strings.length < length)
-          column.strings += reader.readString
+        val column = new StringColumn
+
+        while(column.length < length)
+          column += reader.readString
+
+        column
 
     }
-
-    column
-
   }
 }
 

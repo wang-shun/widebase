@@ -5,7 +5,7 @@ import java.io. { File, RandomAccessFile }
 import vario.filter.StreamFilter
 import vario.io.VariantReader
 
-import widebase.db.column.VariantColumn
+import widebase.db.column.TypedColumn
 
 /** Loads columns from directory table.
  *
@@ -24,12 +24,12 @@ abstract class FileColumnLoad(path: String) {
     * @param parted partition name
     * @param segmented path of segment
     *
-    * @return [[widebase.db.column.VariantColumn]]
+    * @return [[widebase.db.column.TypedColumn]]
    */
   def apply(
     name: String,
     label: Any)
-    (implicit parted: String = null, segmented: File = null): VariantColumn = {
+    (implicit parted: String = null, segmented: File = null): TypedColumn[_] = {
 
     var filename =
       if(segmented == null)
@@ -55,20 +55,15 @@ abstract class FileColumnLoad(path: String) {
 
     val reader = new ColumnReader(vreader)(filename)
 
-    var column: VariantColumn = null
-
     try {
 
-      column = reader.read
+      reader.read
 
     } finally {
 
       reader.close
 
     }
-
-    column
-
   }
 }
 

@@ -7,7 +7,30 @@ import vario.filter.StreamFilter
 import vario.filter.StreamFilter.StreamFilter
 import vario.io.VariantWriter
 
-import widebase.db.column.VariantColumn
+import widebase.db.column. {
+
+  AnyColumn,
+  BoolColumn,
+  ByteColumn,
+  CharColumn,
+  DoubleColumn,
+  FloatColumn,
+  IntColumn,
+  LongColumn,
+  ShortColumn,
+  MonthColumn,
+  DateColumn,
+  MinuteColumn,
+  SecondColumn,
+  TimeColumn,
+  DateTimeColumn,
+  TimestampColumn,
+  SymbolColumn,
+  StringColumn,
+  TypedColumn
+
+}
+
 import widebase.io.filter.MagicId
 
 /** Writes columns into channel.
@@ -33,7 +56,7 @@ class ColumnWriter(writer: VariantWriter, companion: VariantWriter = null) {
     *
     * @param column to write
    */
-  def write(column: VariantColumn) {
+  def write[A](column: TypedColumn[A]) {
 
     // Write magic
     if(writer.mode != Datatype.String)
@@ -55,33 +78,33 @@ class ColumnWriter(writer: VariantWriter, companion: VariantWriter = null) {
     else
       companion.mode = column.typeOf
 
-    column.typeOf match {
+    column match {
 
-      case Datatype.Bool => column.bools.foreach(bool => writer.write(bool))
-      case Datatype.Byte => column.bytes.foreach(byte => writer.write(byte))
-      case Datatype.Char => column.chars.foreach(char => writer.write(char))
-      case Datatype.Double => column.doubles.foreach(double => writer.write(double))
-      case Datatype.Float => column.floats.foreach(float => writer.write(float))
-      case Datatype.Int => column.ints.foreach(int => writer.write(int))
-      case Datatype.Long => column.longs.foreach(long => writer.write(long))
-      case Datatype.Short => column.shorts.foreach(short => writer.write(short))
-      case Datatype.Month => column.months.foreach(value => writer.write(value))
-      case Datatype.Date => column.dates.foreach(value => writer.write(value))
-      case Datatype.Minute => column.minutes.foreach(value => writer.write(value))
-      case Datatype.Second => column.seconds.foreach(value => writer.write(value))
-      case Datatype.Time => column.times.foreach(value => writer.write(value))
-      case Datatype.DateTime => column.dateTimes.foreach(value => writer.write(value))
-      case Datatype.Timestamp => column.timestamps.foreach(value => writer.write(value))
-      case Datatype.Symbol =>
+      case column: BoolColumn => column.foreach(value => writer.write(value))
+      case column: ByteColumn => column.foreach(value => writer.write(value))
+      case column: CharColumn => column.foreach(value => writer.write(value))
+      case column: DoubleColumn => column.foreach(value => writer.write(value))
+      case column: FloatColumn => column.foreach(value => writer.write(value))
+      case column: IntColumn => column.foreach(value => writer.write(value))
+      case column: LongColumn => column.foreach(value => writer.write(value))
+      case column: ShortColumn => column.foreach(value => writer.write(value))
+      case column: MonthColumn => column.foreach(value => writer.write(value))
+      case column: DateColumn => column.foreach(value => writer.write(value))
+      case column: MinuteColumn => column.foreach(value => writer.write(value))
+      case column: SecondColumn => column.foreach(value => writer.write(value))
+      case column: TimeColumn => column.foreach(value => writer.write(value))
+      case column: DateTimeColumn => column.foreach(value => writer.write(value))
+      case column: TimestampColumn => column.foreach(value => writer.write(value))
+      case column: SymbolColumn =>
         if(companion == null)
-          column.symbols.foreach(value => writer.write(value, true))
+          column.foreach(value => writer.write(value, true))
         else {
 
           var lastEnded = 0
 
           writer.mode = Datatype.Int
 
-          column.symbols.foreach { value =>
+          column.foreach { value =>
 
             lastEnded += value.toString.getBytes(companion.charset).size - 1
 
@@ -91,15 +114,15 @@ class ColumnWriter(writer: VariantWriter, companion: VariantWriter = null) {
           }
         }
 
-      case Datatype.String =>
+      case column: StringColumn =>
         if(companion == null)
-          column.strings.foreach(value => writer.write(value, true))
+          column.foreach(value => writer.write(value, true))
         else {
           var lastEnded = 0L
 
           writer.mode = Datatype.Long
 
-          column.strings.foreach { value =>
+          column.foreach { value =>
 
             lastEnded += value.getBytes(companion.charset).size
 
