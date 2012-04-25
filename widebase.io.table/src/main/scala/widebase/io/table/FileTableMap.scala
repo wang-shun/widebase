@@ -30,7 +30,7 @@ abstract class FileTableMap(path: String) {
 
     val loader = new FileColumnLoader(path)
 
-    val labels = loader.load(name, ".d")(parted, segmented).strings
+    val labels = loader.load(name, ".d")(parted, segmented)
 
     val mapper = new FileColumnMapper(path)
 

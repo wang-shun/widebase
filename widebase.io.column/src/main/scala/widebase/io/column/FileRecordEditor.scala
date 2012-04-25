@@ -53,7 +53,7 @@ class FileRecordEditor(path: String) {
    */
   def set(
     name: String,
-    label: String,
+    label: Any,
     index: Int,
     value: Any)
     (implicit parted: String = null, segmented: File = null) {
@@ -72,7 +72,7 @@ class FileRecordEditor(path: String) {
     if(parted != null)
       dir += "/" + parted
 
-    val filename = dir + "/" + name + "/" + label
+    val filename = dir + "/" + name + "/" + label.toString
 
     val reader =
       new VariantReader(
@@ -275,7 +275,7 @@ class FileRecordEditor(path: String) {
 
     val loader = new FileColumnLoader(path)
 
-    val labels = loader.load(name, ".d")(parted, segmented).strings
+    val labels = loader.load(name, ".d")(parted, segmented)
 
     var i = 0
 
@@ -303,7 +303,7 @@ class FileRecordEditor(path: String) {
    */
   protected def append(
     name: String,
-    label: String,
+    label: Any,
     value: Any)
     (implicit parted: String = null, segmented: File = null) {
 
@@ -316,7 +316,7 @@ class FileRecordEditor(path: String) {
     if(parted != null)
       dir += "/" + parted
 
-    var filename = dir + "/" + name + "/" + label
+    var filename = dir + "/" + name + "/" + label.toString
 
     val reader = new VariantReader(
       new RandomAccessFile(filename, "r").getChannel,

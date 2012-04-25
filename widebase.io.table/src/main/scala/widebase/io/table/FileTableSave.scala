@@ -74,7 +74,8 @@ abstract class FileTableSave(path: String) {
 
     // Write column labels
     val labels = new VariantColumn('S)
-    labels.strings ++= table.labels
+    for(label <- table.labels)
+      labels += label
     writer.write(labels)
 
     // Write column values
@@ -123,7 +124,8 @@ abstract class FileTableSave(path: String) {
 
     // Save column labels
     val labels = new VariantColumn('S)
-    labels.strings ++= table.labels
+    for(label <- table.labels)
+      labels += label
     saver.save(name, ".d", labels, true)(null, segmented)
 
     // Save column values
@@ -272,7 +274,8 @@ abstract class FileTableSave(path: String) {
     }
 
     val labels = new VariantColumn('S)
-    labels.strings ++= table.labels
+    for(label <- table.labels)
+      labels += label
 
     val saver = new FileColumnSaver(path)
     var numberOfRecordsOnPart = 0

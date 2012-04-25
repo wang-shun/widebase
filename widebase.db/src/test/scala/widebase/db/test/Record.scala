@@ -17,8 +17,6 @@ import org.joda.time. {
 
 }
 
-import scala.collection.mutable.LinkedHashSet
-
 import vario.data.Datatype
 
 import widebase.db.column.VariantColumn
@@ -108,7 +106,7 @@ object Record extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(LinkedHashSet(
+    val table = new Table(VariantColumn(
       "Bool",
       "Byte",
       "Char",
@@ -201,7 +199,7 @@ object Record extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(LinkedHashSet(
+    val table = new Table(VariantColumn(
       "Bool",
       "Byte",
       "Char",
@@ -297,7 +295,7 @@ object Record extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(LinkedHashSet(
+    val table = new Table(VariantColumn(
       "Partition",
       "Bool",
       "Byte",

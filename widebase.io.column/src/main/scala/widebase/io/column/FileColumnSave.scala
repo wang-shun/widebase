@@ -27,7 +27,7 @@ abstract class FileColumnSave(path: String) {
    */
   def apply(
     name: String,
-    label: String,
+    label: Any,
     column: VariantColumn,
     seamless: Boolean = false)
     (implicit parted: String = null, segmented: File = null) {
@@ -52,7 +52,7 @@ abstract class FileColumnSave(path: String) {
     if(!dir.exists)
       dir.mkdir
 
-    val file = new File(dir.getPath + "/" + label)
+    val file = new File(dir.getPath + "/" + label.toString)
 
     if(file.exists)
       file.delete

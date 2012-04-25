@@ -33,18 +33,52 @@ import widebase.io.column. { ColumnReader, ColumnWriter }
 
 /** Column based table.
  *
+ * @param l labels
+ * @param c columns
+ *
  * @author myst3r10n
  */
 case class Table(
-  protected val n: LinkedHashSet[String],
+  protected val l: VariantColumn,
   protected val c: VariantColumn*) {
 
-  def this() = this(LinkedHashSet[String](), null)
-  def this(n: LinkedHashSet[String]) = this(n, null)
+  def this() = this(new VariantColumn)
 
   /** Columns. */
-  protected var map = LinkedHashMap(n.zip(c ++ WrappedArray.make[VariantColumn](
-    Array.fill(n.size - c.size)(new VariantColumn))).toSeq:_*)
+  protected var map = LinkedHashMap[Any, VariantColumn]()
+
+  {
+
+    var labelIndex = 0
+    var columnIndex = 0
+
+    while(labelIndex < l.length && columnIndex < c.length) {
+
+      map += l(labelIndex) -> c(columnIndex)
+
+      labelIndex += 1
+      columnIndex += 1
+
+    }
+
+    while(labelIndex < l.length) {
+
+      map += l(labelIndex) -> new VariantColumn
+
+      labelIndex += 1
+      columnIndex += 1
+
+    }
+
+    while(columnIndex < c.length) {
+
+      map += new VariantColumn -> c(columnIndex)
+
+      labelIndex += 1
+      columnIndex += 1
+
+    }
+  }
 
   /** Records. */
   object records {
@@ -109,7 +143,7 @@ case class Table(
       * @param direction the sort direction
      */
     def apply(
-      label: String,
+      label: Any,
       method: Symbol,
       direction: Symbol = 'a) {
 
@@ -147,7 +181,7 @@ case class Table(
       * @param direction the sort direction
      */
     def insertion(
-      label: String,
+      label: Any,
       direction: SortDirection) {
 
       val primary = Table.this(label)
@@ -231,7 +265,7 @@ case class Table(
       * @param direction the sort direction
      */
     def selection(
-      label: String,
+      label: Any,
       direction: SortDirection) {
 
       val primary = Table.this(label)
@@ -328,12 +362,13 @@ case class Table(
    *
    * @return the table itself
    */
-  def ++=(pair: (String, VariantColumn)) = {
+  def ++=(pair: (Any, VariantColumn)) = {
 
     if(map.values.size > 0 && map.values.head.length != pair._2.length)
       throw RecordsMismatchException(map.values.head.length, pair._2.length)
 
     map += pair._1 -> pair._2
+
     this
 
   }
@@ -362,7 +397,7 @@ case class Table(
    *
    * @return the table itself
    */
-  def --=(label: String) = {
+  def --=(label: Any) = {
 
     if(map.contains(label))
       map -= label
@@ -373,11 +408,11 @@ case class Table(
 
   /** Select a column by its label in the table.
    *
-   * @param column The label where columns are selected.
+   * @param label where columns are selected
    *
-   * @return The column by label.
+   * @return column by label
    */
-  def apply(column: String) = map(column)
+  def apply(label: Any) = map(label)
 
   /** Inserts new records at a given index into columns.
    *
@@ -439,7 +474,7 @@ case class Table(
    *
    * @param f self-explanatory
    */
-  def foreach[U](f: ((String, VariantColumn)) =>  U) = map.foreach(f)
+  def foreach[U](f: ((Any, VariantColumn)) =>  U) = map.foreach(f)
 
   /** labels of columns.
    *
@@ -447,7 +482,7 @@ case class Table(
    */
   def labels = map.keys
 
-  def update(label: String, column: VariantColumn) {
+  def update(label: Any, column: VariantColumn) {
 
     map(label) = column
 
@@ -476,7 +511,8 @@ case class Table(
 
     // Write column labels
     val labels = new VariantColumn('S)
-    labels.strings ++= this.labels
+    for(label <- this.labels)
+      labels += label
     writer.write(labels)
 
     // Write columns
@@ -598,7 +634,7 @@ object Table {
 
     val table = new Table
 
-    reader.read.strings.foreach(label => table ++= (label, reader.read))
+    reader.read.foreach(label => table ++= (label, reader.read))
 
     reader.close
 

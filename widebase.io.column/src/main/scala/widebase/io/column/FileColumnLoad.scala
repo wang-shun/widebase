@@ -28,7 +28,7 @@ abstract class FileColumnLoad(path: String) {
    */
   def apply(
     name: String,
-    label: String)
+    label: Any)
     (implicit parted: String = null, segmented: File = null): VariantColumn = {
 
     var filename =
@@ -40,7 +40,7 @@ abstract class FileColumnLoad(path: String) {
     if(parted != null)
       filename += "/" + parted
 
-    filename += "/" + name + "/" + label
+    filename += "/" + name + "/" + label.toString
 
     val channel = new RandomAccessFile(filename, "r").getChannel
 

@@ -39,7 +39,7 @@ class FileColumnMap(path: String) {
    */
   def apply(
     name: String,
-    label: String)
+    label: Any)
     (implicit parted: String = null, segmented: File = null): VariantColumn = {
 
     var filename =
@@ -51,7 +51,7 @@ class FileColumnMap(path: String) {
     if(parted != null)
       filename += "/" + parted
 
-    filename +=  "/" + name + "/" + label
+    filename +=  "/" + name + "/" + label.toString
 
     val reader = new FileVariantReader(
       new RandomAccessFile(filename, "r").getChannel,
