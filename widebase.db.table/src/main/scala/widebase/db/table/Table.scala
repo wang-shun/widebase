@@ -25,7 +25,6 @@ import vario.filter.StreamFilter.StreamFilter
 
 import widebase.db.column. {
 
-  AnyColumn,
   BoolColumn,
   ByteColumn,
   CharColumn,
@@ -83,7 +82,7 @@ case class Table(
 
     while(l != null && labelIndex < l.length) {
 
-      map += l(labelIndex) -> new AnyColumn
+      map += l(labelIndex) -> null
 
       labelIndex += 1
       columnIndex += 1
@@ -501,8 +500,9 @@ case class Table(
    */
   def ++=(pair: (Any, TypedColumn[_])) = {
 
-    if(map.values.size > 0 && map.values.head.length != pair._2.length)
-      throw RecordsMismatchException(map.values.head.length, pair._2.length)
+    columns.foreach(column =>
+      if(column != null && column.length != pair._2.length)
+        throw RecordsMismatchException(map.values.head.length, pair._2.length))
 
     map += pair._1 -> pair._2
 
@@ -516,17 +516,21 @@ case class Table(
    *
    * @return the table itself
    */
-  def ++=(table: Table) = {
+  def ++=(table: Table): Table = {
 
-    val columns = this.columns.toBuffer
+    if(table.records.size < 1)
+      return this
+
     val others = table.columns.toBuffer
 
     for(i <- 0 to columns.size - 1) {
 
-      if(columns(i).typeOf != others(i).typeOf)
-        throw new MixedTypeException(columns(i).typeOf, others(i).typeOf)
+      if(columns.toBuffer(i).typeOf != others(i).typeOf)
+        throw new MixedTypeException(columns.toBuffer(i).typeOf, others(i).typeOf)
 
-      columns(i) match {
+      wasUntyped(i, others(i).head)
+
+      columns.toBuffer(i) match {
 
         case column: BoolColumn => column ++= others(i).asInstanceOf[BoolColumn]
         case column: ByteColumn => column ++= others(i).asInstanceOf[ByteColumn]
@@ -586,11 +590,13 @@ case class Table(
     if(records.size != map.values.size)
       throw LengthMismatchException(map.values.size, records.size)
 
-    var iterator = map.values.toIterator
+    var i = 0
 
     def insert(n: Int, value: Any) {
 
-      iterator.next match {
+      wasUntyped(i, value)
+
+      columns.toBuffer(i) match {
 
         case column: BoolColumn => column.insert(n, value.asInstanceOf[Boolean])
         case column: ByteColumn => column.insert(n, value.asInstanceOf[Byte])
@@ -619,11 +625,14 @@ case class Table(
 
         case values: Vector[_] =>
           values.foreach(insert(n, _))
-          iterator = map.values.toIterator
+          i = 0
 
         case value: Any => insert(n, value)
 
       }
+
+      i += 1
+
     }
   }
 
@@ -717,34 +726,12 @@ case class Table(
       throw LengthMismatchException(map.values.size, records.size)
 
     var i = 0
-    val buffer = columns.toBuffer
 
     def insert(value: Any) {
 
-      if(buffer(i).isInstanceOf[AnyColumn])
-        value match {
+      wasUntyped(i, value)
 
-          case value: Boolean => buffer(i) = new BoolColumn
-          case value: Byte => buffer(i) = new ByteColumn
-          case value: Char => buffer(i) = new CharColumn
-          case value: Double => buffer(i) = new DoubleColumn
-          case value: Float => buffer(i) = new FloatColumn
-          case value: Int => buffer(i) = new IntColumn
-          case value: Long => buffer(i) = new LongColumn
-          case value: Short => buffer(i) = new ShortColumn
-          case value: YearMonth => buffer(i) = new MonthColumn
-          case value: LocalDate => buffer(i) = new DateColumn
-          case value: Minutes => buffer(i) = new MinuteColumn
-          case value: Seconds => buffer(i) = new SecondColumn
-          case value: LocalTime => buffer(i) = new TimeColumn
-          case value: LocalDateTime => buffer(i) = new DateTimeColumn
-          case value: Timestamp => buffer(i) = new TimestampColumn
-          case value: Symbol => buffer(i) = new SymbolColumn
-          case value: String => buffer(i) = new StringColumn
-
-        }
-
-      buffer(i) match {
+      columns.toBuffer(i) match {
 
         case column: BoolColumn => column += value.asInstanceOf[Boolean]
         case column: ByteColumn => column += value.asInstanceOf[Byte]
@@ -782,6 +769,32 @@ case class Table(
       i += 1
 
     }
+  }
+
+  protected def wasUntyped(index: Int, value: Any) {
+
+    if(columns.toBuffer(index) == null)
+      value match {
+
+        case value: Boolean => map(map.keys.toBuffer(index)) = new BoolColumn
+        case value: Byte => map(map.keys.toBuffer(index)) = new ByteColumn
+        case value: Char => map(map.keys.toBuffer(index)) = new CharColumn
+        case value: Double => map(map.keys.toBuffer(index)) = new DoubleColumn
+        case value: Float => map(map.keys.toBuffer(index)) = new FloatColumn
+        case value: Int => map(map.keys.toBuffer(index)) = new IntColumn
+        case value: Long => map(map.keys.toBuffer(index)) = new LongColumn
+        case value: Short => map(map.keys.toBuffer(index)) = new ShortColumn
+        case value: YearMonth => map(map.keys.toBuffer(index)) = new MonthColumn
+        case value: LocalDate => map(map.keys.toBuffer(index)) = new DateColumn
+        case value: Minutes => map(map.keys.toBuffer(index)) = new MinuteColumn
+        case value: Seconds => map(map.keys.toBuffer(index)) = new SecondColumn
+        case value: LocalTime => map(map.keys.toBuffer(index)) = new TimeColumn
+        case value: LocalDateTime => map(map.keys.toBuffer(index)) = new DateTimeColumn
+        case value: Timestamp => map(map.keys.toBuffer(index)) = new TimestampColumn
+        case value: Symbol => map(map.keys.toBuffer(index)) = new SymbolColumn
+        case value: String => map(map.keys.toBuffer(index)) = new StringColumn
+
+      }
   }
 }
 

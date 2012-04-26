@@ -9,7 +9,6 @@ import vario.filter. { MapFilter, StreamFilter }
 
 import widebase.db.column. {
 
-  AnyColumn,
   BoolColumn,
   ByteColumn,
   CharColumn,
@@ -133,7 +132,6 @@ class FileColumnMap(path: String) {
 
     typeOf match {
 
-      case Datatype.None => new AnyColumn
       case Datatype.Bool => new BoolColumn(mapper, records)
       case Datatype.Byte => new ByteColumn(mapper, records)
       case Datatype.Char => new CharColumn(mapper, records)

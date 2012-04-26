@@ -9,7 +9,6 @@ import vario.io.VariantWriter
 
 import widebase.db.column. {
 
-  AnyColumn,
   BoolColumn,
   ByteColumn,
   CharColumn,

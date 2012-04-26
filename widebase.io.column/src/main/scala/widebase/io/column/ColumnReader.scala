@@ -13,7 +13,6 @@ import vario.io.VariantReader
 
 import widebase.db.column. {
 
-  AnyColumn,
   BoolColumn,
   ByteColumn,
   CharColumn,
@@ -98,8 +97,6 @@ class ColumnReader(reader: VariantReader)(implicit filename: String = "") {
     reader.mode = typeOf
 
     typeOf match {
-
-      case Datatype.None => new AnyColumn
 
       case Datatype.Bool =>
         val column = new BoolColumn

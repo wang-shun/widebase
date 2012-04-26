@@ -144,24 +144,7 @@ object Record extends Logger with Loggable {
       "DateTime",
       "Timestamp",
       "Symbol",
-      "String"),
-      new BoolColumn,
-      new ByteColumn,
-      new CharColumn,
-      new DoubleColumn,
-      new FloatColumn,
-      new IntColumn,
-      new LongColumn,
-      new ShortColumn,
-      new MonthColumn,
-      new DateColumn,
-      new MinuteColumn,
-      new SecondColumn,
-      new TimeColumn,
-      new DateTimeColumn,
-      new TimestampColumn,
-      new SymbolColumn,
-      new StringColumn)
+      "String"))
 
     started = System.currentTimeMillis
     for(r <- 1 to records)
@@ -237,24 +220,7 @@ object Record extends Logger with Loggable {
       "DateTime",
       "Timestamp",
       "Symbol",
-      "String"),
-      new BoolColumn,
-      new ByteColumn,
-      new CharColumn,
-      new DoubleColumn,
-      new FloatColumn,
-      new IntColumn,
-      new LongColumn,
-      new ShortColumn,
-      new MonthColumn,
-      new DateColumn,
-      new MinuteColumn,
-      new SecondColumn,
-      new TimeColumn,
-      new DateTimeColumn,
-      new TimestampColumn,
-      new SymbolColumn,
-      new StringColumn)
+      "String"))
 
     started = System.currentTimeMillis
     for(r <- 1 to records)
@@ -334,25 +300,7 @@ object Record extends Logger with Loggable {
       "DateTime",
       "Timestamp",
       "Symbol",
-      "String"),
-      new DateColumn,
-      new BoolColumn,
-      new ByteColumn,
-      new CharColumn,
-      new DoubleColumn,
-      new FloatColumn,
-      new IntColumn,
-      new LongColumn,
-      new ShortColumn,
-      new MonthColumn,
-      new DateColumn,
-      new MinuteColumn,
-      new SecondColumn,
-      new TimeColumn,
-      new DateTimeColumn,
-      new TimestampColumn,
-      new SymbolColumn,
-      new StringColumn)
+      "String"))
 
     var partition = new LocalDate(millis)
 
