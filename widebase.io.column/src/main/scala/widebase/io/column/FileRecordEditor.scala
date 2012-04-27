@@ -301,7 +301,7 @@ class FileRecordEditor(path: String) {
     * @param parted partition name
     * @param segmented path of segment
    */
-  protected def append(
+  def append(
     name: String,
     label: Any,
     value: Any)
