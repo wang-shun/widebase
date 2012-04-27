@@ -45,16 +45,16 @@ class FileRecordEditor(path: String) {
   /** Sets values within column of directory table.
     *
     * @param name of table
-    * @param label label of column
-    * @param index the index of value
-    * @param value the value to add
+    * @param label of column
+    * @param field of column
+    * @param value to add
     * @param parted partition name
     * @param segmented path of segment
    */
   def set(
     name: String,
     label: Any,
-    index: Int,
+    field: Int,
     value: Any)
     (implicit parted: String = null, segmented: File = null) {
 
@@ -207,14 +207,14 @@ class FileRecordEditor(path: String) {
         typeOf == Datatype.None ||
         typeOf == Datatype.Bool ||
         typeOf == Datatype.Byte ||
-        typeOf == Datatype.Month => writer.position = offset + index
+        typeOf == Datatype.Month => writer.position = offset + field
 
       case Datatype.Char => writer.position = offset +
-        (index * data.sizeOf.char)
+        (field * data.sizeOf.char)
       case Datatype.Double => writer.position = offset +
-        (index * data.sizeOf.double)
+        (field * data.sizeOf.double)
       case Datatype.Float => writer.position = offset +
-        (index * data.sizeOf.float)
+        (field * data.sizeOf.float)
 
       case typeOf if
         typeOf == Datatype.Int ||
@@ -222,16 +222,16 @@ class FileRecordEditor(path: String) {
         typeOf == Datatype.Minute ||
         typeOf == Datatype.Second ||
         typeOf == Datatype.Time => writer.position = offset +
-          (index * data.sizeOf.int)
+          (field * data.sizeOf.int)
 
       case typeOf if
         typeOf == Datatype.Long ||
         typeOf == Datatype.DateTime ||
         typeOf == Datatype.Timestamp => writer.position = offset +
-          (index * data.sizeOf.long)
+          (field * data.sizeOf.long)
 
       case Datatype.Short => writer.position = offset +
-        (index * data.sizeOf.short)
+        (field * data.sizeOf.short)
 
     }
 
