@@ -448,20 +448,27 @@ class FileRecordEditor(path: String) {
     // Write column length
     writer.mode = Datatype.Int
     writer.write(records + 1)
+    writer.flush
 
+    var companion: FileVariantWriter = null
 
     if(typeOf == Datatype.Symbol || typeOf == Datatype.String) {
 
-      writer.close
+      if(typeOf == Datatype.Symbol) {
 
-      if(typeOf == Datatype.Symbol)
         filename += ".sym"
-      else if(typeOf == Datatype.String)
+        writer.mode = Datatype.Int
+
+      } else if(typeOf == Datatype.String) {
+
         filename += ".str"
+        writer.mode = Datatype.Long
+
+      }
 
       var channel = new RandomAccessFile(filename, "rw").getChannel
       channel.tryLock
-      writer = new FileVariantWriter(channel, StreamFilter.None) {
+      companion = new FileVariantWriter(channel, StreamFilter.None) {
 
         override val charset = props.charsets.append
 
@@ -474,7 +481,15 @@ class FileRecordEditor(path: String) {
     writer.mode = Datatype.Byte
     writer.position = writer.size
 
-    writer.mode = typeOf
+    if(companion == null)
+      writer.mode = typeOf
+    else {
+
+      companion.mode = Datatype.Byte
+      companion.position = companion.size
+      companion.mode = typeOf
+
+    }
 
     value match {
 
@@ -493,10 +508,21 @@ class FileRecordEditor(path: String) {
       case value: LocalTime => writer.write(value)
       case value: LocalDateTime => writer.write(value)
       case value: Timestamp => writer.write(value)
-      case value: Symbol => writer.write(value, false)
-      case value: String => writer.write(value, false)
+      case value: Symbol =>
+        writer.mode = Datatype.Int
+        writer.write((companion.size +
+          value.toString.getBytes(companion.charset).size - 1).toInt)
+        companion.write(value, false)
+
+      case value: String =>
+        writer.mode = Datatype.Long
+        writer.write(companion.size + value.getBytes(companion.charset).size)
+        companion.write(value, false)
 
     }
+
+    if(companion != null)
+      companion.close
 
     writer.close
 
