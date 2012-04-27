@@ -1,7 +1,7 @@
 Widebase
 ========
 
-Column-oriented database for large time series...
+A column-oriented database for large time series, <a href="https://github.com/widebase/widebase-doc/raw/master/widebase.handbook/pdf/widebase-handbook.pdf">read more</a>.
 
 # Build from source
 
