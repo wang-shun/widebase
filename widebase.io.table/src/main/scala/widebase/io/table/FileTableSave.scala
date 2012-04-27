@@ -415,7 +415,7 @@ abstract class FileTableSave(path: String) {
         releaseWriters
 
         // Set column labels
-        saver.save(name, ".d", table.labels, true)(partition)
+        saver.save(name, ".d", table.labels, true)(partition, segmented)
 
         dir =
           if(segmented == null)
