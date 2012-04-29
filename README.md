@@ -5,7 +5,7 @@ A column-oriented database for large time series.
 
 <b>It's still in Beta phase and not ready for productive use.</b>
 
-To learn more about Widebase and its architecture, <a href="https://github.com/widebase/widebase-doc/raw/master/widebase.handbook/pdf/widebase-handbook.pdf">read the handbook</a>.
+To learn more about Widebase and its architecture, <a href="http://widebase.github.com/widebase/latest/handbook/html/index.html">read the handbook</a>.
 
 # Build from source
 
