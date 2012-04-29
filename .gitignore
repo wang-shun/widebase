@@ -1,6 +1,7 @@
 usr/
 *.class
 *.log
+gpg.sbt
 
 # sbt specific
 dist/*

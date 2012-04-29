@@ -5,7 +5,7 @@ object WidebaseBuild extends Build {
 
   import Dependency._
 
-  override val settings = super.settings ++ buildSettings
+  override val settings = super.settings ++ buildSettings ++ publishSettings
 
   lazy val widebase = Project(
     "widebase",
@@ -78,5 +78,40 @@ object WidebaseBuild extends Build {
 		version := "0.1.0-SNAPSHOT",
     scalacOptions ++= Seq("-unchecked", "-deprecation"))
 
+  /** Publish settings */
+	def publishSettings = Seq(
+	  publishMavenStyle := true,
+	  publishArtifact in Test := false,
+	  pomIncludeRepository := { _ => false },
+
+    publishTo <<= (version) { version: String =>
+
+      val nexus = "https://oss.sonatype.org/"
+
+      if(version.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "content/repositories/snapshots/") 
+      else
+        Some("releases"  at nexus + "service/local/staging/deploy/maven2/")
+
+    },
+    pomExtra := (
+      <url>https://github.com/widebase/widebase</url>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://raw.github.com/widebase/widebase/master/LICENSE</url>
+        </license>
+      </licenses>
+      <scm>
+        <url>https://github.com/widebase/widebase</url>
+        <connection>scm:git:git@github.com:widebase/widebase.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>myst3r10n</id>
+          <name>myst3r10n</name>
+          <url>https://github.com/myst3r10n</url>
+        </developer>
+      </developers>))
 }
 
