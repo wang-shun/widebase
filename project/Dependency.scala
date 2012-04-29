@@ -9,9 +9,9 @@ object Dependency {
       "joda-time" % "joda-time" % "2.0")
 
     val varioCollectionMutable =
-      Seq("vario" %% "vario-collection-mutable" % "0.1.0-SNAPSHOT")
-    val varioFile = Seq("vario" %% "vario-file" % "0.1.0-SNAPSHOT")
-    val varioFilter = Seq("vario" %% "vario-filter" % "0.1.0-SNAPSHOT")
+      Seq("com.github.vario" %% "vario-collection-mutable" % "0.1.0")
+    val varioFile = Seq("com.github.vario" %% "vario-file" % "0.1.0")
+    val varioFilter = Seq("com.github.vario" %% "vario-filter" % "0.1.0")
 
   }
 
