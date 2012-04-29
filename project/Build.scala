@@ -21,22 +21,18 @@ object WidebaseBuild extends Build {
 
   /** DB */
   lazy val widebaseDb = Project("widebase-db", file("widebase.db")) dependsOn(
-    widebaseDbColumn,
-    widebaseDbTable,
-    widebaseIoTable) settings(
-      libraryDependencies ++= lib.jodaTime ++ testlib.log)
+    widebaseIoTable) settings(libraryDependencies ++= testlib.log)
 
   /** DB Column */
   lazy val widebaseDbColumn = Project(
     "widebase-db-column",
     file("widebase.db.column")) dependsOn(widebaseUtil) settings(
-    libraryDependencies ++= lib.jodaTime ++ lib.varioCollectionMutable)
+    libraryDependencies ++= lib.varioCollectionMutable)
 
   /** DB Table */
   lazy val widebaseDbTable = Project(
     "widebase-db-table",
-    file("widebase.db.table")) dependsOn(widebaseIoColumn) settings(
-    libraryDependencies ++= lib.jodaTime)
+    file("widebase.db.table")) dependsOn(widebaseIoColumn)
 
   /** I/O Column */
   lazy val widebaseIoColumn = Project(
@@ -44,28 +40,22 @@ object WidebaseBuild extends Build {
     file("widebase.io.column")) dependsOn(
       widebaseDbColumn,
       widebaseIoFilter,
-      widebaseUtil) settings (libraryDependencies ++= lib.varioFile)
+      widebaseUtil)
 
   /** I/O Filter */
   lazy val widebaseIoFilter = Project(
     "widebase-io-filter",
-    file("widebase.io.filter")) settings (
-    libraryDependencies ++= lib.jodaTime ++ lib.varioFile)
+    file("widebase.io.filter"))
 
   /** I/O Table */
   lazy val widebaseIoTable = Project(
     "widebase-io-table",
-    file("widebase.io.table")) dependsOn(
-    widebaseDbTable,
-    widebaseIoColumn,
-    widebaseUtil) settings (
-    libraryDependencies ++= lib.jodaTime ++ lib.varioFile)
+    file("widebase.io.table")) dependsOn(widebaseDbTable)
 
   /** Utilities */
   lazy val widebaseUtil = Project(
     "widebase-util",
-    file("widebase.util")) settings(
-      libraryDependencies ++= lib.varioFilter)
+    file("widebase.util")) settings(libraryDependencies ++= lib.varioFilter)
 
   /** Log path */
   System.setProperty(
@@ -74,7 +64,7 @@ object WidebaseBuild extends Build {
 
   /** Build settings */
 	def buildSettings = Seq(
-		organization := "widebase",
+		organization := "com.github.widebase",
 		version := "0.1.0-SNAPSHOT",
     scalacOptions ++= Seq("-unchecked", "-deprecation"))
 
@@ -113,5 +103,6 @@ object WidebaseBuild extends Build {
           <url>https://github.com/myst3r10n</url>
         </developer>
       </developers>))
+
 }
 
