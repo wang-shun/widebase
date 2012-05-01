@@ -2,16 +2,6 @@ package widebase.db.column
 
 import scala.collection.Traversable
 
-import scala.collection.generic. {
-
-  CanBuildFrom,
-  GenericTraversableTemplate,
-  TraversableFactory
-
-}
-
-import scala.collection.mutable.LazyBuilder
-
 import vario.collection.mutable.HybridBufferLike
 import vario.data.Datatype.Datatype
 
@@ -22,16 +12,12 @@ import vario.data.Datatype.Datatype
  *
  * @author myst3r10n
  */
-abstract class TypedColumn[A](t: Datatype) extends HybridBufferLike[A]
-/*  with Traversable[A]
-  with GenericTraversableTemplate[A, TypedColumn]*/ {
+abstract class TypedColumn[A](t: Datatype) extends HybridBufferLike[A] {
 
   import vario.data
 
   /** Type of buffer. */
   val typeOf = t
-
-//  override def companion = TypedColumn
 
   /** Records of mapper. */
   protected val records: Int
@@ -94,22 +80,4 @@ abstract class TypedColumn[A](t: Datatype) extends HybridBufferLike[A]
 
   }
 }
-/*
-object TypedColumn extends TraversableFactory[TypedColumn] {
-
-  implicit def canBuildFrom[A]: CanBuildFrom[Coll, A, TypedColumn[A]] =
-    new GenericCanBuildFrom[A]
-
-  def newBuilder[A] = new LazyBuilder[A,TypedColumn[A]] {
-
-    def result = {
-
-      val data = parts.foldLeft(List[A]()) { (l,n) => l ++ n }
-
-      new TypedColumn(data:_*)
-
-    }
-  }
-}
-*/
 

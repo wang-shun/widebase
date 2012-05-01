@@ -21,7 +21,7 @@ package object db {
     if(!(new File(path)).isDirectory)
       throw DatabaseNotFoundException(path)
 
-    val file = new File(path + "/segments.xml")
+    val file = new File(path + "/segment.xml")
 
     var segments = new SegmentMap
 
