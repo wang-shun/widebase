@@ -171,14 +171,13 @@ abstract class FileTableSave(path: String) {
     name: String,
     table: Table)(implicit segmented: File = null) {
 
-    class SymbolCompanion(var writer: FileVariantWriter, var lastEnded: Int)
-    class StringCompanion(var writer: FileVariantWriter, var lastEnded: Long)
+    class Companion(var writer: FileVariantWriter, var lastEnded: Long)
 
     var dir: File = null
 
     var writers = ArrayBuffer[FileVariantWriter]()
-    var symbolCompanions = Map[Int, SymbolCompanion]()
-    var stringCompanions = Map[Int, StringCompanion]()
+    var symbolCompanions = Map[Int, Companion]()
+    var stringCompanions = Map[Int, Companion]()
 
     def initWriters {
 
@@ -211,9 +210,9 @@ abstract class FileTableSave(path: String) {
           write(0)
 
           // Set column value type
-          if(column.typeOf == Datatype.Symbol)
-            mode = Datatype.Int
-          else if(column.typeOf == Datatype.String)
+          if(
+            column.typeOf == Datatype.Symbol ||
+            column.typeOf == Datatype.String)
             mode = Datatype.Long
           else
             mode = column.typeOf
@@ -252,10 +251,10 @@ abstract class FileTableSave(path: String) {
           column.typeOf match {
 
             case Datatype.Symbol => symbolCompanions +=
-              writers.size - 1 -> new SymbolCompanion(writer, 0)
+              writers.size - 1 -> new Companion(writer, 0L)
 
             case Datatype.String => stringCompanions +=
-              writers.size - 1 -> new StringCompanion(writer, 0L)
+              writers.size - 1 -> new Companion(writer, 0L)
 
           }
         }

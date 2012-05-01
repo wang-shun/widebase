@@ -22,13 +22,13 @@ abstract class TypedColumn[A](t: Datatype) extends HybridBufferLike[A] {
   /** Records of mapper. */
   protected val records: Int
 
-  /** Capacity of mapper. */
-  protected val capacity = records
+  /** Elements of mapper. */
+  protected val mappedElements = records
 
   {
 
-    if(mapper != null)
-      mapper.mode = typeOf
+    if(mappers != null)
+      mappers.foreach(mapper => mapper.mode = typeOf)
 
   }
 

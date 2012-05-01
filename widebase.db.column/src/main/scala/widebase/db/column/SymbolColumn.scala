@@ -2,6 +2,8 @@ package widebase.db.column
 
 import java.nio.channels.FileChannel
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 import vario.filter.MapFilter
@@ -15,25 +17,55 @@ import vario.filter.MapFilter
  * @author myst3r10n
  */
 class SymbolColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0,
   protected val channel: FileChannel = null)
-  extends VariableColumn[Symbol](Datatype.Symbol) {
+  extends TypedColumn[Symbol](Datatype.Symbol) {
 
   import vario.data
 
-  protected val sizeOf = data.sizeOf.int
+  protected val sizeOf = data.sizeOf.long
 
-  protected var symbolMapper: FileVariantMapper = null
+  if(channel != null)
+    mappers.foreach(mapper =>
+      if(mapper != null && mapper.mode != Datatype.Long)
+        mapper.mode = Datatype.Long)
 
-  if(
-    mapper != null &&
-    channel != null) {
+  override protected def get(index: Int) = {
 
-    if(mapper.mode != Datatype.Int)
-      mapper.mode = Datatype.Int
+    val offset =
+      if(index == 0)
+        0L
+      else {
 
-    symbolMapper = new FileVariantMapper(channel)(MapFilter.Private) {
+        val position = (index.toLong - 1) * sizeOf
+
+        val region = (position / Int.MaxValue).toInt
+
+        if(region == 0)
+          mappers(region).position = position.toInt
+        else
+          mappers(region).position = (position / region).toInt
+
+        mappers(region).readLong
+
+      }
+
+    val position = index.toLong * sizeOf
+
+    val region = (position / Int.MaxValue).toInt
+
+    if(region == 0)
+      mappers(region).position = position.toInt
+    else
+      mappers(region).position = (position / region).toInt
+
+    val size = mappers(region).readLong - offset
+
+    val symbolMapper = new FileVariantMapper(
+      channel,
+      offset,
+      size)(MapFilter.Private) {
 
       override val charset = props.charsets.symbols
 
@@ -41,34 +73,30 @@ class SymbolColumn(
 
     }
 
-    symbolMapper.close // Only file channel ;)
-
     if(symbolMapper.mode != typeOf)
       symbolMapper.mode = typeOf
 
-  }
-
-  protected def get(idx: Int) = {
-
+    symbolMapper.readSymbol(size.toInt)
+/*
     symbolMapper.position =
-      if(idx == 0)
-        0
+      if(index == 0)
+        0L
       else {
 
-        mapper.position = (idx - 1) * data.sizeOf.int
+        mapper.position = (index - 1) * data.sizeOf.int
         mapper.readInt
 
       }
 
-    mapper.position = idx * data.sizeOf.int
+    mapper.position = index * data.sizeOf.int
     symbolMapper.readSymbol(mapper.readInt - symbolMapper.position)
-
+*/
   }
 
-  protected def read = mapper.readSymbol
-  protected def write(value: Symbol) {
+  protected def read(region: Int) = mappers(region).readSymbol
+  protected def write(region: Int, value: Symbol) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

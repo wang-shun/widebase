@@ -11,48 +11,65 @@ import vario.data.Datatype.Datatype
  * @author myst3r10n
  */
 abstract class MixedColumn[A](t: Datatype) extends TypedColumn[A](t) {
-
-  override def apply(idx: Int) =
-    if(mapper == null || idx > records)
-      buffer.apply(idx)
-    else {
-
-      val backupMode = mapper.mode
-      mapper.mode = Datatype.Byte
-      mapper.position = idx * sizeOf
-      mapper.mode = backupMode
-
-      read
-
-    }
+/*
+  override def apply(index: Int) =
+    if(mappers == null || index > records)
+      buffer.apply(index)
+    else
+      get(index)
 
   override def last =
-    if(mapper == null || records == 0)
+    if(mappers == null || records == 0)
       buffer.last
-    else {
+    else
+      get(records - 1)
 
-      val backupMode = mapper.mode
-      mapper.mode = Datatype.Byte
-      mapper.position = (records - 1) * sizeOf
-      mapper.mode = backupMode
+  override def update(index: Int, value: A) {
 
-      read
+    if(mappers != null && index < records)
+      set(index, value)
+    else
+      buffer(index - records) = value
 
-    }
+  }
+*/
+  override protected def get(index: Int) = {
 
-  override def update(idx: Int, value: A) {
+    val position = index.toLong * sizeOf
 
-    if(mapper != null && idx < records) {
+    val region = (position / Int.MaxValue).toInt
 
-      val backupMode = mapper.mode
-      mapper.mode = Datatype.Byte
-      mapper.position = idx * sizeOf
-      mapper.mode = backupMode
+    val backupMode = mappers(region).mode
+    mappers(region).mode = Datatype.Byte
 
-      write(value)
+    if(region == 0)
+      mappers(region).position = position.toInt
+    else
+      mappers(region).position = (position / region).toInt
 
-    } else
-      buffer(idx - records) = value
+    mappers(region).mode = backupMode
+
+    read(region)
+
+  }
+
+  override protected def set(index: Int, element: A) = {
+
+    val position = index.toLong * sizeOf
+
+    val region = (position / Int.MaxValue).toInt
+
+    val backupMode = mappers(region).mode
+    mappers(region).mode = Datatype.Byte
+
+    if(region == 0)
+      mappers(region).position = position.toInt
+    else
+      mappers(region).position = (position / region).toInt
+
+    mappers(region).mode = backupMode
+
+    write(region, element)
 
   }
 }

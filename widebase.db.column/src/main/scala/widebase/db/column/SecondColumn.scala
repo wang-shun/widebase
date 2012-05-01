@@ -2,6 +2,8 @@ package widebase.db.column
 
 import org.joda.time.Seconds
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 
@@ -13,7 +15,7 @@ import vario.file.FileVariantMapper
  * @author myst3r10n
  */
 class SecondColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0)
   extends TypedColumn[Seconds](Datatype.Second) {
 
@@ -21,10 +23,10 @@ class SecondColumn(
 
   protected val sizeOf = data.sizeOf.second
 
-  protected def read = mapper.readSecond
-  protected def write(value: Seconds) {
+  protected def read(region: Int) = mappers(region).readSecond
+  protected def write(region: Int, value: Seconds) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

@@ -2,6 +2,8 @@ package widebase.db.column
 
 import java.sql.Timestamp
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 
@@ -13,18 +15,18 @@ import vario.file.FileVariantMapper
  * @author myst3r10n
  */
 class TimestampColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0)
-  extends MixedColumn[Timestamp](Datatype.Timestamp) {
+  extends TypedColumn[Timestamp](Datatype.Timestamp) {
 
   import vario.data
 
   protected val sizeOf = data.sizeOf.timestamp
 
-  protected def read = mapper.readTimestamp
-  protected def write(value: Timestamp) {
+  protected def read(region: Int) = mappers(region).readTimestamp
+  protected def write(region: Int, value: Timestamp) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

@@ -2,6 +2,8 @@ package widebase.db.column
 
 import java.nio.channels.FileChannel
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 import vario.filter.MapFilter
@@ -15,39 +17,54 @@ import vario.filter.MapFilter
  * @author myst3r10n
  */
 class StringColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0,
   protected val channel: FileChannel = null)
-  extends VariableColumn[String](Datatype.String) {
+  extends TypedColumn[String](Datatype.String) {
 
   import vario.data
 
   protected val sizeOf = data.sizeOf.long
 
-  if(
-    mapper != null &&
-    channel != null &&
-    mapper.mode != Datatype.Long)
-    mapper.mode = Datatype.Long
+  if(channel != null)
+    mappers.foreach(mapper =>
+      if(mapper != null && mapper.mode != Datatype.Long)
+        mapper.mode = Datatype.Long)
 
-  protected def get(idx: Int) = {
+  override protected def get(index: Int) = {
 
-    val position =
-      if(idx == 0)
+    val offset =
+      if(index == 0)
         0L
       else {
 
-        mapper.position = (idx - 1) * data.sizeOf.long
-        mapper.readLong
+        val position = (index.toLong - 1) * sizeOf
+
+        val region = (position / Int.MaxValue).toInt
+
+        if(region == 0)
+          mappers(region).position = position.toInt
+        else
+          mappers(region).position = (position / region).toInt
+
+        mappers(region).readLong
 
       }
 
-    mapper.position = idx * data.sizeOf.long
-    val size = mapper.readLong - position
+    val position = index.toLong * sizeOf
+
+    val region = (position / Int.MaxValue).toInt
+
+    if(region == 0)
+      mappers(region).position = position.toInt
+    else
+      mappers(region).position = (position / region).toInt
+
+    val size = mappers(region).readLong - offset
 
     val stringMapper = new FileVariantMapper(
       channel,
-      position,
+      offset,
       size)(MapFilter.Private) {
 
       override val charset = props.charsets.strings
@@ -63,10 +80,10 @@ class StringColumn(
 
   }
 
-  protected def read = mapper.readString
-  protected def write(value: String) {
+  protected def read(region: Int) = mappers(region).readString
+  protected def write(region: Int, value: String) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

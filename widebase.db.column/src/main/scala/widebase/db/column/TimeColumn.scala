@@ -2,6 +2,8 @@ package widebase.db.column
 
 import org.joda.time.LocalTime
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 
@@ -13,7 +15,7 @@ import vario.file.FileVariantMapper
  * @author myst3r10n
  */
 class TimeColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0)
   extends TypedColumn[LocalTime](Datatype.Time) {
 
@@ -21,10 +23,10 @@ class TimeColumn(
 
   protected val sizeOf = data.sizeOf.time
 
-  protected def read = mapper.readTime
-  protected def write(value: LocalTime) {
+  protected def read(region: Int) = mappers(region).readTime
+  protected def write(region: Int, value: LocalTime) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

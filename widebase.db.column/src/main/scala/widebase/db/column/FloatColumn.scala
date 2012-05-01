@@ -1,5 +1,7 @@
 package widebase.db.column
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 
@@ -11,7 +13,7 @@ import vario.file.FileVariantMapper
  * @author myst3r10n
  */
 class FloatColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0)
   extends TypedColumn[Float](Datatype.Float) {
 
@@ -19,10 +21,10 @@ class FloatColumn(
 
   protected val sizeOf = data.sizeOf.float
 
-  protected def read = mapper.readFloat
-  protected def write(value: Float) {
+  protected def read(region: Int) = mappers(region).readFloat
+  protected def write(region: Int, value: Float) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

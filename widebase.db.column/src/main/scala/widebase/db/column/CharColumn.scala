@@ -1,5 +1,7 @@
 package widebase.db.column
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 
@@ -11,7 +13,7 @@ import vario.file.FileVariantMapper
  * @author myst3r10n
  */
 class CharColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0)
   extends TypedColumn[Char](Datatype.Char) {
 
@@ -19,10 +21,10 @@ class CharColumn(
 
   protected val sizeOf = data.sizeOf.char
 
-  protected def read = mapper.readChar
-  protected def write(value: Char) {
+  protected def read(region: Int) = mappers(region).readChar
+  protected def write(region: Int, value: Char) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

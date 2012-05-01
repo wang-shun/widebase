@@ -1,5 +1,7 @@
 package widebase.db.column
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 
@@ -11,7 +13,7 @@ import vario.file.FileVariantMapper
  * @author myst3r10n
  */
 class BoolColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0)
   extends TypedColumn[Boolean](Datatype.Bool) {
 
@@ -19,11 +21,25 @@ class BoolColumn(
 
   protected val sizeOf = data.sizeOf.bool
 
-  protected def read = mapper.readBool
+  protected def read(region: Int) = mappers(region).readBool
 
-  protected def write(value: Boolean) {
+  protected def write(region: Int, value: Boolean) {
 
-    mapper.write(value)
+    mappers(region).write(value)
+
+  }
+
+  override protected def get(index: Int) = {
+
+    mappers.head.position = index
+    read(0)
+
+  }
+
+  override protected def set(index: Int, element: Boolean) = {
+
+    mappers.head.position = index
+    write(0, element)
 
   }
 }

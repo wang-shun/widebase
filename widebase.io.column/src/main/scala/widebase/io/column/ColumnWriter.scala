@@ -99,9 +99,9 @@ class ColumnWriter(writer: VariantWriter, companion: VariantWriter = null) {
           column.foreach(value => writer.write(value, true))
         else {
 
-          var lastEnded = 0
+          var lastEnded = 0L
 
-          writer.mode = Datatype.Int
+          writer.mode = Datatype.Long
 
           column.foreach { value =>
 

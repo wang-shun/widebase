@@ -1,5 +1,7 @@
 package widebase.db.column
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 
@@ -11,7 +13,7 @@ import vario.file.FileVariantMapper
  * @author myst3r10n
  */
 class LongColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0)
   extends TypedColumn[Long](Datatype.Long) {
 
@@ -19,10 +21,10 @@ class LongColumn(
 
   protected val sizeOf = data.sizeOf.long
 
-  protected def read = mapper.readLong
-  protected def write(value: Long) {
+  protected def read(region: Int) = mappers(region).readLong
+  protected def write(region: Int, value: Long) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

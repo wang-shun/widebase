@@ -2,6 +2,8 @@ package widebase.db.column
 
 import org.joda.time.YearMonth
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 
@@ -13,18 +15,18 @@ import vario.file.FileVariantMapper
  * @author myst3r10n
  */
 class MonthColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0)
-  extends MixedColumn[YearMonth](Datatype.Month) {
+  extends TypedColumn[YearMonth](Datatype.Month) {
 
   import vario.data
 
   protected val sizeOf = data.sizeOf.month
 
-  protected def read = mapper.readMonth
-  protected def write(value: YearMonth) {
+  protected def read(region: Int) = mappers(region).readMonth
+  protected def write(region: Int, value: YearMonth) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

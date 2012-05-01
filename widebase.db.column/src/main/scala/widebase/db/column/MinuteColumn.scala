@@ -2,6 +2,8 @@ package widebase.db.column
 
 import org.joda.time.Minutes
 
+import scala.collection.mutable.ArrayBuffer
+
 import vario.data.Datatype
 import vario.file.FileVariantMapper
 
@@ -13,7 +15,7 @@ import vario.file.FileVariantMapper
  * @author myst3r10n
  */
 class MinuteColumn(
-  protected val mapper: FileVariantMapper = null,
+  protected val mappers: ArrayBuffer[FileVariantMapper] = null,
   protected val records: Int = 0)
   extends TypedColumn[Minutes](Datatype.Minute) {
 
@@ -21,10 +23,10 @@ class MinuteColumn(
 
   protected val sizeOf = data.sizeOf.minute
 
-  protected def read = mapper.readMinute
-  protected def write(value: Minutes) {
+  protected def read(region: Int) = mappers(region).readMinute
+  protected def write(region: Int, value: Minutes) {
 
-    mapper.write(value)
+    mappers(region).write(value)
 
   }
 }

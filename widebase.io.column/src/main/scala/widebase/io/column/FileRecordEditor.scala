@@ -454,17 +454,12 @@ class FileRecordEditor(path: String) {
 
     if(typeOf == Datatype.Symbol || typeOf == Datatype.String) {
 
-      if(typeOf == Datatype.Symbol) {
-
+      if(typeOf == Datatype.Symbol)
         filename += ".sym"
-        writer.mode = Datatype.Int
-
-      } else if(typeOf == Datatype.String) {
-
+      else if(typeOf == Datatype.String)
         filename += ".str"
-        writer.mode = Datatype.Long
 
-      }
+      writer.mode = Datatype.Long
 
       var channel = new RandomAccessFile(filename, "rw").getChannel
       channel.tryLock
@@ -509,9 +504,9 @@ class FileRecordEditor(path: String) {
       case value: LocalDateTime => writer.write(value)
       case value: Timestamp => writer.write(value)
       case value: Symbol =>
-        writer.mode = Datatype.Int
+        writer.mode = Datatype.Long
         writer.write((companion.size +
-          value.toString.getBytes(companion.charset).size - 1).toInt)
+          value.toString.getBytes(companion.charset).size - 1))
         companion.write(value, false)
 
       case value: String =>
