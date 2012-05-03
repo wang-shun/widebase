@@ -1,7 +1,7 @@
 Widebase
 ========
 
-A column-oriented database for large time series.
+The the essential data model and its i/o operations.
 
 <b>It's still in Beta phase and not ready for productive use.</b>
 
