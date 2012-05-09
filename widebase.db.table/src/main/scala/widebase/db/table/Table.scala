@@ -52,52 +52,12 @@ import widebase.io.column. { ColumnReader, ColumnWriter }
 
 /** Column based table.
  *
- * @param l labels
- * @param c columns
- *
  * @author myst3r10n
  */
-case class Table(
-  protected val l: TypedColumn[_],
-  protected val c: TypedColumn[_]*) {
-
-  def this() = this(null)
+class Table {
 
   /** Columns. */
   protected var map = LinkedHashMap[Any, TypedColumn[_]]()
-
-  {
-
-    var labelIndex = 0
-    var columnIndex = 0
-
-    while(l != null && labelIndex < l.length && columnIndex < c.length) {
-
-      map += l(labelIndex) -> c(columnIndex)
-
-      labelIndex += 1
-      columnIndex += 1
-
-    }
-
-    while(l != null && labelIndex < l.length) {
-
-      map += l(labelIndex) -> null
-
-      labelIndex += 1
-      columnIndex += 1
-
-    }
-
-    while(columnIndex < c.length) {
-
-      map += "" -> c(columnIndex)
-
-      labelIndex += 1
-      columnIndex += 1
-
-    }
-  }
 
   /** Records. */
   object records {
@@ -121,7 +81,7 @@ case class Table(
      * @note Due performance lack not use by bulk operations.
      **/
     def foreach[U](f: Iterable[Any] => U) =
-      for(r <- 0 to size - 1)
+      for(r <- 0 to length - 1)
         f(for(column <- columns)
           yield(column(r)))
 
@@ -139,8 +99,8 @@ case class Table(
      *
      * @return the amount of records
      */
-    def size =
-      if(columns.size <= 0)
+    def length =
+      if(columns.size <= 0 || columns.head == null)
         0
       else
         columns.head.length
@@ -518,7 +478,7 @@ case class Table(
    */
   def ++=(table: Table): Table = {
 
-    if(table.records.size < 1)
+    if(table.records.length < 1)
       return this
 
     val others = table.columns.toBuffer
@@ -587,8 +547,8 @@ case class Table(
    */
   def insert(n: Int, records: Any*) {
 
-    if(records.size != map.values.size)
-      throw LengthMismatchException(map.values.size, records.size)
+    if(records.length != map.values.size)
+      throw LengthMismatchException(map.values.size, records.length)
 
     var i = 0
 
@@ -714,6 +674,40 @@ case class Table(
   
   }
 
+  override def toString: String = {
+
+    if(records.length == 0)
+      return "Empty"
+
+    var printable = ""
+    val lineSeparator = System.getProperty("line.separator")
+
+    var amount = records.length
+
+    if(amount > 5)
+      amount = 5
+
+    if(amount > 0) {
+
+      amount -= 1
+
+      for(r <- 0 to amount) {
+
+        printable += records(r)
+
+        if(r < amount)
+          printable += lineSeparator
+
+      }
+    }
+
+    if(records.length > 5)
+      printable += lineSeparator + "..."
+
+    printable
+
+  }
+
   /** Appends new records to columns.
    *
    * @param records the new records to append
@@ -722,8 +716,8 @@ case class Table(
    */
   protected def append(records: WrappedArray[_]) {
 
-    if(records.size != map.values.size)
-      throw LengthMismatchException(map.values.size, records.size)
+    if(map.values.size != records.length)
+      throw LengthMismatchException(map.values.size, records.length)
 
     var i = 0
 
@@ -803,6 +797,53 @@ case class Table(
  * @author myst3r10n
  */
 object Table {
+
+  /** Creates [[widebase.db.table.Table]].
+   *
+   * @param labels of table
+   * @param columns of table
+   *
+   * @author myst3r10n
+   */
+  def apply(labels: TypedColumn[_], columns: TypedColumn[_]*) = {
+
+    var labelIndex = 0
+    var columnIndex = 0
+    val table = new Table
+
+    while(
+      labels != null &&
+      labelIndex < labels.length &&
+      columnIndex < columns.length) {
+
+      table ++= labels(labelIndex) -> columns(columnIndex)
+
+      labelIndex += 1
+      columnIndex += 1
+
+    }
+
+    while(labels != null && labelIndex < labels.length) {
+
+      table ++= labels(labelIndex) -> null
+
+      labelIndex += 1
+      columnIndex += 1
+
+    }
+
+    while(columnIndex < columns.length) {
+
+      table ++= "" -> columns(columnIndex)
+
+      labelIndex += 1
+      columnIndex += 1
+
+    }
+
+    table
+
+  }
 
   /** Creates [[widebase.db.table.Table]] from bytes.
    *

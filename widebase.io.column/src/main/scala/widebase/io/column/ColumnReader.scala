@@ -30,6 +30,7 @@ import widebase.db.column. {
   TimestampColumn,
   SymbolColumn,
   StringColumn,
+
   TypedColumn
 
 }

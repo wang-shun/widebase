@@ -60,7 +60,7 @@ object Upsert extends Logger with Loggable {
   if(!dir.exists)
     dir.mkdir
 
-  dir = new File(dir.getPath + "/wdb")
+  dir = new File(dir.getPath + "/testdb")
 
   if(!dir.exists)
     dir.mkdir
@@ -84,7 +84,7 @@ object Upsert extends Logger with Loggable {
 
     var i = 0
 
-    while(i < args.size) {
+    while(i < args.length) {
 
       args(i) match {
 
@@ -106,7 +106,7 @@ object Upsert extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(
+    val table = Table(
       StringColumn(
         "Bool",
         "Byte",
@@ -191,7 +191,7 @@ object Upsert extends Logger with Loggable {
 
       r += 1
 
-      if(debug || r == remapped.records.size)
+      if(debug || r == remapped.records.length)
         println("Record " + r + ": " + record)
       else
         record

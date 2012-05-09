@@ -7,6 +7,12 @@ class PartitionMap extends LinkedHashMap[String, Table] {
   def parts = keys
   def tables = values
 
+  override def toString =
+    if(tables.size <= 0)
+      "Empty"
+    else
+      tables.head.toString
+
 }
 
 object PartitionMap {

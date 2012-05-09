@@ -59,7 +59,7 @@ object Record extends Logger with Loggable {
   if(!dir.exists)
     dir.mkdir
 
-  dir = new File(dir.getPath + "/wdb")
+  dir = new File(dir.getPath + "/testdb")
 
   if(!dir.exists)
     dir.mkdir
@@ -80,11 +80,11 @@ object Record extends Logger with Loggable {
 
     debug = false
     parts = 10
-    records = 25000
+    records = 2500
 
     var i = 0
 
-    while(i < args.size) {
+    while(i < args.length) {
 
       args(i) match {
 
@@ -127,7 +127,7 @@ object Record extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(StringColumn(
+    val table = Table(StringColumn(
       "Bool",
       "Byte",
       "Char",
@@ -188,7 +188,7 @@ object Record extends Logger with Loggable {
 
       r += 1
 
-      if(debug || r == loaded.records.size)
+      if(debug || r == loaded.records.length)
         println("Record " + r + ": " + record)
       else
         record
@@ -203,7 +203,7 @@ object Record extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(StringColumn(
+    val table = Table(StringColumn(
       "Bool",
       "Byte",
       "Char",
@@ -264,7 +264,7 @@ object Record extends Logger with Loggable {
 
       r += 1
 
-      if(debug || r == mapped.records.size)
+      if(debug || r == mapped.records.length)
         println("Record " + r + ": " + record)
       else
         record
@@ -282,7 +282,7 @@ object Record extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(StringColumn(
+    val table = Table(StringColumn(
       "Partition",
       "Bool",
       "Byte",
@@ -362,7 +362,7 @@ object Record extends Logger with Loggable {
 
         r += 1
 
-        if(debug || (p == parts && r == table.records.size / parts))
+        if(debug || (p == parts && r == table.records.length / parts))
           println("Record " + r + ": " + record)
         else
           record

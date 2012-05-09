@@ -59,7 +59,7 @@ object Column extends Logger with Loggable {
   if(!dir.exists)
     dir.mkdir
 
-  dir = new File(dir.getPath + "/wdb")
+  dir = new File(dir.getPath + "/testdb")
 
   if(!dir.exists)
     dir.mkdir
@@ -84,7 +84,7 @@ object Column extends Logger with Loggable {
 
     var i = 0
 
-    while(i < args.size) {
+    while(i < args.length) {
 
       args(i) match {
 
@@ -127,7 +127,7 @@ object Column extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(StringColumn(
+    val table = Table(StringColumn(
       "Bool",
       "Byte",
       "Char",
@@ -289,7 +289,7 @@ object Column extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(StringColumn(
+    val table = Table(StringColumn(
       "Bool",
       "Byte",
       "Char",
@@ -454,7 +454,7 @@ object Column extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(StringColumn(
+    val table = Table(StringColumn(
       "Partition",
       "Bool",
       "Byte",

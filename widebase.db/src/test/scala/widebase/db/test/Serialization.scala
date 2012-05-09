@@ -60,11 +60,11 @@ object Serialization extends Logger with Loggable {
   def main(args: Array[String]) {
 
     debug = false
-    records = 25000
+    records = 10//25000
 
     var i = 0
 
-    while(i < args.size) {
+    while(i < args.length) {
 
       args(i) match {
 
@@ -86,7 +86,7 @@ object Serialization extends Logger with Loggable {
 
     var started = 0L
 
-    val table = new Table(StringColumn(
+    val table = Table(StringColumn(
       "Bool",
       "Byte",
       "Char",
@@ -164,7 +164,8 @@ object Serialization extends Logger with Loggable {
     }
     info("Table filled " + records + " records in " +
       diff(started, System.currentTimeMillis))
-
+println(table)
+/*
     started = System.currentTimeMillis
     val binary = table.toBytes()
     info("Table to bytes " + records + " records in " +
@@ -241,7 +242,7 @@ object Serialization extends Logger with Loggable {
 
     info("Table iterated " + records + " records in " +
       diff(started, System.currentTimeMillis))
-
+*/
   }
 }
 

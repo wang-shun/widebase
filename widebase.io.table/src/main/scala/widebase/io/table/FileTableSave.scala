@@ -302,7 +302,7 @@ abstract class FileTableSave(path: String) {
     var lastInt: Option[Int] = scala.None
     var lastDate: LocalDate = null
 
-    for(r <- 0 to table.records.size - 1) {
+    for(r <- 0 to table.records.length - 1) {
 
       var partition: String = null
 

@@ -9,7 +9,7 @@ object WidebaseBuild extends Build {
 
   lazy val widebase = Project(
     "widebase",
-    file("widebase"),
+    file("."),
     settings = Defaults.defaultSettings ++ Unidoc.settings) aggregate(
       widebaseDb,
       widebaseDbColumn,
@@ -60,7 +60,7 @@ object WidebaseBuild extends Build {
   /** Log path */
   System.setProperty(
     "widebase.log",
-    System.getProperty("user.dir") + "/usr/log/widebase")
+    System.getProperty("user.dir") + "/var/log/widebase")
 
   /** Build settings */
 	def buildSettings = Seq(

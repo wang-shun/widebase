@@ -79,5 +79,39 @@ abstract class TypedColumn[A](t: Datatype) extends HybridBufferLike[A] {
     this
 
   }
+
+  override def toString: String = {
+
+    if(length == 0)
+      return "Empty"
+
+    var printable = ""
+    val lineSeparator = System.getProperty("line.separator")
+    
+    var amount = length
+
+    if(amount > 5)
+      amount = 5
+
+    if(amount > 0) {
+
+      amount -= 1
+
+      for(i <- 0 to amount) {
+
+        printable += this(i)
+
+        if(i < amount)
+          printable += lineSeparator
+
+      }
+    }
+
+    if(length > 5)
+      printable += lineSeparator + "..."
+
+    printable
+
+  }
 }
 
