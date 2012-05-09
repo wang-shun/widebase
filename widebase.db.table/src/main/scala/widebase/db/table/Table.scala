@@ -674,6 +674,7 @@ class Table {
   
   }
 
+  /** A printable [[widebase.db.table.Table]]. */
   override def toString: String = {
 
     if(records.length == 0)
@@ -765,6 +766,11 @@ class Table {
     }
   }
 
+  /** Ensure that column is typed.
+   *
+   * @param index of column
+   * @param value with type
+   */
   protected def wasUntyped(index: Int, value: Any) {
 
     if(columns.toBuffer(index) == null)
@@ -802,8 +808,6 @@ object Table {
    *
    * @param labels of table
    * @param columns of table
-   *
-   * @author myst3r10n
    */
   def apply(labels: TypedColumn[_], columns: TypedColumn[_]*) = {
 
