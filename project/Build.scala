@@ -65,7 +65,7 @@ object WidebaseBuild extends Build {
   /** Build settings */
 	def buildSettings = Seq(
 		organization := "com.github.widebase",
-		version := "0.1.0-SNAPSHOT",
+		version := "0.1.0",
     scalacOptions ++= Seq("-unchecked", "-deprecation"))
 
   /** Publish settings */
