@@ -1,35 +1,19 @@
-Widebase
-========
+# Widebase
 
-The the essential data model and its i/o operations.
+This page contains build instructions.
+A introduction about Widebase and more at http://widebase.github.com/.
 
-<b>It's still in Beta phase and not ready for productive use.</b>
+## Using Vario with SBT
 
-To learn more about Widebase and its architecture, <a href="http://widebase.github.com/widebase/latest/handbook/html/index.html">read the handbook</a>.
+SBT installation instructions on https://github.com/harrah/xsbt/wiki.
 
-# Build from source
-
-To build this code, get and install Vario from https://github.com/vario/vario.
+### Build from source
 
 Use these commands to build:
 
     > git clone git@github.com:widebase/widebase.git
     > cd widebase
     > sbt publish-local
-
-And specify as a dependency in your project file:
-
-```scala
-libraryDependencies += "widebase" %% "widebase-db" % "0.1.0-SNAPSHOT"
-```
-
-# Demos/Testing
-
-Some demo/test codes are in `widebase.db/src/test/scala/widebase/db/test`. Example how to run `Record.scala` test:
-
-    > sbt
-    > project widebase-db
-    > test:run-main widebase.db.test.Record
 
 # Generating ScalaDoc
 
