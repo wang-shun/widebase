@@ -15,7 +15,7 @@ Use these commands to build:
     > cd widebase
     > sbt publish-local
 
-# Generating ScalaDoc
+### Generating ScalaDoc
 
 Use this command to generating docs:
 
