@@ -3,7 +3,7 @@
 This page contains build instructions.
 A introduction about Widebase and more at http://widebase.github.com/.
 
-## Using Vario with SBT
+## Using Widebase with SBT
 
 SBT installation instructions on https://github.com/harrah/xsbt/wiki.
 
