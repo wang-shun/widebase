@@ -66,23 +66,13 @@ import widebase.io.table. {
  */
 class Database protected[db](val path: String, val segment: SegmentMap) {
 
-  /** Converts segment key into segment path.
+  /** Implicitly converts a segment key into segment path.
    *
    * @param key to convert
    *
-   * @return segment path
+   * @return a conversion purposed object
    */
-  implicit def asSegmentPath(key: String) = {
-
-    class SegmentConversions(key: String) {
-
-      def S = segment(key)
-
-    }
-
-    new SegmentConversions(key)
-
-  }
+  implicit def asSegmentPath(key: String) = new SegmentConversion(key, segment)
 
   object tables extends FileRecordEditor(path) {
 
