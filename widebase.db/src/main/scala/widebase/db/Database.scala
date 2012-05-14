@@ -72,11 +72,15 @@ class Database protected[db](val path: String, val segment: SegmentMap) {
    *
    * @return segment path
    */
-  implicit def segmentKeyToSegmentPath(key: String) = { 
+  implicit def asSegmentPath(key: String) = {
 
-    class Segment(key: String) { def S = segment(key) }
+    class SegmentConversions(key: String) {
 
-    new Segment(key)
+      def S = segment(key)
+
+    }
+
+    new SegmentConversions(key)
 
   }
 
