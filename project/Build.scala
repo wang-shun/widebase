@@ -27,6 +27,8 @@ object WidebaseBuild extends Build {
   lazy val widebaseDbColumn = Project(
     "widebase-db-column",
     file("widebase.db.column")) dependsOn(widebaseUtil) settings(
+    resolvers +=
+      "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public",
     libraryDependencies ++= lib.varioCollectionMutable)
 
   /** DB Table */
@@ -55,7 +57,10 @@ object WidebaseBuild extends Build {
   /** Utilities */
   lazy val widebaseUtil = Project(
     "widebase-util",
-    file("widebase.util")) settings(libraryDependencies ++= lib.varioFilter)
+    file("widebase.util")) settings(
+    resolvers +=
+      "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public",
+    libraryDependencies ++= lib.varioFilter)
 
   /** Log path */
   System.setProperty(
