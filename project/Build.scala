@@ -58,20 +58,20 @@ object WidebaseBuild extends Build {
   lazy val widebaseUtil = Project(
     "widebase-util",
     file("widebase.util")) settings(
-    resolvers +=
-      "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public",
     libraryDependencies ++= lib.varioFilter)
 
   /** Log path */
   System.setProperty(
     "widebase.log",
-    System.getProperty("user.dir") + "/var/log/widebase")
+    System.getProperty("user.dir") + "/var/log")
 
   /** Build settings */
 	def buildSettings = Seq(
 		organization := "com.github.widebase",
 		version := "0.1.0",
-    scalacOptions ++= Seq("-unchecked", "-deprecation"))
+    scalacOptions ++= Seq("-unchecked", "-deprecation"),
+    resolvers ++= Seq(
+      "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))
 
   /** Publish settings */
 	def publishSettings = Seq(
