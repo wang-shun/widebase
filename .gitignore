@@ -7,6 +7,11 @@ usr/data/test/*
 !usr/data/test/db/
 usr/data/test/db/*
 !usr/data/test/db/segment.xml
+!usr/data/test/seg/
+usr/data/test/seg/*
+!usr/data/test/seg/test/
+usr/data/test/seg/test/*
+!usr/data/test/seg/test/.gitignore
 *.class
 *.log
 gpg.sbt
