@@ -12,6 +12,7 @@ usr/data/test/seg/*
 !usr/data/test/seg/test/
 usr/data/test/seg/test/*
 !usr/data/test/seg/test/.gitignore
+var/
 *.class
 *.log
 gpg.sbt
