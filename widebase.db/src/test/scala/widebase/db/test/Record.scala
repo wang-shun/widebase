@@ -54,18 +54,8 @@ object Record extends Logger with Loggable {
   protected var records: Int = _
 
   // Init DB
-  var dir = new File("usr")
-
-  if(!dir.exists)
-    dir.mkdir
-
-  dir = new File(dir.getPath + "/testdb")
-
-  if(!dir.exists)
-    dir.mkdir
-
   val dbi =
-    widebase.db.instance(System.getProperty("user.dir") + "/" + dir.getPath)
+    widebase.db.instance(System.getProperty("user.dir") + "/usr/data/test/db")
 
   // Init API
   import dbi.tables._

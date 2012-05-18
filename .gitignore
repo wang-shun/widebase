@@ -1,4 +1,16 @@
-usr/
+!usr/
+usr/*
+!usr/data/
+usr/data/*
+!usr/data/test/
+usr/data/test/*
+!usr/data/test/db/
+usr/data/test/db/*
+!usr/data/test/db/segment.xml
+!usr/data/test/seg/
+usr/data/test/seg/*
+!usr/data/test/seg/test/
+usr/data/test/seg/test/*
 *.class
 *.log
 gpg.sbt
