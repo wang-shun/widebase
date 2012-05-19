@@ -62,10 +62,10 @@ abstract class FileTableLoad(path: String) {
     val table = new Table
 
     // Read column labels
-    val labels = reader.read
+    val labels = reader.read()
 
     // Read column values
-    labels.foreach(label => table ++= (label, reader.read))
+    labels.foreach(label => table ++= (label, reader.read()))
 
     reader.close
 

@@ -60,7 +60,7 @@ object Serialization extends Logger with Loggable {
   def main(args: Array[String]) {
 
     debug = false
-    records = 10//25000
+    records = 25000
 
     var i = 0
 
@@ -164,8 +164,7 @@ object Serialization extends Logger with Loggable {
     }
     info("Table filled " + records + " records in " +
       diff(started, System.currentTimeMillis))
-println(table)
-/*
+
     started = System.currentTimeMillis
     val binary = table.toBytes()
     info("Table to bytes " + records + " records in " +
@@ -242,7 +241,7 @@ println(table)
 
     info("Table iterated " + records + " records in " +
       diff(started, System.currentTimeMillis))
-*/
+
   }
 }
 

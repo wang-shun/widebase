@@ -644,10 +644,12 @@ class Table {
   /** Converts this table to bytes.
    *
    * @param filter self-explanatory
+   * @param records to convert, 0 convert all
    *
    * @return [[scala.Byte]]s of table
    */
-  def toBytes(filter: StreamFilter = StreamFilter.None) = {
+  def toBytes(filter: StreamFilter = StreamFilter.None)
+    (implicit records: Int = 0) = {
 
     val stream = new ByteArrayOutputStream
     val channel = Channels.newChannel(stream)
@@ -666,7 +668,7 @@ class Table {
     writer.write(labels)
 
     // Write columns
-    columns.foreach(column => writer.write(column))
+    columns.foreach(column => writer.write(column, records))
 
     writer.close
 
@@ -853,10 +855,12 @@ object Table {
    *
    * @param bytes of table
    * @param filter self-explanatory
+   * @param records to recover, 0 recover all
    */
   def fromBytes(
     bytes: Array[Byte],
-    filter: StreamFilter = StreamFilter.None) = {
+    filter: StreamFilter = StreamFilter.None)
+    (implicit records: Int = 0) = {
 
     val stream = new ByteArrayInputStream(bytes)
     val channel = Channels.newChannel(stream)
@@ -873,7 +877,7 @@ object Table {
 
     val table = new Table
 
-    reader.read.foreach(label => table ++= (label, reader.read))
+    reader.read().foreach(label => table ++= (label, reader.read(records)))
 
     reader.close
 

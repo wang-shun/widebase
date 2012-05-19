@@ -57,7 +57,7 @@ abstract class FileColumnLoad(path: String) {
 
     try {
 
-      reader.read
+      reader.read()
 
     } finally {
 

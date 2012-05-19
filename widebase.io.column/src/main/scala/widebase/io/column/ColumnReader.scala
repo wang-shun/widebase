@@ -62,9 +62,11 @@ class ColumnReader(reader: VariantReader)(implicit filename: String = "") {
 
   /** Reads column from file.
     *
+    * @param amount values to read, 0 read all
+    *
     * @return [[widebase.db.column.VariantColumn]]
    */
-  def read: TypedColumn[_] = {
+  def read(amount: Int = 0): TypedColumn[_] = {
 
     // Read magic
     if(reader.mode != Datatype.String)
@@ -92,7 +94,10 @@ class ColumnReader(reader: VariantReader)(implicit filename: String = "") {
 
     // Read column length
     reader.mode = Datatype.Int
-    val length = reader.readInt
+    var length = reader.readInt
+
+    if(amount > 0)
+      length = amount
 
     // Read column values
     reader.mode = typeOf
