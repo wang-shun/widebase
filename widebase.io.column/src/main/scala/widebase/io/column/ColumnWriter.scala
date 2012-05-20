@@ -193,7 +193,7 @@ class ColumnWriter(writer: VariantWriter, companion: VariantWriter = null) {
 
           if(amount > 0)
             for(i <- 0 to amount - 1)
-              writer.write(column(i))
+              writer.write(column(i), true)
           else
             column.foreach(value => writer.write(value, true))
 
@@ -229,7 +229,7 @@ class ColumnWriter(writer: VariantWriter, companion: VariantWriter = null) {
 
           if(amount > 0)
             for(i <- 0 to amount - 1)
-              writer.write(column(i))
+              writer.write(column(i), true)
           else
             column.foreach(value => writer.write(value, true))
 
