@@ -55,6 +55,7 @@ class FileColumnMap(path: String) {
     *
     * @param name of table
     * @param label label of column
+    * @param amount values to map, 0 map all
     * @param parted partition name
     * @param segmented path of segment
     *
@@ -62,7 +63,8 @@ class FileColumnMap(path: String) {
    */
   def apply(
     name: String,
-    label: Any)
+    label: Any,
+    amount: Int = 0)
     (implicit parted: String = null, segmented: File = null) = {
 
     var filename =
@@ -112,7 +114,10 @@ class FileColumnMap(path: String) {
 
     // Read column length
     reader.mode = Datatype.Int
-    val records = reader.readInt
+    var records = reader.readInt
+
+    if(amount > 0)
+      records = amount
 
     reader.close
 
