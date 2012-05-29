@@ -34,8 +34,21 @@ abstract class FileTableMap(path: String) {
 
     val mapper = new FileColumnMapper(path)
 
-    labels.foreach(label =>
-      table ++= (label, mapper.map(name, label)(parted, segmented)))
+    val lastCol = mapper.map(name, labels.last)(parted, segmented)
+
+    if(labels.length > 1) {
+
+      val amount = lastCol.length
+
+      for(i <- 0 to labels.length - 2) {
+
+        val label = labels(i)
+        table ++= (label, mapper.map(name, label, amount)(parted, segmented))
+
+      }
+    }
+
+    table ++= (labels.last, lastCol)
 
     table
 
