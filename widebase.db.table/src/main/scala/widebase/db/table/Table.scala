@@ -99,12 +99,18 @@ class Table {
      *
      * @return the amount of records
      */
-    def length =
-      if(columns.size <= 0 || columns.head == null)
-        0
-      else
-        columns.head.length
+    def length: Int = {
 
+      if(labels == null || labels.length == 0 || columns.size == 0)
+        return 0 // No labels or columns
+
+      columns.foreach(column =>
+        if(column == null)
+          return 0) // Any column undefined
+
+      columns.head.length
+
+    }
   }
 
   /** Implements sort.
@@ -248,25 +254,29 @@ class Table {
 
         var k = 0
 
-        columns.foreach {
+        columns.foreach { column =>
 
-          case column: BoolColumn => column(j + 1) = values(k).asInstanceOf[Boolean]
-          case column: ByteColumn => column(j + 1) = values(k).asInstanceOf[Byte]
-          case column: CharColumn => column(j + 1) = values(k).asInstanceOf[Char]
-          case column: DoubleColumn => column(j + 1) = values(k).asInstanceOf[Double]
-          case column: FloatColumn => column(j + 1) = values(k).asInstanceOf[Float]
-          case column: IntColumn => column(j + 1) = values(k).asInstanceOf[Int]
-          case column: LongColumn => column(j + 1) = values(k).asInstanceOf[Long]
-          case column: ShortColumn => column(j + 1) = values(k).asInstanceOf[Short]
-          case column: MonthColumn => column(j + 1) = values(k).asInstanceOf[YearMonth]
-          case column: DateColumn => column(j + 1) = values(k).asInstanceOf[LocalDate]
-          case column: MinuteColumn => column(j + 1) = values(k).asInstanceOf[Minutes]
-          case column: SecondColumn => column(j + 1) = values(k).asInstanceOf[Seconds]
-          case column: TimeColumn => column(j + 1) = values(k).asInstanceOf[LocalTime]
-          case column: DateTimeColumn => column(j + 1) = values(k).asInstanceOf[LocalDateTime]
-          case column: TimestampColumn => column(j + 1) = values(k).asInstanceOf[Timestamp]
-          case column: SymbolColumn => column(j + 1) = values(k).asInstanceOf[Symbol]
-          case column: StringColumn => column(j + 1) = values(k).asInstanceOf[String]
+          column match {
+
+            case column: BoolColumn => column(j + 1) = values(k).asInstanceOf[Boolean]
+            case column: ByteColumn => column(j + 1) = values(k).asInstanceOf[Byte]
+            case column: CharColumn => column(j + 1) = values(k).asInstanceOf[Char]
+            case column: DoubleColumn => column(j + 1) = values(k).asInstanceOf[Double]
+            case column: FloatColumn => column(j + 1) = values(k).asInstanceOf[Float]
+            case column: IntColumn => column(j + 1) = values(k).asInstanceOf[Int]
+            case column: LongColumn => column(j + 1) = values(k).asInstanceOf[Long]
+            case column: ShortColumn => column(j + 1) = values(k).asInstanceOf[Short]
+            case column: MonthColumn => column(j + 1) = values(k).asInstanceOf[YearMonth]
+            case column: DateColumn => column(j + 1) = values(k).asInstanceOf[LocalDate]
+            case column: MinuteColumn => column(j + 1) = values(k).asInstanceOf[Minutes]
+            case column: SecondColumn => column(j + 1) = values(k).asInstanceOf[Seconds]
+            case column: TimeColumn => column(j + 1) = values(k).asInstanceOf[LocalTime]
+            case column: DateTimeColumn => column(j + 1) = values(k).asInstanceOf[LocalDateTime]
+            case column: TimestampColumn => column(j + 1) = values(k).asInstanceOf[Timestamp]
+            case column: SymbolColumn => column(j + 1) = values(k).asInstanceOf[Symbol]
+            case column: StringColumn => column(j + 1) = values(k).asInstanceOf[String]
+
+          }
 
           k += 1
 
@@ -285,7 +295,7 @@ class Table {
 
       val primary = Table.this(label)
 
-      for(i <- 1 to primary.length - 1) {
+      for(i <- 0 to primary.length - 1) {
 
         var pos = -1
         var value: Any = null
@@ -610,30 +620,33 @@ class Table {
 
   /** labels of columns.
    *
-   * @return The labels of columns.
+   * @return the labels of columns.
    */
   def labels =
-    map.keys.head match {
+    if(map.keys.size == 0)
+      null
+    else
+      map.keys.head match {
 
-      case label: Boolean => new BoolColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Boolean]]
-      case label: Byte => new ByteColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Byte]]
-      case label: Char => new CharColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Char]]
-      case label: Double => new DoubleColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Double]]
-      case label: Float => new FloatColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Float]]
-      case label: Int => new IntColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Int]]
-      case label: Long => new LongColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Long]]
-      case label: Short => new ShortColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Short]]
-      case label: YearMonth => new MonthColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[YearMonth]]
-      case label: LocalDate => new DateColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[LocalDate]]
-      case label: Minutes => new MinuteColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Minutes]]
-      case label: Seconds => new SecondColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Seconds]]
-      case label: LocalTime => new TimeColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[LocalTime]]
-      case label: LocalDateTime => new DateTimeColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[LocalDateTime]]
-      case label: Timestamp => new TimestampColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Timestamp]]
-      case label: Symbol => new SymbolColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Symbol]]
-      case label: String => new StringColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[String]]
+        case label: Boolean => new BoolColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Boolean]]
+        case label: Byte => new ByteColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Byte]]
+        case label: Char => new CharColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Char]]
+        case label: Double => new DoubleColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Double]]
+        case label: Float => new FloatColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Float]]
+        case label: Int => new IntColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Int]]
+        case label: Long => new LongColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Long]]
+        case label: Short => new ShortColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Short]]
+        case label: YearMonth => new MonthColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[YearMonth]]
+        case label: LocalDate => new DateColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[LocalDate]]
+        case label: Minutes => new MinuteColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Minutes]]
+        case label: Seconds => new SecondColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Seconds]]
+        case label: LocalTime => new TimeColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[LocalTime]]
+        case label: LocalDateTime => new DateTimeColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[LocalDateTime]]
+        case label: Timestamp => new TimestampColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Timestamp]]
+        case label: Symbol => new SymbolColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[Symbol]]
+        case label: String => new StringColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[String]]
 
-    }
+      }
 
   def update(label: Any, column: TypedColumn[_]) {
 

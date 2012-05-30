@@ -38,6 +38,8 @@ import widebase.db.column. {
 
 }
 
+import widebase.db.table.Table
+
 import widebase.io.column. {
 
   FileColumnFinder,
@@ -76,6 +78,101 @@ class Database protected[db](val path: String, val segment: SegmentMap) {
 
   object tables extends FileRecordEditor(path) {
 
+    /** Routines that handle find within database. */
+    object find extends FileTableFind(path) {
+
+      protected val finder = new FileColumnFinder(path)
+
+      /** Checks whether column exists within directory table.
+        *
+        * @param name of table
+        * @param parted partition name
+        * @param segmented path of segment
+        *
+        * @return true if exists, else false
+       */
+      def col(name: String)
+      (implicit parted: String = null, segmented: File = null) =
+        finder.find(name)(parted, segmented)
+
+    }
+
+    /** Routines that handle load from database. */
+    object load extends FileTableLoad(path) {
+
+      protected val loader = new FileColumnLoader(path)
+
+      /** Load column from directory table.
+        *
+        * @param name of table
+        * @param label label of column
+        * @param indexable column
+        * @param amount values to load, 0 load all
+        * @param parted partition name
+        * @param segmented path of segment
+        *
+        * @return [[widebase.db.column.TypedColumn]]
+       */
+      def col(
+        name: String,
+        label: String,
+        indexable: Boolean = false,
+        amount: Int = 0)
+        (implicit parted: String = null, segmented: File = null) =
+        loader.load(name, label, indexable, amount)(parted, segmented)
+
+    }
+
+    /** Routines that handle map from database. */
+    object map extends FileTableMap(path) {
+
+      protected val mapper = new FileColumnMapper(path)
+
+      /** Map column from directory table.
+        *
+        * @param name of table
+        * @param label label of column
+        * @param amount values to load, 0 load all
+        * @param parted partition name
+        * @param segmented path of segment
+        *
+        * @return [[widebase.db.column.TypedColumn]]
+       */
+      def col(
+        name: String,
+        label: String,
+        amount: Int = 0)
+        (implicit parted: String = null, segmented: File = null) =
+        mapper.map(name, label, amount)(parted, segmented)
+
+    }
+
+    /** Routines that handle save into database. */
+    object save extends FileTableSave(path) {
+
+      protected val saver = new FileColumnSaver(path)
+
+      /** Save column into directory table.
+        *
+        * @param name of table
+        * @param label of column
+        * @param column itself
+        * @param indexable column
+        * @param parted partition name
+        * @param segmented path of segment
+       */
+      def col[A](
+        name: String,
+        label: String,
+        column: TypedColumn[A],
+        indexable: Boolean = false)
+        (implicit parted: String = null, segmented: File = null) {
+
+        saver.save(name, label, column, indexable)(parted, segmented)
+
+      }
+    }
+
     /** Attach column into directory table.
       *
       * @param name of table
@@ -87,7 +184,7 @@ class Database protected[db](val path: String, val segment: SegmentMap) {
     def attach[A](name: String, label: Any, column: TypedColumn[A])
       (implicit parted: String = null, segmented: File = null) {
 
-      save.col(name, label.toString, column)(parted, segmented)
+      save.col(name, label.toString, column, true)(parted, segmented)
 
       val labels = load.col(name, ".d")(parted, segmented)
 
@@ -113,7 +210,7 @@ class Database protected[db](val path: String, val segment: SegmentMap) {
 
       }
 
-      save.col(name, ".d", labels, true)(parted, segmented)
+      save.col(name, ".d", labels)(parted, segmented)
 
     }
 
@@ -151,96 +248,8 @@ class Database protected[db](val path: String, val segment: SegmentMap) {
 
       }
 
-      save.col(name, ".d", labels, true)(parted, segmented)
+      save.col(name, ".d", labels)(parted, segmented)
 
-    }
-
-    /** Finds tables within database. */
-    object find extends FileTableFind(path) {
-
-      protected val finder = new FileColumnFinder(path)
-
-      /** Checks whether column exists within directory table.
-        *
-        * @param name of table
-        * @param parted partition name
-        * @param segmented path of segment
-        *
-        * @return true if exists, else false
-       */
-      def col(name: String)
-      (implicit parted: String = null, segmented: File = null) =
-        finder.find(name)(parted, segmented)
-
-    }
-
-    /** Loads tables within database. */
-    object load extends FileTableLoad(path) {
-
-      protected val loader = new FileColumnLoader(path)
-
-      /** Loads columns from directory table.
-        *
-        * @param name of table
-        * @param label label of column
-        * @param parted partition name
-        * @param segmented path of segment
-        *
-        * @return [[widebase.db.column.TypedColumn]]
-       */
-      def col(
-        name: String,
-        label: String)
-        (implicit parted: String = null, segmented: File = null) =
-        loader.load(name, label)(parted, segmented)
-
-    }
-
-    /** Map tables within database. */
-    object map extends FileTableMap(path) {
-
-      protected val mapper = new FileColumnMapper(path)
-
-      /** Map columns from directory table.
-        *
-        * @param name of table
-        * @param label label of column
-        * @param parted partition name
-        * @param segmented path of segment
-        *
-        * @return [[widebase.db.column.TypedColumn]]
-       */
-      def col(
-        name: String,
-        label: String)
-        (implicit parted: String = null, segmented: File = null) =
-        mapper.map(name, label)(parted, segmented)
-
-    }
-
-    /** Saves tables within database. */
-    object save extends FileTableSave(path) {
-
-      protected val saver = new FileColumnSaver(path)
-
-      /** Saves columns into directory table.
-        *
-        * @param name of table
-        * @param label label of column
-        * @param column self-explanatory
-        * @param parted partition name
-        * @param segmented path of segment
-       */
-      def col[A](
-        name: String,
-        label: String,
-        column: TypedColumn[A],
-        seamless: Boolean = false)
-        (implicit parted: String = null, segmented: File = null) {
-
-        saver.save(name, label, column, seamless)(parted, segmented)
-
-      }
     }
   }
 }

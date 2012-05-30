@@ -243,24 +243,47 @@ object Record extends Logger with Loggable {
     table.columns.foreach(column => column.clear)
 
     started = System.currentTimeMillis
-    val mapped = map(name)
-    info("Dir table mapped " + records + " records in " +
+    val loaded = load.dir(name)
+    info("Dir table loaded " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
-    var r = 0
+    var loadedR = 0
 
     started = System.currentTimeMillis
-    mapped.records.foreach { record =>
+    loaded.records.foreach { record =>
 
-      r += 1
+      loadedR += 1
 
-      if(debug || r == mapped.records.length)
-        println("Record " + r + ": " + record)
+      if(debug || loadedR == loaded.records.length)
+        println("Record " + loadedR + ": " + record)
       else
         record
 
     }
-    info("Dir table iterated " + records + " records in " +
+    info("Dir table loaded iterated " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    loaded.columns.foreach(column => column.clear)
+
+    started = System.currentTimeMillis
+    val mapped = map(name)
+    info("Dir table mapped " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    var mappedR = 0
+
+    started = System.currentTimeMillis
+    mapped.records.foreach { record =>
+
+      mappedR += 1
+
+      if(debug || mappedR == mapped.records.length)
+        println("Record " + mappedR + ": " + record)
+      else
+        record
+
+    }
+    info("Dir table mapped iterated " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
   }
@@ -332,19 +355,19 @@ object Record extends Logger with Loggable {
     table.columns.foreach(column => column.clear)
 
     started = System.currentTimeMillis
-    val tables = map.dates(
+    val loaded = load.dates(
       name,
       new LocalDate(millis),
       new LocalDate(millis).plusDays(parts)).tables
-    info("Parted dir table mapped " + records + " records in " +
+    info("Parted dir table loaded " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
-    var p = 0
+    var loadedP = 0
 
     started = System.currentTimeMillis
-    for(table <- tables) {
+    for(table <- loaded) {
 
-      p += 1
+      loadedP += 1
 
       var r = 0
 
@@ -352,14 +375,47 @@ object Record extends Logger with Loggable {
 
         r += 1
 
-        if(debug || (p == parts && r == table.records.length / parts))
+        if(debug || (loadedP == parts && r == table.records.length / parts))
           println("Record " + r + ": " + record)
         else
           record
 
       }
     }
-    info("Parted dir table iterated " + records + " records in " +
+    info("Parted dir table loaded iterated " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    loaded.foreach(table => table.columns.foreach(column => column.clear))
+
+    started = System.currentTimeMillis
+    val mapped = map.dates(
+      name,
+      new LocalDate(millis),
+      new LocalDate(millis).plusDays(parts)).tables
+    info("Parted dir table mapped " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    var mappedP = 0
+
+    started = System.currentTimeMillis
+    for(table <- mapped) {
+
+      mappedP += 1
+
+      var r = 0
+
+      table.records.foreach { record =>
+
+        r += 1
+
+        if(debug || (mappedP == parts && r == table.records.length / parts))
+          println("Record " + r + ": " + record)
+        else
+          record
+
+      }
+    }
+    info("Parted dir table mapped iterated " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
   }

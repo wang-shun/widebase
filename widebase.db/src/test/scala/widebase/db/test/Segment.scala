@@ -367,6 +367,78 @@ object Segment extends Logger with Loggable {
     table.columns.foreach(column => column.clear)
 
     started = System.currentTimeMillis
+    val loaded = load.dir(name)(null, "test".S)
+    info("Dir table loaded " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    bools = loaded("Bool").asInstanceOf[BoolColumn]
+    bytes = loaded("Byte").asInstanceOf[ByteColumn]
+    chars = loaded("Char").asInstanceOf[CharColumn]
+    doubles = loaded("Double").asInstanceOf[DoubleColumn]
+    floats = loaded("Float").asInstanceOf[FloatColumn]
+    ints = loaded("Int").asInstanceOf[IntColumn]
+    longs = loaded("Long").asInstanceOf[LongColumn]
+    shorts = loaded("Short").asInstanceOf[ShortColumn]
+    months = loaded("Month").asInstanceOf[MonthColumn]
+    dates = loaded("Date").asInstanceOf[DateColumn]
+    minutes = loaded("Minute").asInstanceOf[MinuteColumn]
+    seconds = loaded("Second").asInstanceOf[SecondColumn]
+    times = loaded("Time").asInstanceOf[TimeColumn]
+    dateTimes = loaded("DateTime").asInstanceOf[DateTimeColumn]
+    timestamps = loaded("Timestamp").asInstanceOf[TimestampColumn]
+    symbols = loaded("Symbol").asInstanceOf[SymbolColumn]
+    strings = loaded("String").asInstanceOf[StringColumn]
+
+    started = System.currentTimeMillis
+    for(r <- 0 to records - 1)
+      if(debug || r == records - 1) {
+
+        println("Bool: " + bools(r))
+        println("Byte: " + bytes(r))
+        println("Char: " + chars(r).toInt + " (as Int)")
+        println("Double: " + doubles(r))
+        println("Float: " + floats(r))
+        println("Int: " + ints(r))
+        println("Long: " + longs(r))
+        println("Short: " + shorts(r))
+        println("Month: " + months(r))
+        println("Date: " + dates(r))
+        println("Minute: " + minutes(r))
+        println("Second: " + seconds(r))
+        println("Time: " + times(r))
+        println("DateTime: " + dateTimes(r))
+        println("Timestamp: " + timestamps(r))
+        println("Symbol: " + symbols(r))
+        println("String: " + strings(r))
+
+      } else {
+
+        bools(r)
+        bytes(r)
+        chars(r)
+        doubles(r)
+        floats(r)
+        ints(r)
+        longs(r)
+        shorts(r)
+        months(r)
+        dates(r)
+        minutes(r)
+        seconds(r)
+        times(r)
+        dateTimes(r)
+        timestamps(r)
+        symbols(r)
+        strings(r)
+
+      }
+
+    info("Dir table loaded iterated " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    loaded.columns.foreach(column => column.clear)
+
+    started = System.currentTimeMillis
     val mapped = map(name)(null, "test".S)
     info("Dir table mapped " + records + " records in " +
       diff(started, System.currentTimeMillis))
@@ -544,19 +616,19 @@ object Segment extends Logger with Loggable {
     table.columns.foreach(column => column.clear)
 
     started = System.currentTimeMillis
-    val tables = map.dates(
+    val loaded = load.dates(
       name,
       new LocalDate(millis),
       new LocalDate(millis).plusDays(parts))("test".S).tables
-    info("Parted dir table mapped " + records + " records in " +
+    info("Parted dir table loaded " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
-    var p = 0
+    var loadedP = 0
 
     started = System.currentTimeMillis
-    for(table <- tables) {
+    for(table <- loaded) {
 
-      p += 1
+      loadedP += 1
 
       partitions = table("Partition").asInstanceOf[DateColumn]
       bools = table("Bool").asInstanceOf[BoolColumn]
@@ -578,7 +650,7 @@ object Segment extends Logger with Loggable {
       strings = table("String").asInstanceOf[StringColumn]
 
       for(r <- 0 to records / parts - 1)
-        if(debug || (p == parts && r == records / parts - 1)) {
+        if(debug || (loadedP == parts && r == records / parts - 1)) {
 
           println("Partition: " + partitions(r))
           println("Bool: " + bools(r))
@@ -623,7 +695,92 @@ object Segment extends Logger with Loggable {
         }
     }
 
-    info("Parted dir table iterated " + records + " records in " +
+    info("Parted dir table loaded iterated " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    loaded.foreach(table => table.columns.foreach(column => column.clear))
+
+    started = System.currentTimeMillis
+    val mapped = map.dates(
+      name,
+      new LocalDate(millis),
+      new LocalDate(millis).plusDays(parts))("test".S).tables
+    info("Parted dir table mapped " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    var mappedP = 0
+
+    started = System.currentTimeMillis
+    for(table <- mapped) {
+
+      mappedP += 1
+
+      partitions = table("Partition").asInstanceOf[DateColumn]
+      bools = table("Bool").asInstanceOf[BoolColumn]
+      bytes = table("Byte").asInstanceOf[ByteColumn]
+      chars = table("Char").asInstanceOf[CharColumn]
+      doubles = table("Double").asInstanceOf[DoubleColumn]
+      floats = table("Float").asInstanceOf[FloatColumn]
+      ints = table("Int").asInstanceOf[IntColumn]
+      longs = table("Long").asInstanceOf[LongColumn]
+      shorts = table("Short").asInstanceOf[ShortColumn]
+      months = table("Month").asInstanceOf[MonthColumn]
+      dates = table("Date").asInstanceOf[DateColumn]
+      minutes = table("Minute").asInstanceOf[MinuteColumn]
+      seconds = table("Second").asInstanceOf[SecondColumn]
+      times = table("Time").asInstanceOf[TimeColumn]
+      dateTimes = table("DateTime").asInstanceOf[DateTimeColumn]
+      timestamps = table("Timestamp").asInstanceOf[TimestampColumn]
+      symbols = table("Symbol").asInstanceOf[SymbolColumn]
+      strings = table("String").asInstanceOf[StringColumn]
+
+      for(r <- 0 to records / parts - 1)
+        if(debug || (mappedP == parts && r == records / parts - 1)) {
+
+          println("Partition: " + partitions(r))
+          println("Bool: " + bools(r))
+          println("Byte: " + bytes(r))
+          println("Char: " + chars(r).toInt + " (as Int)")
+          println("Double: " + doubles(r))
+          println("Float: " + floats(r))
+          println("Int: " + ints(r))
+          println("Long: " + longs(r))
+          println("Short: " + shorts(r))
+          println("Month: " + months(r))
+          println("Date: " + dates(r))
+          println("Minute: " + minutes(r))
+          println("Second: " + seconds(r))
+          println("Time: " + times(r))
+          println("DateTime: " + dateTimes(r))
+          println("Timestamp: " + timestamps(r))
+          println("Symbol: " + symbols(r))
+          println("String: " + strings(r))
+
+        } else {
+
+          partitions(r)
+          bools(r)
+          bytes(r)
+          chars(r)
+          doubles(r)
+          floats(r)
+          ints(r)
+          longs(r)
+          shorts(r)
+          months(r)
+          dates(r)
+          minutes(r)
+          seconds(r)
+          times(r)
+          dateTimes(r)
+          timestamps(r)
+          symbols(r)
+          strings(r)
+
+        }
+    }
+
+    info("Parted dir table mapped iterated " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
   }

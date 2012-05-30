@@ -151,11 +151,11 @@ abstract class FileTableSave(path: String) {
     val saver = new FileColumnSaver(path)
 
     // Save column labels
-    saver.save(name, ".d", table.labels, true)(null, segmented)
+    saver.save(name, ".d", table.labels)(null, segmented)
 
     // Save column values
     table.foreach { case (label, column) =>
-      saver.save(name, label, column)(null, segmented) }
+      saver.save(name, label, column, true)(null, segmented) }
 
   }
 
@@ -414,7 +414,7 @@ abstract class FileTableSave(path: String) {
         releaseWriters
 
         // Set column labels
-        saver.save(name, ".d", table.labels, true)(partition, segmented)
+        saver.save(name, ".d", table.labels)(partition, segmented)
 
         dir =
           if(segmented == null)

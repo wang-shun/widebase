@@ -18,37 +18,48 @@ abstract class FileTableMap(path: String) {
   /** Map directory table from database.
     *
     * @param name of table
+    * @param amount values to map, 0 map all
     * @param parted partition name
     * @param segmented path of segment
     *
     * @return [[widebase.db.column.Table]]
    */
-  def apply(name: String)
+  def apply(name: String, amount: Int = 0)
   (implicit parted: String = null, segmented: File = null) = {
 
+    // New table
     val table = new Table
 
+    // Load column labels
     val loader = new FileColumnLoader(path)
-
     val labels = loader.load(name, ".d")(parted, segmented)
 
+    // Load column values
     val mapper = new FileColumnMapper(path)
 
-    val lastCol = mapper.map(name, labels.last)(parted, segmented)
+    if(amount > 0)
+      labels.foreach(label =>
+        table ++= (label, mapper.map(name, label, amount)(parted, segmented)))
+    else {
 
-    if(labels.length > 1) {
+      val lastCol = mapper.map(name, labels.last)(parted, segmented)
 
-      val amount = lastCol.length
+      if(labels.length > 1) {
 
-      for(i <- 0 to labels.length - 2) {
+        val amount = lastCol.length
 
-        val label = labels(i)
-        table ++= (label, mapper.map(name, label, amount)(parted, segmented))
+        for(i <- 0 to labels.length - 2) {
 
+          val label = labels(i)
+
+          table ++= (label, mapper.map(name, label, amount)(parted, segmented))
+
+        }
       }
-    }
 
-    table ++= (labels.last, lastCol)
+      table ++= (labels.last, lastCol)
+
+    }
 
     table
 

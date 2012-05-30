@@ -2,11 +2,13 @@ package widebase.io.table
 
 import java.io. { File, RandomAccessFile }
 
+import org.joda.time. { LocalDate, YearMonth, Years }
+
 import vario.filter.StreamFilter
 import vario.io.VariantReader
 
-import widebase.db.table.Table
-import widebase.io.column.ColumnReader
+import widebase.db.table. { PartitionMap, Table }
+import widebase.io.column. { ColumnReader, FileColumnLoader }
 
 /** Loads tables from database.
  *
@@ -70,6 +72,191 @@ abstract class FileTableLoad(path: String) {
     reader.close
 
     table
+
+  }
+
+  /** Load table from directory table.
+    *
+    * @param name of table
+    * @param amount values to map, 0 map all
+    * @param parted partition name
+    * @param segmented path of segment
+    *
+    * @return [[widebase.db.Table]]
+   */
+  def dir(
+    name: String,
+    amount: Int = 0)
+    (implicit parted: String = null, segmented: File = null) = {
+
+    // New table
+    val table = new Table
+
+    // Load column labels
+    val loader = new FileColumnLoader(path)
+    val labels = loader.load(name, ".d")(parted, segmented)
+
+    // Load column values
+    labels.foreach(label =>
+      table ++=
+        label ->
+        loader.load(name, label, true, amount)(parted, segmented))      
+
+    table
+
+  }
+
+  /** Load table from partitioned directory table by [[org.joda.time.LocalDate]]
+    *
+    * @param name of table
+    * @param from the [[org.joda.time.LocalDate]] from
+    * @param till the [[org.joda.time.LocalDate]] till
+    * @param segmented path of segment
+    *
+    * @return [[widebase.collection.mutable.PartitionMap]]
+   */
+  def dates(
+    name: String,
+    from: LocalDate,
+    till: LocalDate)(implicit segmented: File = null) = {
+
+    val dir =
+      if(segmented == null)
+        path
+      else
+        segmented.getPath
+
+    var parts = new PartitionMap
+
+    var i = from
+
+    while(i.compareTo(till) < 0) {
+
+      val partition = i.toString
+
+      if((new File(dir + "/" + partition + "/" + name)).exists)
+        parts += partition -> this.dir(name)(partition, segmented)
+
+      i = i.plusDays(1)
+
+    }
+
+    parts
+
+  }
+
+  /** Load table from partitioned directory table by [[scala.Int]]
+    *
+    * @param name of table
+    * @param from the [[scala.Int]] from
+    * @param till the [[scala.Int]] till
+    * @param segmented path of segment
+    *
+    * @return [[widebase.collection.mutable.PartitionMap]]
+   */
+  def ints(
+    name: String,
+    from: Int,
+    till: Int)(implicit segmented: File = null) = {
+
+    val dir =
+      if(segmented == null)
+        path
+      else
+        segmented.getPath
+
+    var parts = new PartitionMap
+
+    var i = from
+
+    for(i <- from to till) {
+
+      val partition = i.toString
+
+      if((new File(dir + "/" + partition + "/" + name)).exists)
+        parts += partition -> this.dir(name)(partition, segmented)
+
+    }
+
+    parts
+
+  }
+
+  /** Load table from partitioned directory table by [[org.joda.time.YearMonth]]
+    *
+    * @param name of table
+    * @param from the [[org.joda.time.YearMonth]] from
+    * @param till the [[org.joda.time.YearMonth]] till
+    * @param segmented path of segment
+    *
+    * @return [[widebase.collection.mutable.PartitionMap]]
+   */
+  def months(
+    name: String,
+    from: YearMonth,
+    till: YearMonth)(implicit segmented: File = null) = {
+
+    val dir =
+      if(segmented == null)
+        path
+      else
+        segmented.getPath
+
+    var parts = new PartitionMap
+
+    var i = from
+
+    while(i.compareTo(till) < 0) {
+
+      val partition = i.toString
+
+      if((new File(dir + "/" + partition + "/" + name)).exists)
+        parts += partition -> this.dir(name)(partition, segmented)
+
+      i = i.plusMonths(1)
+
+    }
+
+    parts
+
+  }
+
+  /** Load table from partitioned directory table by [[org.joda.time.Years]]
+    *
+    * @param name of table
+    * @param from the [[org.joda.time.Years]] from
+    * @param till the [[org.joda.time.Years]] till
+    * @param segmented path of segment
+    *
+    * @return [[widebase.collection.mutable.PartitionMap]]
+   */
+  def years(
+    name: String,
+    from: Years,
+    till: Years)(implicit segmented: File = null) = {
+
+    val dir =
+      if(segmented == null)
+        path
+      else
+        segmented.getPath
+
+    var parts = new PartitionMap
+
+    var i = from
+
+    while(i.compareTo(till) < 0) {
+
+      val partition = i.toString
+
+      if((new File(dir + "/" + partition + "/" + name)).exists)
+        parts += partition -> this.dir(name)(partition, segmented)
+
+      i = i.plus(1)
+
+    }
+
+    parts
 
   }
 }

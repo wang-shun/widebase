@@ -47,14 +47,21 @@ import widebase.io.filter. {
 /** Reads columns from channel.
  *
  * @param reader self-explanatory
+ * @param companion self-explanatory
  * @param filename only exception purpose
  *
  * @author myst3r10n
  */
-class ColumnReader(reader: VariantReader)(implicit filename: String = "") {
+class ColumnReader(
+  reader: VariantReader,
+  companion: VariantReader = null)
+  (implicit filename: String = "") {
 
-  /** Closes reader. */
+  /** Closes writer and companion. */
   def close {
+
+    if(companion != null)
+      companion.close
 
     reader.close
 
@@ -94,13 +101,17 @@ class ColumnReader(reader: VariantReader)(implicit filename: String = "") {
 
     // Read column length
     reader.mode = Datatype.Int
-    var length = reader.readInt
-
-    if(amount > 0)
-      length = amount
+    val length = 
+      if(amount > 0)
+        amount
+      else
+        reader.readInt
 
     // Read column values
-    reader.mode = typeOf
+    if(companion == null)
+      reader.mode = typeOf
+    else
+      reader.mode = typeOf
 
     typeOf match {
 
@@ -227,16 +238,50 @@ class ColumnReader(reader: VariantReader)(implicit filename: String = "") {
       case Datatype.Symbol =>
         val column = new SymbolColumn
 
-        while(column.length < length)
-          column += reader.readSymbol
+        if(companion == null)
+          while(column.length < length)
+            column += reader.readSymbol
+        else {
+
+          var lastEnded = 0L
+
+          reader.mode = Datatype.Long
+
+          while(column.length < length) {
+
+            val currendEnded = reader.readLong
+
+            column += companion.readSymbol((currendEnded - lastEnded).toInt)
+
+            lastEnded = currendEnded
+
+          }
+        }
 
         column
 
       case Datatype.String =>
         val column = new StringColumn
 
-        while(column.length < length)
-          column += reader.readString
+        if(companion == null)
+          while(column.length < length)
+            column += reader.readString
+        else {
+
+          var lastEnded = 0L
+
+          reader.mode = Datatype.Long
+
+          while(column.length < length) {
+
+            val currendEnded = reader.readLong
+
+            column += companion.readString((currendEnded - lastEnded).toInt)
+
+            lastEnded = currendEnded
+
+          }
+        }
 
         column
 

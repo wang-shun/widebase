@@ -20,8 +20,9 @@ abstract class FileColumnSave(path: String) {
   /** Saves columns into directory table.
     *
     * @param name of table
-    * @param label label of column
-    * @param column self-explanatory
+    * @param label of column
+    * @param column itself
+    * @param indexable column
     * @param parted partition name
     * @param segmented path of segment
    */
@@ -29,7 +30,7 @@ abstract class FileColumnSave(path: String) {
     name: String,
     label: Any,
     column: TypedColumn[A],
-    seamless: Boolean = false)
+    indexable: Boolean = false)
     (implicit parted: String = null, segmented: File = null) {
 
     var dir =
@@ -63,7 +64,7 @@ abstract class FileColumnSave(path: String) {
     var companion: VariantWriter = null
 
     if(
-      !seamless &&
+      indexable &&
       (column.typeOf == Datatype.String || column.typeOf == Datatype.Symbol)) {
 
       var companionFile: File = null

@@ -7,7 +7,7 @@ import vario.io.VariantReader
 
 import widebase.db.column.TypedColumn
 
-/** Loads columns from directory table.
+/** Load column from directory table.
  *
  * @param path of database
  *
@@ -17,10 +17,14 @@ abstract class FileColumnLoad(path: String) {
 
   import widebase.io
 
-  /** Loads columns from directory table.
+  /** Load column from directory table.
+    *
+    * @note Only seamless columns
     *
     * @param name of table
     * @param label label of column
+    * @param indexable column
+    * @param amount values to load, 0 load all
     * @param parted partition name
     * @param segmented path of segment
     *
@@ -28,7 +32,9 @@ abstract class FileColumnLoad(path: String) {
    */
   def apply(
     name: String,
-    label: Any)
+    label: Any,
+    indexable: Boolean = false,
+    amount: Int = 0)
     (implicit parted: String = null, segmented: File = null): TypedColumn[_] = {
 
     var filename =
@@ -44,6 +50,41 @@ abstract class FileColumnLoad(path: String) {
 
     val channel = new RandomAccessFile(filename, "r").getChannel
 
+    var companion: VariantReader = null
+
+    if(indexable) {
+
+      def lookupCompanion: String = {
+
+        val companionFiles = Array(
+          new File(filename + ".sym"),
+          new File(filename + ".str"))
+
+        companionFiles.foreach(companionFile =>
+          if(companionFile.exists)
+            return companionFile.getPath)
+
+        null
+
+      }
+
+      val companionFilename = lookupCompanion
+
+      if(companionFilename != null) {
+
+        val channel = new RandomAccessFile(companionFilename, "rw").getChannel
+
+        companion = new VariantReader(channel, StreamFilter.None) {
+
+          override val charset = props.charsets.loader
+
+          override def capacity = props.capacities.loader
+          override def order = props.orders.loader
+
+        }
+      }
+    }
+
     val vreader = new VariantReader(channel, StreamFilter.None) {
 
       override val charset = props.charsets.loader
@@ -53,11 +94,11 @@ abstract class FileColumnLoad(path: String) {
 
     }
 
-    val reader = new ColumnReader(vreader)(filename)
+    val reader = new ColumnReader(vreader, companion)(filename)
 
     try {
 
-      reader.read()
+      reader.read(amount)
 
     } finally {
 

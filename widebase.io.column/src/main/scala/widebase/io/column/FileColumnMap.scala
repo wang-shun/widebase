@@ -114,10 +114,11 @@ class FileColumnMap(path: String) {
 
     // Read column length
     reader.mode = Datatype.Int
-    var records = reader.readInt
-
-    if(amount > 0)
-      records = amount
+    val records =
+      if(amount > 0)
+        amount
+      else
+        reader.readInt
 
     reader.close
 
