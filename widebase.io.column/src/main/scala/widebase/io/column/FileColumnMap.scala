@@ -79,8 +79,7 @@ class FileColumnMap(path: String) {
     filename +=  "/" + name + "/" + label.toString
 
     val reader = new FileVariantReader(
-      new RandomAccessFile(filename, "r").getChannel,
-      StreamFilter.None) {
+      new RandomAccessFile(filename, "r").getChannel) {
 
       override val charset = props.charsets.mapper
 

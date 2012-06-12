@@ -2,7 +2,7 @@ package widebase.util
 
 import java.nio.charset.Charset
 
-import vario.filter. { ByteOrder, StreamFilter }
+import vario.filter. { ByteOrder, CompressionLevel, StreamFilter }
 
 /** System properties.
  *
@@ -76,6 +76,24 @@ object SysProps {
 
   }
 
+  /** Get system property of [[vario.filter.CompressionLevel]].
+   *
+   * @param key of property
+   * @param default property
+   *
+   * @return system property or default value
+   */
+  def getLevel(key: String, default: Int): Int = {
+
+    val property = Integer.getInteger(key)
+
+    if(property == null)
+      return default
+
+    property
+
+  }
+
   /** Get system property of [[vario.filter.ByteOrder]].
    *
    * @param key of property
@@ -133,6 +151,17 @@ object SysProps {
    * @param value of property
    */
   def setFilter(key: String, value: StreamFilter) {
+
+    System.setProperty(key, value.toString)
+
+  }
+
+  /** Set system property of [[vario.filter.CompressionLevel]].
+   *
+   * @param key of property
+   * @param value of property
+   */
+  def setLevel(key: String, value: Int) {
 
     System.setProperty(key, value.toString)
 

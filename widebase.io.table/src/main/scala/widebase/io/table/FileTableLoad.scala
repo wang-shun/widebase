@@ -37,6 +37,7 @@ abstract class FileTableLoad(path: String) {
       filter match {
 
         case StreamFilter.Gzip => ".gz"
+        case StreamFilter.Zlib => ".zip"
         case _ => ""
 
       }

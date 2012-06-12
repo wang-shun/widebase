@@ -188,7 +188,7 @@ class FileRecordEditor(path: String) {
 
     val channel = new RandomAccessFile(filename, "rw").getChannel
     channel.tryLock
-    val writer = new FileVariantWriter(channel, StreamFilter.None) {
+    val writer = new FileVariantWriter(channel) {
 
       override val charset = props.charsets.set
 
@@ -433,7 +433,7 @@ class FileRecordEditor(path: String) {
 
     val channel = new RandomAccessFile(filename, "rw").getChannel
     channel.tryLock
-    var writer = new FileVariantWriter(channel, StreamFilter.None) {
+    var writer = new FileVariantWriter(channel) {
 
       override val charset = props.charsets.append
 
@@ -463,7 +463,7 @@ class FileRecordEditor(path: String) {
 
       var channel = new RandomAccessFile(filename, "rw").getChannel
       channel.tryLock
-      companion = new FileVariantWriter(channel, StreamFilter.None) {
+      companion = new FileVariantWriter(channel) {
 
         override val charset = props.charsets.append
 

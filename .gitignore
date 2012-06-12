@@ -1,5 +1,8 @@
 !usr/
 usr/*
+!usr/csv/
+usr/csv/*
+!usr/csv/*.gz
 !usr/data/
 usr/data/*
 !usr/data/test/

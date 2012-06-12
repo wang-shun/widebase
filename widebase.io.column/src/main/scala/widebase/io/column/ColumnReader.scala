@@ -101,11 +101,10 @@ class ColumnReader(
 
     // Read column length
     reader.mode = Datatype.Int
-    val length = 
-      if(amount > 0)
-        amount
-      else
-        reader.readInt
+    var length = reader.readInt // Must read!
+
+    if(amount > 0)
+      length = amount
 
     // Read column values
     if(companion == null)
@@ -249,11 +248,11 @@ class ColumnReader(
 
           while(column.length < length) {
 
-            val currendEnded = reader.readLong
+            val currentEnded = reader.readLong
 
-            column += companion.readSymbol((currendEnded - lastEnded).toInt)
+            column += companion.readSymbol((currentEnded - lastEnded).toInt)
 
-            lastEnded = currendEnded
+            lastEnded = currentEnded
 
           }
         }
@@ -274,11 +273,11 @@ class ColumnReader(
 
           while(column.length < length) {
 
-            val currendEnded = reader.readLong
+            val currentEnded = reader.readLong
 
-            column += companion.readString((currendEnded - lastEnded).toInt)
+            column += companion.readString((currentEnded - lastEnded).toInt)
 
-            lastEnded = currendEnded
+            lastEnded = currentEnded
 
           }
         }

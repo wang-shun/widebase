@@ -17,12 +17,12 @@ import widebase.util.SysProps
  *
  * Package property keys:
  * {{{
- * widebase.io.table. { capacity, charset, filter, order }
+ * widebase.io.table. { capacity, charset, filter, level, order }
  * }}}
  *
  * Individual property keys:
  * {{{
- * widebase.io.table. { capacities._, charsets._, filters._, orders._ }
+ * widebase.io.table. { capacities._, charsets._, filters._, levels._, orders._ }
  * }}}
  *
  * @author myst3r10n
@@ -112,6 +112,25 @@ object Props extends PropsLike {
       finder = SysProps.getFilter(packageName + ".filters.saver", defaultFilter)
       loader = SysProps.getFilter(packageName + ".filters.loader", defaultFilter)
       saver = SysProps.getFilter(packageName + ".filters.saver", defaultFilter)
+
+    }
+  }
+
+  /** Compression level properties.
+   *
+   * @author myst3r10n
+   */
+  object levels {
+
+    /** Used compression level to save tables. */
+    var saver: Int = _
+
+    reset
+
+    /** Resets compression level properties. */
+    def reset {
+
+      saver = SysProps.getLevel(packageName + ".levels.saver", defaultLevel)
 
     }
   }

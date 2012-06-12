@@ -15,6 +15,8 @@ object WidebaseBuild extends Build {
       widebaseDbColumn,
       widebaseDbTable,
       widebaseIoColumn,
+      widebaseIoCsv,
+      widebaseIoCsvFilter,
       widebaseIoFilter,
       widebaseIoTable,
       widebaseUtil)
@@ -43,6 +45,16 @@ object WidebaseBuild extends Build {
       widebaseDbColumn,
       widebaseIoFilter,
       widebaseUtil)
+
+  /** I/O CSV */
+  lazy val widebaseIoCsv = Project(
+    "widebase-io-csv",
+    file("widebase.io.csv")) dependsOn(widebaseDb, widebaseIoCsvFilter)
+
+  /** I/O CSV Filter */
+  lazy val widebaseIoCsvFilter = Project(
+    "widebase-io-csv-filter",
+    file("widebase.io.csv.filter")) dependsOn(widebaseDbTable)
 
   /** I/O Filter */
   lazy val widebaseIoFilter = Project(

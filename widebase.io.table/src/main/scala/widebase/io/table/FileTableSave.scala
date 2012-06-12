@@ -56,6 +56,7 @@ import widebase.io.filter.MagicId
 abstract class FileTableSave(path: String) {
 
   import PartitionDomain.PartitionDomain
+
   import vario.filter.StreamFilter.StreamFilter
 
   /** Saves table into database.
@@ -63,18 +64,21 @@ abstract class FileTableSave(path: String) {
     * @param name of table
     * @param table self-explanatory
     * @param filter self-explanatory
+    * @param level of compression 0-9
     * @param segmented path of segment
    */
   def apply(
     name: String,
     table: Table,
-    filter: StreamFilter = props.filters.saver)
+    filter: StreamFilter = props.filters.saver,
+    level: Int = props.levels.saver)
     (implicit segmented: File = null) {
 
     val fileExtension =
       filter match {
 
         case StreamFilter.Gzip => ".gz"
+        case StreamFilter.Zlib => ".zip"
         case _ => ""
 
       }
@@ -92,7 +96,7 @@ abstract class FileTableSave(path: String) {
 
     val channel = new RandomAccessFile(file.getPath, "rw").getChannel
     channel.tryLock
-    val vwriter = new VariantWriter(channel, filter) {
+    val vwriter = new VariantWriter(channel, filter, level) {
 
       override val charset = props.charsets.saver
 
@@ -190,7 +194,7 @@ abstract class FileTableSave(path: String) {
 
         val channel = new RandomAccessFile(file.getPath, "rw").getChannel
         channel.tryLock
-        writers += new FileVariantWriter(channel, StreamFilter.None) {
+        writers += new FileVariantWriter(channel) {
 
           override val charset = props.charsets.parted
 
@@ -237,7 +241,7 @@ abstract class FileTableSave(path: String) {
             new RandomAccessFile(companion.getPath, "rw").getChannel
           channel.tryLock
 
-          val writer = new FileVariantWriter(channel, StreamFilter.None) {
+          val writer = new FileVariantWriter(channel) {
 
             override val charset = props.charsets.parted
 

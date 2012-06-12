@@ -1,6 +1,6 @@
 package widebase.io.table
 
-import vario.filter.StreamFilter
+import vario.filter. { CompressionLevel, StreamFilter }
 
 import widebase.util.SysProps
 
@@ -14,6 +14,11 @@ trait PropsLike extends widebase.io.column.PropsLike {
   protected val defaultFilter = SysProps.getFilter(
     packageName + ".filter",
     SysProps.getFilter("widebase.io.filter", StreamFilter.None))
+
+  /** Default level. */
+  protected val defaultLevel = SysProps.getLevel(
+    packageName + ".level",
+    SysProps.getLevel("widebase.io.level", CompressionLevel.Default))
 
 }
 
