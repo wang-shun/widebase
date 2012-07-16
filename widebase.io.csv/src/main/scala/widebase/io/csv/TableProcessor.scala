@@ -73,13 +73,13 @@ import widebase.io.table.PartitionDomain
  * Example how to import trade data into directory table:
  *
  * {{{
- * csv.table.to(cli.path, "trade", "ZddS", ",", filter.none, "trade.csv.gz", "g")
+ * csv.table.to(dbi.path, "trade", "ZddS", ",", filter.none, "trade.csv.gz", "g")
  * }}}
  *
  * Example how to import trade data partitioned by end of day into directory table:
  *
  * {{{
- * csv.table.to(cli.path, "trade", "ZddS", ",", filter.none, "trade.csv.gz", "g")('daily)
+ * csv.table.to(dbi.path, "trade", "ZddS", ",", filter.none, "trade.csv.gz", "g")('daily)
  * }}}
  *
  * @author myst3r10n
