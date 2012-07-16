@@ -110,8 +110,8 @@ abstract class FileTableLoad(path: String) {
   /** Load table from partitioned directory table by [[org.joda.time.LocalDate]]
     *
     * @param name of table
-    * @param from the [[org.joda.time.LocalDate]] from
-    * @param till the [[org.joda.time.LocalDate]] till
+    * @param from date
+    * @param till date
     * @param segmented path of segment
     *
     * @return [[widebase.collection.mutable.PartitionMap]]
@@ -149,8 +149,8 @@ abstract class FileTableLoad(path: String) {
   /** Load table from partitioned directory table by [[scala.Int]]
     *
     * @param name of table
-    * @param from the [[scala.Int]] from
-    * @param till the [[scala.Int]] till
+    * @param from [[scala.Int]]
+    * @param till [[scala.Int]]
     * @param segmented path of segment
     *
     * @return [[widebase.collection.mutable.PartitionMap]]
@@ -168,8 +168,6 @@ abstract class FileTableLoad(path: String) {
 
     var parts = new PartitionMap
 
-    var i = from
-
     for(i <- from to till) {
 
       val partition = i.toString
@@ -186,8 +184,8 @@ abstract class FileTableLoad(path: String) {
   /** Load table from partitioned directory table by [[org.joda.time.YearMonth]]
     *
     * @param name of table
-    * @param from the [[org.joda.time.YearMonth]] from
-    * @param till the [[org.joda.time.YearMonth]] till
+    * @param from month
+    * @param till month
     * @param segmented path of segment
     *
     * @return [[widebase.collection.mutable.PartitionMap]]
@@ -225,8 +223,8 @@ abstract class FileTableLoad(path: String) {
   /** Load table from partitioned directory table by [[org.joda.time.Years]]
     *
     * @param name of table
-    * @param from the [[org.joda.time.Years]] from
-    * @param till the [[org.joda.time.Years]] till
+    * @param from year
+    * @param till year
     * @param segmented path of segment
     *
     * @return [[widebase.collection.mutable.PartitionMap]]
