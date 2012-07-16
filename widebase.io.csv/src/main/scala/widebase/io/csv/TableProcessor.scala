@@ -316,7 +316,7 @@ trait TableProcessor extends Logger with Loggable {
   /** Write a CSV file into database.
    *
    * @param path to database
-   * @param table name of table
+   * @param table name
    * @param tokens tokenized value types
    * @param delimiter of CSV file
    * @param filter individual processing
@@ -372,7 +372,7 @@ trait TableProcessor extends Logger with Loggable {
 
   }
 
-  /** Write a CSV file into database
+  /** Write a CSV file into database.
    *
    * @param path to database
    * @param table name of table
