@@ -5,9 +5,9 @@ object Dependency {
   object lib {
 
     val varioCollectionMutable =
-      Seq("com.github.vario" %% "vario-collection-mutable" % "0.4.1")
+      Seq("com.github.vario" %% "vario-collection-mutable" % "0.4.2")
 
-    val varioFilter = Seq("com.github.vario" %% "vario-filter" % "0.4.1")
+    val varioFilter = Seq("com.github.vario" %% "vario-filter" % "0.4.2")
 
   }
 
