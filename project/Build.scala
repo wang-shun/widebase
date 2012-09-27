@@ -49,7 +49,9 @@ object WidebaseBuild extends Build {
   /** I/O CSV */
   lazy val widebaseIoCsv = Project(
     "widebase-io-csv",
-    file("widebase.io.csv")) dependsOn(widebaseDb, widebaseIoCsvFilter)
+    file("widebase.io.csv")) dependsOn(
+    widebaseDb,
+    widebaseIoCsvFilter) settings(libraryDependencies ++= lib.log)
 
   /** I/O CSV Filter */
   lazy val widebaseIoCsvFilter = Project(
@@ -80,7 +82,7 @@ object WidebaseBuild extends Build {
   /** Build settings */
 	def buildSettings = Seq(
 		organization := "com.github.widebase",
-		version := "0.1.1",
+		version := "0.1.2",
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     resolvers ++= Seq(
       "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))
