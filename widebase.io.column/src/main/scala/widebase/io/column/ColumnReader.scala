@@ -114,14 +114,69 @@ class ColumnReader(
 
     typeOf match {
 
-      case Datatype.Bool => new BoolColumn ++= reader.readBool(length)
-      case Datatype.Byte => new ByteColumn ++= reader.read(length)
-      case Datatype.Char => new CharColumn ++= reader.readChar(length)
-      case Datatype.Double => new DoubleColumn ++= reader.readDouble(length)
-      case Datatype.Float => new FloatColumn ++= reader.readFloat(length)
-      case Datatype.Int => new IntColumn ++= reader.readInt(length)
-      case Datatype.Long => new LongColumn ++= reader.readLong(length)
-      case Datatype.Short => new ShortColumn ++= reader.readShort(length)
+      case Datatype.Bool =>
+        val column = new BoolColumn
+
+        if(column.length < length)
+          column ++= reader.readBool(length)
+
+        column
+
+      case Datatype.Byte =>
+        val column = new ByteColumn
+
+        if(column.length < length)
+          column ++= reader.read(length)
+
+        column
+
+      case Datatype.Char =>
+        val column = new CharColumn
+
+        if(column.length < length)
+          column ++= reader.readChar(length)
+
+        column
+
+      case Datatype.Double =>
+        val column = new DoubleColumn
+
+        if(column.length < length)
+          column ++= reader.readDouble(length)
+
+        column
+
+      case Datatype.Float =>
+        val column = new FloatColumn
+
+        if(column.length < length)
+          column ++= reader.readFloat(length)
+
+        column
+
+      case Datatype.Int =>
+        val column = new IntColumn
+
+        if(column.length < length)
+          column ++= reader.readInt(length)
+
+        column
+
+      case Datatype.Long =>
+        val column = new LongColumn
+
+        if(column.length < length)
+          column ++= reader.readLong(length)
+
+        column
+
+      case Datatype.Short =>
+        val column = new ShortColumn
+
+        if(column.length < length)
+          column ++= reader.readShort(length)
+
+        column
 
       case Datatype.Month =>
         val column = new MonthColumn
@@ -131,11 +186,45 @@ class ColumnReader(
 
         column
 
-      case Datatype.Date => new DateColumn ++= reader.readDate(length)
-      case Datatype.Minute => new MinuteColumn ++= reader.readMinute(length)
-      case Datatype.Second => new SecondColumn ++= reader.readSecond(length)
-      case Datatype.Time => new TimeColumn ++= reader.readTime(length)
-      case Datatype.DateTime =>new DateTimeColumn ++= reader.readDateTime(length)
+      case Datatype.Date =>
+        val column = new DateColumn
+
+        if(column.length < length)
+          column ++= reader.readDate(length)
+
+        column
+
+      case Datatype.Minute =>
+        val column = new MinuteColumn
+
+        if(column.length < length)
+          column ++= reader.readMinute(length)
+
+        column
+
+      case Datatype.Second =>
+        val column = new SecondColumn
+
+        if(column.length < length)
+          column ++= reader.readSecond(length)
+
+        column
+
+      case Datatype.Time =>
+        val column = new TimeColumn
+
+        if(column.length < length)
+          column ++= reader.readTime(length)
+
+        column
+
+      case Datatype.DateTime =>
+        val column = new DateTimeColumn
+
+        if(column.length < length)
+          column ++= reader.readDateTime(length)
+
+        column
 
       case Datatype.Timestamp =>
         val column = new TimestampColumn
