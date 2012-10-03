@@ -77,20 +77,7 @@ class SymbolColumn(
       symbolMapper.mode = typeOf
 
     symbolMapper.readSymbol(size.toInt)
-/*
-    symbolMapper.position =
-      if(index == 0)
-        0L
-      else {
 
-        mapper.position = (index - 1) * data.sizeOf.int
-        mapper.readInt
-
-      }
-
-    mapper.position = index * data.sizeOf.int
-    symbolMapper.readSymbol(mapper.readInt - symbolMapper.position)
-*/
   }
 
   protected def read(region: Int) = mappers(region).readSymbol
