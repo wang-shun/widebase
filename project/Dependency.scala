@@ -10,9 +10,9 @@ object Dependency {
       "org.slf4j" % "slf4j-log4j12" % "1.7.1")
 
     val varioCollectionMutable =
-      Seq("com.github.vario" %% "vario-collection-mutable" % "0.4.3")
+      Seq("com.github.vario" %% "vario-collection-mutable" % "0.4.4")
 
-    val varioFilter = Seq("com.github.vario" %% "vario-filter" % "0.4.3")
+    val varioFilter = Seq("com.github.vario" %% "vario-filter" % "0.4.4")
 
   }
 

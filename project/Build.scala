@@ -82,7 +82,7 @@ object WidebaseBuild extends Build {
   /** Build settings */
 	def buildSettings = Seq(
 		organization := "com.github.widebase",
-		version := "0.1.3",
+		version := "0.1.4",
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     resolvers ++= Seq(
       "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))
@@ -103,6 +103,7 @@ object WidebaseBuild extends Build {
         Some("releases"  at nexus + "service/local/staging/deploy/maven2/")
 
     },
+
     pomExtra := (
       <url>https://github.com/widebase/widebase</url>
       <licenses>
@@ -121,7 +122,9 @@ object WidebaseBuild extends Build {
           <name>myst3r10n</name>
           <url>https://github.com/myst3r10n</url>
         </developer>
-      </developers>))
+      </developers>),
+
+    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"))
 
 }
 
