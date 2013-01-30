@@ -7,6 +7,10 @@ import org.joda.time. { DateTimeConstants, LocalDate }
 import widebase.db.column. { DateColumn, IntColumn, StringColumn }
 import widebase.db.table. { Table, TemplateTable }
 
+/* Test of filter and filterNot.
+ *
+ * @author myst3r10n
+ */
 object Filter extends Logger with Loggable {
 
   val debug = false
