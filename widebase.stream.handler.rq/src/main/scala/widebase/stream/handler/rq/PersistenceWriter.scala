@@ -2,8 +2,8 @@ package widebase.stream.handler.rq
 
 import scala.collection.mutable.ArrayBuffer
 
-import vario.file.FileVariantWriter
-import vario.io.VariantWriter
+import widebase.io.VariantWriter
+import widebase.io.file.FileVariantWriter
 
 /** A persistence writer.
  *

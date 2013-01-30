@@ -2,7 +2,7 @@ package widebase.stream.codec
 
 import org.jboss.netty.handler.codec.frame.LengthFieldPrepender
 
-import vario.data.sizeOf
+import widebase.data.sizeOf
 
 /** Encode length.
  *

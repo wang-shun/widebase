@@ -13,7 +13,7 @@ import org.joda.time. {
 
 }
 
-import vario.data.Datatype
+import widebase.data.Datatype
 
 import widebase.db.column. {
 

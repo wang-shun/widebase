@@ -2,11 +2,9 @@ package widebase.io.column
 
 import java.io. { File, RandomAccessFile }
 
-import vario.data.Datatype
-import vario.filter.StreamFilter
-import vario.io.VariantReader
-
-import widebase.io.filter.MagicId
+import widebase.data.Datatype
+import widebase.io.VariantReader
+import widebase.io.filter. { MagicId, StreamFilter }
 
 /** Finds columns within directory table.
  *

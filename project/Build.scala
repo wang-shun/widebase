@@ -11,14 +11,18 @@ object WidebaseBuild extends Build {
     "widebase",
     file("."),
     settings = Defaults.defaultSettings ++ Unidoc.settings) aggregate(
+      widebaseCollectionMutable,
+      widebaseData,
       widebaseDb,
       widebaseDbColumn,
       widebaseDbTable,
       widebaseDsl,
       widebasePlant,
+      widebaseIo,
       widebaseIoColumn,
       widebaseIoCsv,
       widebaseIoCsvFilter,
+      widebaseIoFile,
       widebaseIoFilter,
       widebaseIoTable,
       widebaseStreamCodec,
@@ -32,6 +36,15 @@ object WidebaseBuild extends Build {
       widebaseStreamSocketRq,
       widebaseUtil)
 
+  /** Collection Mutable */
+  lazy val widebaseCollectionMutable = Project(
+    "widebase-collection-mutable",
+    file("widebase.collection.mutable")) dependsOn(widebaseIoFile)
+
+  /** Data */
+  lazy val widebaseData = Project("widebase-data", file("widebase.data")) settings(
+    libraryDependencies ++= lib.jodaTime)
+
   /** DB */
   lazy val widebaseDb = Project("widebase-db", file("widebase.db")) dependsOn(
     widebaseIoTable) settings(libraryDependencies ++= testlib.log)
@@ -39,10 +52,9 @@ object WidebaseBuild extends Build {
   /** DB Column */
   lazy val widebaseDbColumn = Project(
     "widebase-db-column",
-    file("widebase.db.column")) dependsOn(widebaseUtil) settings(
-    resolvers +=
-      "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public",
-    libraryDependencies ++= lib.varioCollectionMutable)
+    file("widebase.db.column")) dependsOn(
+    widebaseCollectionMutable,
+    widebaseUtil)
 
   /** DB Table */
   lazy val widebaseDbTable = Project(
@@ -53,6 +65,11 @@ object WidebaseBuild extends Build {
   lazy val widebaseDsl = Project(
     "widebase-dsl",
     file("widebase.dsl")) dependsOn(widebaseIoCsv)
+
+  /** I/O */
+  lazy val widebaseIo = Project(
+    "widebase-io",
+    file("widebase.io")) dependsOn(widebaseData, widebaseIoFilter)
 
   /** I/O Column */
   lazy val widebaseIoColumn = Project(
@@ -74,6 +91,12 @@ object WidebaseBuild extends Build {
     "widebase-io-csv-filter",
     file("widebase.io.csv.filter")) dependsOn(widebaseDbTable)
 
+  /** I/O File */
+  lazy val widebaseIoFile = Project(
+    "widebase-io-file",
+    file("widebase.io.file")) dependsOn(widebaseIo) settings(
+    libraryDependencies ++= testlib.log)
+
   /** I/O Filter */
   lazy val widebaseIoFilter = Project(
     "widebase-io-filter",
@@ -94,8 +117,9 @@ object WidebaseBuild extends Build {
   /** Stream Codec */
   lazy val widebaseStreamCodec = Project(
     "widebase-stream-codec",
-    file("widebase.stream.codec")) dependsOn(widebaseUtil) settings(
-    libraryDependencies ++= lib.netty ++ lib.varioData)
+    file("widebase.stream.codec")) dependsOn(
+    widebaseData,
+    widebaseUtil) settings(libraryDependencies ++= lib.netty)
 
   /** Stream Codec CQ */
   lazy val widebaseStreamCodecCq = Project(
@@ -153,8 +177,7 @@ object WidebaseBuild extends Build {
   /** Utilities */
   lazy val widebaseUtil = Project(
     "widebase-util",
-    file("widebase.util")) settings(
-    libraryDependencies ++= lib.varioFilter)
+    file("widebase.util")) dependsOn(widebaseIoFilter)
 
   /** Log path */
   System.setProperty(
@@ -169,7 +192,7 @@ object WidebaseBuild extends Build {
   /** Build settings */
 	def buildSettings = Seq(
 		organization := "com.github.widebase",
-		version := "0.1.5",
+		version := "0.3.0-SNAPSHOT",
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     resolvers ++= Seq(
       "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))

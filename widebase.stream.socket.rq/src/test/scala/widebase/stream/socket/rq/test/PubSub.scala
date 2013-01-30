@@ -27,8 +27,7 @@ import org.joda.time. {
 
 import scala.util.control.Breaks. { break, breakable }
 
-import vario.data.Datatype
-import vario.filter.StreamFilter
+import widebase.data.Datatype
 
 import widebase.db.column. {
 
@@ -55,6 +54,7 @@ import widebase.db.column. {
 import widebase.db.table.Table
 import widebase.io.csv. { FileEmptyException, TypeMismatchException }
 import widebase.io.csv.filter.ZipFilter
+import widebase.io.filter.StreamFilter
 import widebase.stream.handler.AuthMap
 import widebase.stream.handler.rq.RecordListener
 
@@ -71,7 +71,7 @@ object PubSub extends Logger with Loggable {
   import widebase.stream.socket.rq
 
   // Init IO
-  import vario.data
+  import widebase.data
 
   // Init DSL
   import widebase.dsl.datatype._

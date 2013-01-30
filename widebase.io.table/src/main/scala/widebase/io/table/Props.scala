@@ -2,8 +2,7 @@ package widebase.io.table
 
 import java.nio.charset.Charset
 
-import vario.filter.ByteOrder
-
+import widebase.io.filter.ByteOrder
 import widebase.util.SysProps
 
 /** Scope properties.
@@ -29,8 +28,8 @@ import widebase.util.SysProps
  */
 object Props extends PropsLike {
 
-  import vario.filter.ByteOrder.ByteOrder
-  import vario.filter.StreamFilter.StreamFilter
+  import widebase.io.filter.ByteOrder.ByteOrder
+  import widebase.io.filter.StreamFilter.StreamFilter
 
   /** This package name. */
   override protected val packageName = "widebase.io.table"
@@ -135,27 +134,27 @@ object Props extends PropsLike {
     }
   }
 
-  /** [[vario.filter.ByteOrder]] properties.
+  /** [[widebase.io.filter.ByteOrder]] properties.
    *
    * @author myst3r10n
    */
   object orders {
 
-    /** Used [[vario.filter.ByteOrder]] to find tables. */
+    /** Used [[widebase.io.filter.ByteOrder]] to find tables. */
     var finder: ByteOrder = _
 
-    /** Used [[vario.filter.ByteOrder]] to load tables. */
+    /** Used [[widebase.io.filter.ByteOrder]] to load tables. */
     var loader: ByteOrder = _
 
-    /** Used [[vario.filter.ByteOrder]] to save tables. */
+    /** Used [[widebase.io.filter.ByteOrder]] to save tables. */
     var saver: ByteOrder = _
 
-    /** Used [[vario.filter.ByteOrder]] to save partitioned tables. */
+    /** Used [[widebase.io.filter.ByteOrder]] to save partitioned tables. */
     var parted: ByteOrder = _
 
     reset
 
-    /** Resets [[vario.filter.ByteOrder]] properties. */
+    /** Resets [[widebase.io.filter.ByteOrder]] properties. */
     def reset {
 
       finder = SysProps.getOrder(packageName + ".orders.finder", defaultOrder)

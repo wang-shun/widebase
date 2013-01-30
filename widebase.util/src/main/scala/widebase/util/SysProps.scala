@@ -2,7 +2,7 @@ package widebase.util
 
 import java.nio.charset.Charset
 
-import vario.filter. { ByteOrder, CompressionLevel, StreamFilter }
+import widebase.io.filter. { ByteOrder, CompressionLevel, StreamFilter }
 
 /** System properties.
  *
@@ -10,8 +10,8 @@ import vario.filter. { ByteOrder, CompressionLevel, StreamFilter }
  */
 object SysProps {
 
-  import vario.filter.ByteOrder.ByteOrder
-  import vario.filter.StreamFilter.StreamFilter
+  import widebase.io.filter.ByteOrder.ByteOrder
+  import widebase.io.filter.StreamFilter.StreamFilter
 
   /** Get system property of [[java.lang.String]].
    *
@@ -58,7 +58,7 @@ object SysProps {
 
   }
 
-  /** Get system property of [[vario.filter.StreamFilter]].
+  /** Get system property of [[widebase.io.filter.StreamFilter]].
    *
    * @param key of property
    * @param default property
@@ -76,7 +76,7 @@ object SysProps {
 
   }
 
-  /** Get system property of [[vario.filter.CompressionLevel]].
+  /** Get system property of [[widebase.io.filter.CompressionLevel]].
    *
    * @param key of property
    * @param default property
@@ -94,7 +94,7 @@ object SysProps {
 
   }
 
-  /** Get system property of [[vario.filter.ByteOrder]].
+  /** Get system property of [[widebase.io.filter.ByteOrder]].
    *
    * @param key of property
    * @param default property
@@ -145,7 +145,7 @@ object SysProps {
 
   }
 
-  /** Set system property of [[vario.filter.StreamFilter]].
+  /** Set system property of [[widebase.io.filter.StreamFilter]].
    *
    * @param key of property
    * @param value of property
@@ -156,7 +156,7 @@ object SysProps {
 
   }
 
-  /** Set system property of [[vario.filter.CompressionLevel]].
+  /** Set system property of [[widebase.io.filter.CompressionLevel]].
    *
    * @param key of property
    * @param value of property
@@ -167,7 +167,7 @@ object SysProps {
 
   }
 
-  /** Set system property of [[vario.filter.ByteOrder]].
+  /** Set system property of [[widebase.io.filter.ByteOrder]].
    *
    * @param key of property
    * @param value of property

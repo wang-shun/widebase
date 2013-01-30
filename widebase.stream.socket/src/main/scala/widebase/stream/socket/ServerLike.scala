@@ -35,7 +35,7 @@ import org.jboss.netty.handler.codec.compression. {
 
 }
 
-import vario.filter.StreamFilter
+import widebase.io.filter.StreamFilter
 
 import widebase.stream.codec. {
 
@@ -54,7 +54,7 @@ import widebase.stream.handler. { AuthHandler, AuthMap, ControlHandler }
  */
 trait ServerLike extends SocketLike {
 
-  import vario.data.sizeOf
+  import widebase.data.sizeOf
 
   protected var allChannels = new DefaultChannelGroup("server")
   protected var bootstrap: ServerBootstrap = _

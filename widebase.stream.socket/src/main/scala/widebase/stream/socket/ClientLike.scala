@@ -26,7 +26,7 @@ import org.jboss.netty.handler.codec.compression. {
 
 import org.jboss.netty.handler.queue.BlockingReadHandler
 
-import vario.filter. { CompressionLevel, StreamFilter }
+import widebase.io.filter. { CompressionLevel, StreamFilter }
 
 /** A common trait to build socket based clients.
  *
@@ -34,7 +34,7 @@ import vario.filter. { CompressionLevel, StreamFilter }
  */
 trait ClientLike extends SocketLike {
 
-  import vario.filter.StreamFilter.StreamFilter
+  import widebase.io.filter.StreamFilter.StreamFilter
 
   protected var future: ChannelFuture = _
   protected var bootstrap: ClientBootstrap = _

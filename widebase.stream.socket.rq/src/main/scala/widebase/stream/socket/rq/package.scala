@@ -1,7 +1,6 @@
 package widebase.stream.socket
 
-import vario.filter. { CompressionLevel, StreamFilter }
-
+import widebase.io.filter. { CompressionLevel, StreamFilter }
 import widebase.stream.handler.AuthMap
 import widebase.stream.handler.rq.RecordListener
 
@@ -53,7 +52,7 @@ import widebase.stream.handler.rq.RecordListener
  */
 package object rq {
 
-  import vario.filter.StreamFilter.StreamFilter
+  import widebase.io.filter.StreamFilter.StreamFilter
 
   /** Create [[widebase.stream.socket.rq.Broker]] instance.
    *

@@ -17,7 +17,7 @@ class RequestDecoder
 
   import MessageType.MessageType
 
-  import vario.data.sizeOf
+  import widebase.data.sizeOf
 
   @throws(classOf[Exception])
   override def decode(

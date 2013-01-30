@@ -4,9 +4,9 @@ import java.nio.channels.FileChannel
 
 import scala.collection.mutable.ArrayBuffer
 
-import vario.data.Datatype
-import vario.file.FileVariantMapper
-import vario.filter.MapFilter
+import widebase.data.Datatype
+import widebase.io.file.FileVariantMapper
+import widebase.io.filter.MapFilter
 
 /** Implements a [[scala.Boolean]] column.
  *
@@ -22,7 +22,7 @@ class StringColumn(
   protected val channel: FileChannel = null)
   extends TypedColumn[String](Datatype.String) {
 
-  import vario.data
+  import widebase.data
 
   protected val sizeOf = data.sizeOf.long
 

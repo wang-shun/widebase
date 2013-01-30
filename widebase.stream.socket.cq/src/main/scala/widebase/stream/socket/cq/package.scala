@@ -1,6 +1,6 @@
 package widebase.stream.socket
 
-import vario.filter. { CompressionLevel, StreamFilter }
+import widebase.io.filter. { CompressionLevel, StreamFilter }
 
 import widebase.stream.handler.AuthMap
 
@@ -33,8 +33,7 @@ import widebase.stream.handler.AuthMap
  */
 package object cq {
 
-  import vario.filter.StreamFilter.StreamFilter
-
+  import widebase.io.filter.StreamFilter.StreamFilter
   import widebase.stream.socket
 
   /** Create [[widebase.stream.socket.cq.Client]] instance.

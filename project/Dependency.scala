@@ -8,6 +8,10 @@ object Dependency {
 
     val jaas = Seq("org.apache.activemq" % "activemq-jaas" % "5.6.0")
 
+    val jodaTime = Seq(
+      "org.joda" % "joda-convert" % "1.2",
+      "joda-time" % "joda-time" % "2.1")
+
     val log = Seq(
       "log4j" % "log4j" % "1.2.17",
       "net.liftweb" %% "lift-common" % "2.5-M1",
@@ -17,13 +21,6 @@ object Dependency {
 
     val sbtLauncher = Seq(
       "org.scala-tools.sbt" % "launcher-interface_2.9.1" % "0.11.2" % "provided")
-
-    val varioCollectionMutable =
-      Seq("com.github.vario" %% "vario-collection-mutable" % "0.4.4")
-
-    val varioData = Seq("com.github.vario" %% "vario-data" % "0.4.4")
-
-    val varioFilter = Seq("com.github.vario" %% "vario-filter" % "0.4.4")
 
   }
 

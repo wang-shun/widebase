@@ -2,7 +2,7 @@ package widebase.db.column
 
 import java.nio.charset.Charset
 
-import vario.filter.ByteOrder
+import widebase.io.filter.ByteOrder
 
 import widebase.util.SysProps
 
@@ -12,7 +12,7 @@ import widebase.util.SysProps
  */
 trait PropsLike {
 
-  import vario.filter.ByteOrder.ByteOrder
+  import widebase.io.filter.ByteOrder.ByteOrder
 
   /** Package name. */
   protected val packageName: String

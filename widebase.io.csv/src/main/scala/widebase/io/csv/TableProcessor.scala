@@ -29,9 +29,7 @@ import org.joda.time. {
 
 import scala.collection.mutable. { ArrayBuffer, LinkedHashMap, Map }
 
-import vario.data.Datatype
-import vario.file.FileVariantWriter
-import vario.filter.StreamFilter
+import widebase.data.Datatype
 
 import widebase.db.column. {
 
@@ -59,7 +57,8 @@ import widebase.db.column. {
 
 import widebase.db.table.Table
 import widebase.io.csv.filter.ZipFilter
-import widebase.io.filter.MagicId
+import widebase.io.file.FileVariantWriter
+import widebase.io.filter. { MagicId, StreamFilter }
 import widebase.io.table.PartitionDomain
 
 /** Predefined routines to processing CSV files.
@@ -86,12 +85,11 @@ import widebase.io.table.PartitionDomain
  */
 trait TableProcessor extends Logger with Loggable {
 
-  import vario.data
-  import vario.data.Datatype.Datatype
-  import vario.filter.StreamFilter.StreamFilter
-
+  import widebase.data
+  import widebase.data.Datatype.Datatype
   import widebase.db
   import widebase.io.csv.filter.ZipFilter.ZipFilter
+  import widebase.io.filter.StreamFilter.StreamFilter
   import widebase.io.table.PartitionDomain.PartitionDomain
 
   /** Reads a CSV file and return table.

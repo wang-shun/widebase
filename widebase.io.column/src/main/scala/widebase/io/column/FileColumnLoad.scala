@@ -2,10 +2,9 @@ package widebase.io.column
 
 import java.io. { File, RandomAccessFile }
 
-import vario.filter.StreamFilter
-import vario.io.VariantReader
-
 import widebase.db.column.TypedColumn
+import widebase.io.VariantReader
+import widebase.io.filter.StreamFilter
 
 /** Load column from directory table.
  *

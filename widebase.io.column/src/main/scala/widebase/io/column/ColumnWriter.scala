@@ -2,10 +2,7 @@ package widebase.io.column
 
 import java.nio.channels.FileChannel
 
-import vario.data.Datatype
-import vario.filter.StreamFilter
-import vario.filter.StreamFilter.StreamFilter
-import vario.io.VariantWriter
+import widebase.data.Datatype
 
 import widebase.db.column. {
 
@@ -30,7 +27,9 @@ import widebase.db.column. {
 
 }
 
-import widebase.io.filter.MagicId
+import widebase.io.VariantWriter
+import widebase.io.filter. { MagicId, StreamFilter }
+import widebase.io.filter.StreamFilter.StreamFilter
 
 /** Writes columns into channel.
  *

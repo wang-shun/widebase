@@ -10,7 +10,7 @@ import widebase.db.table.Table
  */
 trait MessageTypeDecoder extends widebase.stream.codec.MessageTypeDecoder {
 
-  import vario.data.sizeOf
+  import widebase.data.sizeOf
 
   /** Read table from buffer.
    *

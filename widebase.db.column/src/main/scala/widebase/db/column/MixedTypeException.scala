@@ -1,6 +1,6 @@
 package widebase.db.column
 
-import vario.data.Datatype.Datatype
+import widebase.data.Datatype.Datatype
 
 /** Thrown if types mixed.
  *

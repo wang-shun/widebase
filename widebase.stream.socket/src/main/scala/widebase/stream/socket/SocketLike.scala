@@ -4,7 +4,7 @@ import org.jboss.netty.channel.ChannelHandler
 
 import scala.collection.mutable.LinkedHashMap
 
-import vario.filter. { CompressionLevel, StreamFilter }
+import widebase.io.filter. { CompressionLevel, StreamFilter }
 
 /** A common trait to build client/server sockets.
  *
@@ -12,7 +12,7 @@ import vario.filter. { CompressionLevel, StreamFilter }
  */
 trait SocketLike {
 
-  import vario.filter.StreamFilter.StreamFilter
+  import widebase.io.filter.StreamFilter.StreamFilter
 
   /** Pipeline. */
   val pipeline = new LinkedHashMap[String, ChannelHandler]

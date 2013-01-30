@@ -2,9 +2,8 @@ package widebase.io.csv
 
 import java.nio.charset.Charset
 
-import vario.filter.ByteOrder
-
 import widebase.io.column.PropsLike
+import widebase.io.filter.ByteOrder
 import widebase.util.SysProps
 
 /** Scope properties.
@@ -30,7 +29,7 @@ import widebase.util.SysProps
  */
 object Props extends PropsLike {
 
-  import vario.filter.ByteOrder.ByteOrder
+  import widebase.io.filter.ByteOrder.ByteOrder
 
   /** This package name. */
   override protected val packageName = "widebase.io.csv"
@@ -73,18 +72,18 @@ object Props extends PropsLike {
     }
   }
 
-  /** [[vario.filter.ByteOrder]] properties.
+  /** [[widebase.io.filter.ByteOrder]] properties.
    *
    * @author myst3r10n
    */
   object orders {
 
-    /** Used [[vario.filter.ByteOrder]] to import CSV files. */
+    /** Used [[widebase.io.filter.ByteOrder]] to import CSV files. */
     var to: ByteOrder = _
 
     reset
 
-    /** Resets [[vario.filter.ByteOrder]] properties. */
+    /** Resets [[widebase.io.filter.ByteOrder]] properties. */
     def reset {
 
       to = SysProps.getOrder(packageName + ".orders.to", defaultOrder)

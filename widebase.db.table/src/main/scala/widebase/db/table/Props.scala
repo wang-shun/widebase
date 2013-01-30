@@ -2,9 +2,8 @@ package widebase.db.table
 
 import java.nio.charset.Charset
 
-import vario.filter.ByteOrder
-
 import widebase.db.column.PropsLike
+import widebase.io.filter.ByteOrder
 import widebase.util.SysProps
 
 /** Scope properties.
@@ -30,7 +29,7 @@ import widebase.util.SysProps
  */
 object Props extends PropsLike {
 
-  import vario.filter.ByteOrder.ByteOrder
+  import widebase.io.filter.ByteOrder.ByteOrder
 
   /** This package name. */
   override protected val packageName = "widebase.db.table"
@@ -58,21 +57,21 @@ object Props extends PropsLike {
     }
   }
 
-  /** [[vario.filter.ByteOrder]] properties.
+  /** [[widebase.io.filter.ByteOrder]] properties.
    *
    * @author myst3r10n
    */
   object orders {
 
-    /** Used [[vario.filter.ByteOrder]] to convert bytes into table. */
+    /** Used [[widebase.io.filter.ByteOrder]] to convert bytes into table. */
     var from: ByteOrder = _
 
-    /** Used [[vario.filter.ByteOrder]] to convert table into bytes. */
+    /** Used [[widebase.io.filter.ByteOrder]] to convert table into bytes. */
     var to: ByteOrder = _
 
     reset
 
-    /** Resets [[vario.filter.ByteOrder]] properties. */
+    /** Resets [[widebase.io.filter.ByteOrder]] properties. */
     def reset {
 
       from = SysProps.getOrder(packageName + ".orders.from", defaultOrder)

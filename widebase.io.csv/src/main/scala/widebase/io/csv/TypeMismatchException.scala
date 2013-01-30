@@ -1,6 +1,6 @@
 package widebase.io.csv
 
-import vario.data.Datatype.Datatype
+import widebase.data.Datatype.Datatype
 
 /** Thrown if types mismatch.
  *

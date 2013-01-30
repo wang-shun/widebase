@@ -2,12 +2,11 @@ package widebase.io.table
 
 import java.io. { File, RandomAccessFile }
 
-import vario.data.Datatype
-import vario.filter.StreamFilter
-import vario.io.VariantReader
+import widebase.data.Datatype
 
+import widebase.io.VariantReader
 import widebase.io.column.FileColumnFinder
-import widebase.io.filter.MagicId
+import widebase.io.filter. { MagicId, StreamFilter }
 
 /** Finds tables within database.
  *
@@ -17,7 +16,7 @@ import widebase.io.filter.MagicId
  */
 abstract class FileTableFind(path: String) {
 
-  import vario.filter.StreamFilter.StreamFilter
+  import widebase.io.filter.StreamFilter.StreamFilter
 
   /** Checks whether table exists.
     *

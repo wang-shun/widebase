@@ -8,7 +8,7 @@ import org.jboss.netty.buffer.ChannelBuffer
  */
 trait MessageTypeEncoder {
 
-  import vario.data.sizeOf
+  import widebase.data.sizeOf
 
   /** Write message id into buffer.
    *

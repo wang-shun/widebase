@@ -1,15 +1,11 @@
 package widebase.io.column
 
-import vario.data.Datatype
+import widebase.data.Datatype
 
 import java.io.RandomAccessFile
 import java.nio.channels.FileChannel
 
 import scala.util.control.Breaks. { break, breakable }
-
-import vario.filter.StreamFilter
-import vario.filter.StreamFilter.StreamFilter
-import vario.io.VariantReader
 
 import widebase.db.column. {
 
@@ -35,14 +31,19 @@ import widebase.db.column. {
 
 }
 
+import widebase.io.VariantReader
+
 import widebase.io.filter. {
 
   InvalidMagicException,
   MagicId,
   MagicNotFoundException,
+  StreamFilter,
   WrongMagicException
 
 }
+
+import widebase.io.filter.StreamFilter.StreamFilter
 
 /** Reads columns from channel.
  *

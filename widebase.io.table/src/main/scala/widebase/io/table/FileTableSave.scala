@@ -16,10 +16,7 @@ import org.joda.time. {
 
 import scala.collection.mutable. { ArrayBuffer, Buffer, Map }
 
-import vario.data.Datatype
-import vario.file.FileVariantWriter
-import vario.filter.StreamFilter
-import vario.io.VariantWriter
+import widebase.data.Datatype
 
 import widebase.db.column. {
 
@@ -44,8 +41,10 @@ import widebase.db.column. {
 }
 
 import widebase.db.table.Table
+import widebase.io.VariantWriter
 import widebase.io.column. { ColumnWriter, FileColumnSaver }
-import widebase.io.filter.MagicId
+import widebase.io.file.FileVariantWriter
+import widebase.io.filter. { MagicId, StreamFilter }
 
 /** Saves tables into database.
  *
@@ -57,7 +56,7 @@ abstract class FileTableSave(path: String) {
 
   import PartitionDomain.PartitionDomain
 
-  import vario.filter.StreamFilter.StreamFilter
+  import widebase.io.filter.StreamFilter.StreamFilter
 
   /** Saves table into database.
     *

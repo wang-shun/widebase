@@ -13,7 +13,7 @@ import widebase.stream.codec. { MessageTypeDecoder, ResponseDecoder }
  */
 class BrokerDecoder extends ResponseDecoder with MessageTypeDecoder {
 
-  import vario.data.sizeOf
+  import widebase.data.sizeOf
 
   @throws(classOf[Exception])
   override def decode(

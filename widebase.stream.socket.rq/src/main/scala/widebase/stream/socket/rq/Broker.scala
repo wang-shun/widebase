@@ -10,9 +10,8 @@ import org.jboss.netty.channel.group. {
 import scala.collection.mutable. { ArrayBuffer, LinkedHashMap, Map }
 import scala.concurrent.Lock
 
-import vario.filter.StreamFilter
-import vario.filter.StreamFilter.StreamFilter
-
+import widebase.io.filter.StreamFilter
+import widebase.io.filter.StreamFilter.StreamFilter
 import widebase.stream.codec. { LengthDecoder, LengthEncoder }
 import widebase.stream.codec.rq. { BrokerEncoder, RequestDecoder }
 import widebase.stream.handler. { AuthHandler, AuthMap, ControlHandler }

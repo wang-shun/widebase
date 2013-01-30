@@ -3,11 +3,10 @@ package widebase.io.column
 import java.io. { File, RandomAccessFile }
 import java.nio.channels.FileChannel
 
-import vario.data.Datatype
-import vario.filter.StreamFilter
-import vario.io.VariantWriter
-
+import widebase.data.Datatype
 import widebase.db.column.TypedColumn
+import widebase.io.VariantWriter
+import widebase.io.filter.StreamFilter
 
 /** Saves columns into directory table.
  *

@@ -2,8 +2,8 @@ package widebase.db.column
 
 import scala.collection.mutable.ArrayBuffer
 
-import vario.data.Datatype
-import vario.file.FileVariantMapper
+import widebase.data.Datatype
+import widebase.io.file.FileVariantMapper
 
 /** Implements a [[scala.Long]] column.
  *
@@ -17,7 +17,7 @@ class LongColumn(
   protected val records: Int = 0)
   extends TypedColumn[Long](Datatype.Long) {
 
-  import vario.data
+  import widebase.data
 
   protected val sizeOf = data.sizeOf.long
 

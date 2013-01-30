@@ -16,18 +16,18 @@ import org.joda.time. {
 
 import scala.collection.mutable.ArrayBuffer
 
-import vario.data.Datatype
-import vario.file.FileVariantWriter
-import vario.filter.StreamFilter
-import vario.io.VariantReader
+import widebase.data.Datatype
 
 import widebase.db.column.MixedTypeException
+import widebase.io.VariantReader
+import widebase.io.file.FileVariantWriter
 
 import widebase.io.filter. {
 
   InvalidMagicException,
   MagicId,
   MagicNotFoundException,
+  StreamFilter,
   WrongMagicException
 
 }
@@ -40,7 +40,7 @@ import widebase.io.filter. {
  */
 class FileRecordEditor(path: String) {
 
-  import vario.data
+  import widebase.data
 
   /** Sets values within column of directory table.
     *

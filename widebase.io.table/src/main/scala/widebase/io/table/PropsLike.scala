@@ -1,7 +1,6 @@
 package widebase.io.table
 
-import vario.filter. { CompressionLevel, StreamFilter }
-
+import widebase.io.filter. { CompressionLevel, StreamFilter }
 import widebase.util.SysProps
 
 /** A common trait for properties.

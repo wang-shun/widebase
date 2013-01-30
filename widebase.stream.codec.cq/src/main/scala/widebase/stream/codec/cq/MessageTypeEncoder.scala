@@ -10,7 +10,7 @@ import widebase.db.table.Table
  */
 trait MessageTypeEncoder extends widebase.stream.codec.MessageTypeEncoder {
 
-  import vario.data.sizeOf
+  import widebase.data.sizeOf
 
   /** Write table into buffer.
    *

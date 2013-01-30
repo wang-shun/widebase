@@ -4,8 +4,8 @@ import org.joda.time.Minutes
 
 import scala.collection.mutable.ArrayBuffer
 
-import vario.data.Datatype
-import vario.file.FileVariantMapper
+import widebase.data.Datatype
+import widebase.io.file.FileVariantMapper
 
 /** Implements a [[org.joda.time.Minutes]] column.
  *
@@ -19,7 +19,7 @@ class MinuteColumn(
   protected val records: Int = 0)
   extends TypedColumn[Minutes](Datatype.Minute) {
 
-  import vario.data
+  import widebase.data
 
   protected val sizeOf = data.sizeOf.minute
 

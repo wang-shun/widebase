@@ -19,7 +19,7 @@ import org.joda.time. {
 
 import scala.collection.mutable.ArrayBuffer
 
-import vario.data.Datatype
+import widebase.data.Datatype
 
 import widebase.db.column. {
 

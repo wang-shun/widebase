@@ -17,12 +17,11 @@ import org.joda.time. {
 
 import scala.collection.mutable.Map
 
-import vario.data.Datatype
-import vario.file.FileVariantWriter
-import vario.io.VariantWriter
-
+import widebase.data.Datatype
 import widebase.db.table.Table
+import widebase.io.VariantWriter
 import widebase.io.column.FileColumnSaver
+import widebase.io.file.FileVariantWriter
 import widebase.io.filter.MagicId
 
 /** Handles rollback tables.

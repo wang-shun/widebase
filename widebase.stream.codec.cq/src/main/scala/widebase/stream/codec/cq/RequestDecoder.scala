@@ -5,7 +5,7 @@ import org.jboss.netty.channel.Channel
 import org.jboss.netty.channel.ChannelHandlerContext
 import org.jboss.netty.handler.codec.frame.CorruptedFrameException
 
-import vario.data.sizeOf
+import widebase.data.sizeOf
 
 /** Decode request.
  *

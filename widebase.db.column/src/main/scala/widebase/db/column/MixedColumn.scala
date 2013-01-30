@@ -1,7 +1,7 @@
 package widebase.db.column
 
-import vario.data.Datatype
-import vario.data.Datatype.Datatype
+import widebase.data.Datatype
+import widebase.data.Datatype.Datatype
 
 /** Implements a mixed column.
  *

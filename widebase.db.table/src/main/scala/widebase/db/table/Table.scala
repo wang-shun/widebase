@@ -17,11 +17,8 @@ import org.joda.time. {
 
 import scala.collection.mutable. { Buffer, LinkedHashMap, WrappedArray }
 
-import vario.collection.mutable.HybridBufferLike
-import vario.data.Datatype
-import vario.io. { VariantReader, VariantWriter }
-import vario.filter.StreamFilter
-import vario.filter.StreamFilter.StreamFilter
+import widebase.collection.mutable.HybridBufferLike
+import widebase.data.Datatype
 
 import widebase.db.column. {
 
@@ -48,7 +45,10 @@ import widebase.db.column. {
 
 }
 
+import widebase.io. { VariantReader, VariantWriter }
 import widebase.io.column. { ColumnReader, ColumnWriter }
+import widebase.io.filter.StreamFilter
+import widebase.io.filter.StreamFilter.StreamFilter
 
 /** Column based table.
  *

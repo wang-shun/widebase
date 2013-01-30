@@ -5,9 +5,7 @@ import java.nio.channels.FileChannel
 
 import scala.collection.mutable.ArrayBuffer
 
-import vario.data.Datatype
-import vario.file. { FileVariantMapper, FileVariantReader }
-import vario.filter. { MapFilter, StreamFilter }
+import widebase.data.Datatype
 
 import widebase.db.column. {
 
@@ -32,11 +30,15 @@ import widebase.db.column. {
 
 }
 
+import widebase.io.file. { FileVariantMapper, FileVariantReader }
+
 import widebase.io.filter. {
 
   InvalidMagicException,
   MagicId,
   MagicNotFoundException,
+  MapFilter,
+  StreamFilter,
   WrongMagicException
 
 }
@@ -49,7 +51,7 @@ import widebase.io.filter. {
  */
 class FileColumnMap(path: String) {
 
-  import vario.data
+  import widebase.data
 
   /** Map columns from directory table.
     *

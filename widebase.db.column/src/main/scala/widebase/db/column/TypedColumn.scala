@@ -2,8 +2,8 @@ package widebase.db.column
 
 import scala.collection.Traversable
 
-import vario.collection.mutable.HybridBufferLike
-import vario.data.Datatype.Datatype
+import widebase.collection.mutable.HybridBufferLike
+import widebase.data.Datatype.Datatype
 
 /** Implements a typed column.
  *
@@ -14,7 +14,7 @@ import vario.data.Datatype.Datatype
  */
 abstract class TypedColumn[A](t: Datatype) extends HybridBufferLike[A] {
 
-  import vario.data
+  import widebase.data
 
   /** Type of buffer. */
   val typeOf = t

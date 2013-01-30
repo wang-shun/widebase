@@ -4,8 +4,8 @@ import java.sql.Timestamp
 
 import scala.collection.mutable.ArrayBuffer
 
-import vario.data.Datatype
-import vario.file.FileVariantMapper
+import widebase.data.Datatype
+import widebase.io.file.FileVariantMapper
 
 /** Implements a [[java.sql.Timestamp]] column.
  *
@@ -19,7 +19,7 @@ class TimestampColumn(
   protected val records: Int = 0)
   extends TypedColumn[Timestamp](Datatype.Timestamp) {
 
-  import vario.data
+  import widebase.data
 
   protected val sizeOf = data.sizeOf.timestamp
 

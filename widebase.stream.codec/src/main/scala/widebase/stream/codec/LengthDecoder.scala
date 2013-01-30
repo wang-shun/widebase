@@ -2,7 +2,7 @@ package widebase.stream.codec
 
 import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder
 
-import vario.data.sizeOf
+import widebase.data.sizeOf
 
 /** Decode length.
  *

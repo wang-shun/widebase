@@ -11,7 +11,7 @@ import org.jboss.netty.handler.codec.frame. {
 
 }
 
-import vario.data.sizeOf
+import widebase.data.sizeOf
 
 /** Decode requests.
  *

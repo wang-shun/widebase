@@ -24,7 +24,7 @@ import org.joda.time. {
 
 }
 
-import vario.data.Datatype
+import widebase.data.Datatype
 
 import widebase.db.column. {
 
@@ -64,9 +64,8 @@ import widebase.io.csv.filter.ZipFilter
  */
 package object csv {
 
-  import vario.data
-  import vario.data.Datatype.Datatype
-
+  import widebase.data
+  import widebase.data.Datatype.Datatype
   import widebase.io.csv.filter.ZipFilter.ZipFilter
 
   /** Reference to itself. */

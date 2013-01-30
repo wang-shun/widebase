@@ -4,11 +4,10 @@ import java.io. { File, RandomAccessFile }
 
 import org.joda.time. { LocalDate, YearMonth, Years }
 
-import vario.filter.StreamFilter
-import vario.io.VariantReader
-
 import widebase.db.table. { PartitionMap, Table }
+import widebase.io.VariantReader
 import widebase.io.column. { ColumnReader, FileColumnLoader }
+import widebase.io.filter.StreamFilter
 
 /** Loads tables from database.
  *
@@ -18,7 +17,7 @@ import widebase.io.column. { ColumnReader, FileColumnLoader }
  */
 abstract class FileTableLoad(path: String) {
 
-  import vario.filter.StreamFilter.StreamFilter
+  import widebase.io.filter.StreamFilter.StreamFilter
 
   /** Load table from database.
     *
