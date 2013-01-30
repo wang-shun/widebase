@@ -37,6 +37,22 @@ trait TemplateTable[R] {
    */
   def apply(index: Int): R
 
+  /** Filters all elements of this table which satisfy a predicate.
+   *
+   * @param predicate used to test elements.
+   *
+   * @return filtered table
+   */
+  def filter(predicate: Record => Boolean): TemplateTable[R]
+
+  /** Filters all elements of this table which do not satisfy a predicate.
+   *
+   * @param predicate used to test elements.
+   *
+   * @return filtered table
+   */
+  def filterNot(predicate: Record => Boolean) = filter(!predicate(_))
+
   def foreach[U](f: R =>  U) =
     for(r <- 0 to records.length - 1)
       f(apply(r))
