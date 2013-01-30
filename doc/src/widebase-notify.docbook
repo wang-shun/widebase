@@ -1,0 +1,126 @@
+<refentry>
+  <refentryinfo>
+    <title>Widebase Notify</title>
+    <productname>Widebase</productname>
+
+    <authorgroup>
+      <author>
+        <firstname>myst3r10n</firstname>
+        <surname></surname>
+        <address>
+          <email>myst3r10n@rocketmail.com</email>
+        </address>
+        <contrib>Original author</contrib>
+      </author>
+    </authorgroup>
+  </refentryinfo>
+
+  <refmeta>
+    <refentrytitle>widebase-notify</refentrytitle>
+    <manvolnum>8</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+    <refname>widebase-notify</refname>
+    <refpurpose>a standalone notifier</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>widebase-notify</command>
+      <arg choice='opt'>-f <replaceable>pattern</replaceable></arg>
+      <arg choice='opt'>-u <replaceable>//<optional>user:pass@</optional>host<optional>:port</optional></replaceable></arg>
+      <arg choice='plain'><replaceable>table</replaceable></arg>
+      <arg choice='plain'><replaceable>event</replaceable></arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      A standalone notifier to notify a string based <arg><replaceable>event</replaceable></arg> to <arg><replaceable>table</replaceable></arg> associated subscribers over
+      <citerefentry><refentrytitle>widebase-plant</refentrytitle><manvolnum>8</manvolnum></citerefentry>
+      .
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Options</title>
+
+    <para>The following options are supported:</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>-f</option> <replaceable>filter</replaceable></term>
+
+        <listitem>
+          <para>The publishing filter, available pattern:</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><replaceable>l<replaceable>X</replaceable></replaceable></term>
+
+              <listitem>
+                <para>Compression level 0-9.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><replaceable>rg</replaceable></term>
+
+              <listitem>
+                <para>Read socket in Gzip format.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><replaceable>rz</replaceable></term>
+
+              <listitem>
+                <para>Read socket in Zlib format.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><replaceable>wg</replaceable></term>
+
+              <listitem>
+                <para>Write socket in Gzip format.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><replaceable>wz</replaceable></term>
+
+              <listitem>
+                <para>Write socket in Zlib format.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-u</option> <replaceable>uri</replaceable></term>
+
+        <listitem>
+          <para>The URI of publish channel.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Examples</title>
+
+    <para>Notify:</para>
+    <screen><prompt>$</prompt> <userinput>widebase-notify quote EOD</userinput></screen>
+  </refsect1>
+
+  <refsect1>
+    <title>See Also</title>
+
+    <para>widebase-plant(8)</para>
+  </refsect1>
+</refentry>
+

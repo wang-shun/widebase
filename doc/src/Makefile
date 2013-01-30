@@ -18,18 +18,22 @@ CSS_FILE=docbook.css
 
 HTML_TARGETS = \
   widebase-cli.html \
+  widebase-notify.html \
   widebase-plant.html
 
 MAN_TARGETS = \
   widebase-cli.8 \
+  widebase-notify.8 \
   widebase-plant.8
 
 PDF_TARGETS = \
   widebase-cli.pdf \
+  widebase-notify.pdf \
   widebase-plant.pdf
 
 XHTML_TARGETS = \
   widebase-cli.xhtml \
+  widebase-notify.xhtml \
   widebase-plant.xhtml
 
 XSL_HTML = ${CURDIR}/../xsl/freebsd-html.xsl
