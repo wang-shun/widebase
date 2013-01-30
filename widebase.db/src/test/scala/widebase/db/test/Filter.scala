@@ -5,11 +5,9 @@ import net.liftweb.common. { Loggable, Logger }
 import org.joda.time. { DateTimeConstants, LocalDate }
 
 import widebase.db.column. { DateColumn, IntColumn, StringColumn }
+import widebase.db.table. { Table, TemplateTable }
 
 object Filter extends Logger with Loggable {
-
-  // Init API
-  import widebase.db.table.Table
 
   val debug = false
   val records = 250000
@@ -22,6 +20,8 @@ object Filter extends Logger with Loggable {
     columnFilter
 
     recordFilter
+
+    templateFilter
 
   }
 
@@ -86,7 +86,89 @@ object Filter extends Logger with Loggable {
       diff(started, System.currentTimeMillis))
 
     if(debug)
-      table.records.foreach(println(_))
+      filteredTable.records.foreach(println(_))
+
+  }
+
+  def templateFilter {
+
+    case class MyData(val date: LocalDate, val price: Int)
+
+    case class MyTable(
+      table: Table = Table(
+        StringColumn(
+          "date",
+          "price"),
+        DateColumn(),
+        IntColumn()))
+      extends TemplateTable[MyData] {
+
+      val date = table("date").asInstanceOf[DateColumn]
+      val price = table("price").asInstanceOf[IntColumn]
+
+      def +=(data: MyData) = {
+
+        date += data.date
+        price += data.price
+
+        this
+
+      }
+
+      def +=(
+        date: LocalDate,
+        price: Int): MyTable =
+        this += MyData(date, price)
+
+      def ++=(table: MyTable) = {
+
+        for(r <- 0 to table.records.length - 1)
+          this += table(r)
+
+        this
+
+      }
+
+      def apply(index: Int) = MyData(date(index), price(index))
+
+      def filter(predicate: widebase.db.table.Record => Boolean) =
+        MyTable(peer.filter(predicate))
+
+      def peer = table
+
+    }
+
+    var started = 0L
+
+    val today = LocalDate.now
+
+    val table = new MyTable
+
+    started = System.currentTimeMillis
+    for(i <- 0 to records - 1) {
+
+      table.date += today.minusDays(records - 1 - i)
+      table.price += i + 1
+
+    }
+    info("Temaplte filled " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    val days = Array(
+      DateTimeConstants.MONDAY,
+      DateTimeConstants.TUESDAY,
+      DateTimeConstants.WEDNESDAY,
+      DateTimeConstants.THURSDAY,
+      DateTimeConstants.FRIDAY)
+
+    started = System.currentTimeMillis
+    val filteredTemplate = table.filter(record =>
+      days.contains(record("date").asInstanceOf[LocalDate].getDayOfWeek))
+    info("Template filtered " + records + " records in " +
+      diff(started, System.currentTimeMillis))
+
+    if(debug)
+      filteredTemplate.records.foreach(println(_))
 
   }
 }
