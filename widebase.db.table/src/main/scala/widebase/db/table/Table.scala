@@ -287,7 +287,7 @@ class Table {
     val filteredTable = new Table
 
     var i = 0
-    val thisColumns = columns.toBuffer // Performance pupropse
+    val thisColumns = columns.toBuffer // Performance purposes
 
     labels.foreach { label =>
 
@@ -317,7 +317,7 @@ class Table {
 
     }
 
-    val filteredColumns = filteredTable.columns.toBuffer // Performance pupropse
+    val filteredColumns = filteredTable.columns.toBuffer // Performance purposes
 
     for(r <- 0 to records.length - 1)
       if(predicate(Record(labels, records(r).toArray))) {
