@@ -65,8 +65,8 @@ object Filter extends Logger with Loggable {
     started = System.currentTimeMillis
     for(i <- 0 to records - 1) {
 
-      dateCol += today.minusDays(records - i)
-      priceCol += i
+      dateCol += today.minusDays(records - 1 - i)
+      priceCol += i + 1
 
     }
     info("Table filled " + records + " records in " +
@@ -86,7 +86,7 @@ object Filter extends Logger with Loggable {
       diff(started, System.currentTimeMillis))
 
     if(debug)
-      filteredTable.records.foreach(println(_))
+      table.records.foreach(println(_))
 
   }
 }
