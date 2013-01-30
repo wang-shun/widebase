@@ -280,7 +280,7 @@ class Table {
    *
    * @param predicate used to test elements.
    *
-   * @return new filtered table
+   * @return filtered table
    */
   def filter(predicate: Record => Boolean) = {
 
@@ -356,7 +356,7 @@ class Table {
    *
    * @param predicate used to test elements.
    *
-   * @return new filtered table
+   * @return filtered table
    */
   def filterNot(predicate: Record => Boolean) = filter(!predicate(_))
 
