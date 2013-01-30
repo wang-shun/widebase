@@ -17,7 +17,6 @@ object WidebaseBuild extends Build {
       widebaseDbColumn,
       widebaseDbTable,
       widebaseDsl,
-      widebasePlant,
       widebaseIo,
       widebaseIoColumn,
       widebaseIoCsv,
@@ -25,6 +24,8 @@ object WidebaseBuild extends Build {
       widebaseIoFile,
       widebaseIoFilter,
       widebaseIoTable,
+      widebaseNotify,
+      widebasePlant,
       widebaseStreamCodec,
       widebaseStreamCodecCq,
       widebaseStreamCodecRq,
@@ -106,6 +107,13 @@ object WidebaseBuild extends Build {
   lazy val widebaseIoTable = Project(
     "widebase-io-table",
     file("widebase.io.table")) dependsOn(widebaseDbTable)
+
+  /** Notify */
+  lazy val widebaseNotify = Project(
+    "widebase-notify",
+    file("widebase.notify")) dependsOn(widebaseStreamSocketRq) settings(
+    resolvers <+= sbtResolver,
+    libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
 
   /** Plant */
   lazy val widebasePlant = Project(
@@ -192,7 +200,7 @@ object WidebaseBuild extends Build {
   /** Build settings */
 	def buildSettings = Seq(
 		organization := "com.github.widebase",
-		version := "0.3.0-SNAPSHOT",
+		version := "0.3.0",
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     resolvers ++= Seq(
       "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))
