@@ -143,7 +143,7 @@ trait HybridBufferLike[A] {
    *
    * @param predicate used to test elements.
    *
-   * @return new filtered column
+   * @return filtered column
    */
   def filter(predicate: A => Boolean): ArrayBuffer[A] = {
 
@@ -161,7 +161,7 @@ trait HybridBufferLike[A] {
    *
    * @param predicate used to test elements.
    *
-   * @return new filtered column
+   * @return filtered column
    */
   def filterNot(predicate: A => Boolean) = filter(!predicate(_))
 
