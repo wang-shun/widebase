@@ -214,6 +214,12 @@ class Table {
    */
   def apply(label: Any) = map(label)
 
+  /** Columns.
+   *
+   * @return The columns.
+   */
+  def columns = map.values
+
   /** Inserts new records at a given index into columns.
    *
    * @param n the index where new records are inserted
@@ -270,11 +276,89 @@ class Table {
     }
   }
 
-  /** Columns.
+  /** Filters all elements of this table which satisfy a predicate.
    *
-   * @return The columns.
+   * @param predicate used to test elements.
+   *
+   * @return new filtered table
    */
-  def columns = map.values
+  def filter(predicate: Record => Boolean) = {
+
+    val filteredTable = new Table
+
+    var i = 0
+    val thisColumns = columns.toBuffer // Performance pupropse
+
+    labels.foreach { label =>
+
+      thisColumns(i).typeOf match {
+
+        case Datatype.Bool => filteredTable ++= (label, new BoolColumn)
+        case Datatype.Byte => filteredTable ++= (label, new ByteColumn)
+        case Datatype.Char => filteredTable ++= (label, new CharColumn)
+        case Datatype.Double => filteredTable ++= (label, new DoubleColumn)
+        case Datatype.Float => filteredTable ++= (label, new FloatColumn)
+        case Datatype.Int => filteredTable ++= (label, new IntColumn)
+        case Datatype.Long => filteredTable ++= (label, new LongColumn)
+        case Datatype.Short => filteredTable ++= (label, new ShortColumn)
+        case Datatype.Month => filteredTable ++= (label, new MonthColumn)
+        case Datatype.Date => filteredTable ++= (label, new DateColumn)
+        case Datatype.Minute => filteredTable ++= (label, new MinuteColumn)
+        case Datatype.Second => filteredTable ++= (label, new SecondColumn)
+        case Datatype.Time => filteredTable ++= (label, new TimeColumn)
+        case Datatype.DateTime => filteredTable ++= (label, new DateTimeColumn)
+        case Datatype.Timestamp => filteredTable ++= (label, new TimestampColumn)
+        case Datatype.Symbol => filteredTable ++= (label, new SymbolColumn)
+        case Datatype.String => filteredTable ++= (label, new StringColumn)
+
+      }
+
+      i += 1
+
+    }
+
+    val filteredColumns = filteredTable.columns.toBuffer // Performance pupropse
+
+    for(r <- 0 to records.length - 1)
+      if(predicate(Record(labels, records(r).toArray))) {
+
+        for(i <- 0 to columns.size - 1)
+
+          filteredColumns(i) match {
+
+            case column: BoolColumn => column += thisColumns(i)(r).asInstanceOf[Boolean]
+            case column: ByteColumn => column += thisColumns(i)(r).asInstanceOf[Byte]
+            case column: CharColumn => column += thisColumns(i)(r).asInstanceOf[Char]
+            case column: DoubleColumn => column += thisColumns(i)(r).asInstanceOf[Double]
+            case column: FloatColumn => column += thisColumns(i)(r).asInstanceOf[Float]
+            case column: IntColumn => column += thisColumns(i)(r).asInstanceOf[Int]
+            case column: LongColumn => column += thisColumns(i)(r).asInstanceOf[Long]
+            case column: ShortColumn => column += thisColumns(i)(r).asInstanceOf[Short]
+            case column: MonthColumn => column += thisColumns(i)(r).asInstanceOf[YearMonth]
+            case column: DateColumn => column += thisColumns(i)(r).asInstanceOf[LocalDate]
+            case column: MinuteColumn => column += thisColumns(i)(r).asInstanceOf[Minutes]
+            case column: SecondColumn => column += thisColumns(i)(r).asInstanceOf[Seconds]
+            case column: TimeColumn => column += thisColumns(i)(r).asInstanceOf[LocalTime]
+            case column: DateTimeColumn => column += thisColumns(i)(r).asInstanceOf[LocalDateTime]
+            case column: TimestampColumn => column += thisColumns(i)(r).asInstanceOf[Timestamp]
+            case column: SymbolColumn => column += thisColumns(i)(r).asInstanceOf[Symbol]
+            case column: StringColumn => column += thisColumns(i)(r).asInstanceOf[String]
+
+          }
+
+    }
+
+    filteredTable
+
+  }
+
+  /** Filters all elements of this table which do not satisfy a predicate.
+   *
+   * @param predicate used to test elements.
+   *
+   * @return new filtered table
+   */
+  def filterNot(predicate: Record => Boolean) = filter(!predicate(_))
 
   /** Applies a function to all columns of this table.
    *
