@@ -139,6 +139,32 @@ trait HybridBufferLike[A] {
 
   }
 
+  /** Filters all elements of this hybrid buffer which satisfy a predicate.
+   *
+   * @param predicate used to test elements.
+   *
+   * @return new filtered column
+   */
+  def filter(predicate: A => Boolean): ArrayBuffer[A] = {
+
+    val column = ArrayBuffer[A]()
+
+    for(value <- this)
+      if(predicate(value))
+        column += value
+
+    column.result
+
+  }
+
+  /** Filters all elements of this hybrid buffer which do not satisfy a predicate.
+   *
+   * @param predicate used to test elements.
+   *
+   * @return new filtered column
+   */
+  def filterNot(predicate: A => Boolean) = filter(!predicate(_))
+
   /** Self-explanatory
    *
    * @param f self-explanatory
