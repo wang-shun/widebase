@@ -1,0 +1,26 @@
+def home = System.getProperty("widebase.home")
+
+// Log
+org.apache.log4j.xml.DOMConfigurator.configure(home +
+  "/etc/widebase-cli-log4j.xml")
+
+// Init API
+import widebase.db.table.Table
+
+// Init DSL
+import widebase.dsl.conversion._
+import widebase.dsl.datatype._
+import widebase.dsl.function._
+
+// Init Stream/CQ
+import widebase.stream.socket.cq
+
+// Init Stream/RQ
+import widebase.stream.socket.rq
+
+// Convenience purpose
+import org.joda.time.LocalDateTime
+import widebase.stream.handler.rq.RecordListener
+
+def now = LocalDateTime.now
+

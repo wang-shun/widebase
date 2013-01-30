@@ -1,0 +1,21 @@
+#!/bin/sh
+
+cd $(dirname $0)/..
+WIDEBASE_HOME=$PWD
+
+java \
+  -Xmx1000m \
+  -XX:+UseFastAccessorMethods \
+  -Dsbt.main.class=sbt.ConsoleMain \
+  -Dsbt.boot.directory=$WIDEBASE_HOME/var/sbt/boot \
+  -jar $WIDEBASE_HOME/lib/sbt-launch.jar \
+  -Dwidebase.home=$WIDEBASE_HOME \
+  -Dwidebase.cli.log=$WIDEBASE_HOME/var/log \
+  -Dlog4j.configuration=$WIDEBASE_HOME/etc/widebase-cli-log4j.xml \
+  "Sonatype OSS at https://oss.sonatype.org/content/groups/public" \
+  "Typesafe Repository at http://repo.typesafe.com/typesafe/releases/" \
+  "com.github.widebase%%widebase-dsl%0.1.4" \
+  "com.github.widebase%%widebase-stream-socket-cq%0.2.5" \
+  "com.github.widebase%%widebase-stream-socket-rq%0.2.5" \
+  "$@"
+

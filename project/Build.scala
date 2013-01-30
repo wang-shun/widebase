@@ -14,11 +14,22 @@ object WidebaseBuild extends Build {
       widebaseDb,
       widebaseDbColumn,
       widebaseDbTable,
+      widebaseDsl,
+      widebasePlant,
       widebaseIoColumn,
       widebaseIoCsv,
       widebaseIoCsvFilter,
       widebaseIoFilter,
       widebaseIoTable,
+      widebaseStreamCodec,
+      widebaseStreamCodecCq,
+      widebaseStreamCodecRq,
+      widebaseStreamHandler,
+      widebaseStreamHandlerCq,
+      widebaseStreamHandlerRq,
+      widebaseStreamSocket,
+      widebaseStreamSocketCq,
+      widebaseStreamSocketRq,
       widebaseUtil)
 
   /** DB */
@@ -37,6 +48,11 @@ object WidebaseBuild extends Build {
   lazy val widebaseDbTable = Project(
     "widebase-db-table",
     file("widebase.db.table")) dependsOn(widebaseIoColumn)
+
+  /** DB Table */
+  lazy val widebaseDsl = Project(
+    "widebase-dsl",
+    file("widebase.dsl")) dependsOn(widebaseIoCsv)
 
   /** I/O Column */
   lazy val widebaseIoColumn = Project(
@@ -68,6 +84,72 @@ object WidebaseBuild extends Build {
     "widebase-io-table",
     file("widebase.io.table")) dependsOn(widebaseDbTable)
 
+  /** Plant */
+  lazy val widebasePlant = Project(
+    "widebase-plant",
+    file("widebase.plant")) dependsOn(widebaseStreamSocketRq) settings(
+    resolvers <+= sbtResolver,
+    libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
+
+  /** Stream Codec */
+  lazy val widebaseStreamCodec = Project(
+    "widebase-stream-codec",
+    file("widebase.stream.codec")) dependsOn(widebaseUtil) settings(
+    libraryDependencies ++= lib.netty ++ lib.varioData)
+
+  /** Stream Codec CQ */
+  lazy val widebaseStreamCodecCq = Project(
+    "widebase-stream-codec-cq",
+    file("widebase.stream.codec.cq")) dependsOn(
+    widebaseDbTable,
+    widebaseStreamCodec)
+
+  /** Stream Codec RQ */
+  lazy val widebaseStreamCodecRq = Project(
+    "widebase-stream-codec-rq",
+    file("widebase.stream.codec.rq"))  dependsOn(widebaseStreamCodec)
+
+  /** Stream Handler */
+  lazy val widebaseStreamHandler = Project(
+    "widebase-stream-handler",
+    file("widebase.stream.handler")) dependsOn(widebaseStreamCodec) settings(
+    libraryDependencies ++= lib.jaas ++ lib.log)
+
+  /** Stream Handler CQ */
+  lazy val widebaseStreamHandlerCq = Project(
+    "widebase-stream-handler-cq",
+    file("widebase.stream.handler.cq")) dependsOn(
+    widebaseStreamCodecCq,
+    widebaseStreamHandler)
+
+  /** Stream Handler RQ */
+  lazy val widebaseStreamHandlerRq = Project(
+    "widebase-stream-handler-rq",
+    file("widebase.stream.handler.rq")) dependsOn(
+    widebaseDbTable,
+    widebaseStreamCodecRq,
+    widebaseStreamHandler)
+
+  /** Stream Socket */
+  lazy val widebaseStreamSocket = Project(
+    "widebase-stream-socket",
+    file("widebase.stream.socket")) dependsOn(widebaseStreamHandler)
+
+  /** Stream Socket CQ */
+  lazy val widebaseStreamSocketCq = Project(
+    "widebase-stream-socket-cq",
+    file("widebase.stream.socket.cq")) dependsOn(
+    widebaseStreamHandlerCq,
+    widebaseStreamSocket)
+
+  /** Stream Socket RQ */
+  lazy val widebaseStreamSocketRq = Project(
+    "widebase-stream-socket-rq",
+    file("widebase.stream.socket.rq")) dependsOn(
+    widebaseDsl % "test",
+    widebaseStreamHandlerRq,
+    widebaseStreamSocket)
+
   /** Utilities */
   lazy val widebaseUtil = Project(
     "widebase-util",
@@ -79,10 +161,15 @@ object WidebaseBuild extends Build {
     "widebase.log",
     System.getProperty("user.dir") + "/var/log")
 
+  /** JAAS path */
+  System.setProperty(
+    "java.security.auth.login.config",
+    System.getProperty("user.dir") + "/etc/jaas.conf")
+
   /** Build settings */
 	def buildSettings = Seq(
 		organization := "com.github.widebase",
-		version := "0.1.4",
+		version := "0.1.5",
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     resolvers ++= Seq(
       "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))

@@ -1,0 +1,78 @@
+<refentry>
+  <refentryinfo>
+    <title>Widebase CLI</title>
+    <productname>Widebase</productname>
+
+    <authorgroup>
+      <author>
+        <firstname>myst3r10n</firstname>
+        <surname></surname>
+        <address>
+          <email>myst3r10n@rocketmail.com</email>
+        </address>
+        <contrib>Original author</contrib>
+      </author>
+    </authorgroup>
+  </refentryinfo>
+
+  <refmeta>
+    <refentrytitle>widebase-cli</refentrytitle>
+    <manvolnum>8</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+    <refname>widebase-cli</refname>
+    <refpurpose>command line interface to Widebase</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>widebase-cli</command>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      A utility to administration persistence databases.
+      It runs a scala REPL and loads a database associated session file.
+      Each database has its own session file, e.g. <filename>$WIDEBASE_HOME/usr/data/demo/dbi</filename>.
+      Example how a session file looking out:
+    </para>
+
+    <programlistingco>
+      <programlisting>val dbi = widebase.db.instance(home + "/usr/data/demo/db") <co id="widebase-cli-co-ex-init-database" />
+
+import dbi.asSegmentPath <co id="widebase-cli-co-ex-as-segment-path" />
+import dbi.tables._ <co id="widebase-cli-co-ex-persistent-tables" /></programlisting>
+
+      <calloutlist>
+        <callout arearefs="widebase-cli-co-ex-init-database">
+          <para>Get a database instance to <filename class="directory">$WIDEBASE_HOME/usr/data/demo/db</filename>.</para>
+        </callout>
+
+        <callout arearefs="widebase-cli-co-ex-as-segment-path">
+          <para>Import implicity function that converts segment key into segment path.</para>
+        </callout>
+
+        <callout arearefs="widebase-cli-co-ex-persistent-tables">
+          <para>Import some funcions to working with persistent tables.</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+  </refsect1>
+
+  <refsect1>
+    <title>Examples</title>
+
+    <para>Run CLI and load a session file:</para>
+    <screen><prompt>$</prompt> <userinput>widebase-cli</userinput>
+<prompt>scala></prompt> <userinput>:load sbin/init</userinput>
+<prompt>scala></prompt> <userinput>:load usr/data/demo/dbi</userinput></screen>
+
+    <para>To quit a CLI instance, just type:</para>
+    <screen><prompt>scala></prompt> <userinput>:q</userinput></screen>
+  </refsect1>
+</refentry>
+

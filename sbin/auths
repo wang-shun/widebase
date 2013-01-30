@@ -1,0 +1,14 @@
+System.setProperty("java.security.auth.login.config", home + "/etc/jaas.conf")
+
+import widebase.stream.handler.AuthMap
+
+object auths {
+
+  def broker(implicit path: String = home + "/etc/widebase-broker/auths.properties") =
+    AuthMap.load(path)
+
+  def server(implicit path: String = home + "/etc/widebase-server/auths.properties") =
+    AuthMap.load(path)
+
+}
+

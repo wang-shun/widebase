@@ -1,0 +1,20 @@
+import widebase.db.table.Table
+import widebase.stream.handler.rq.RecordListener
+
+object listener extends RecordListener {
+
+  var table: Table = null
+
+  def react = {
+
+    case event: String => println("event: " + event)
+    case (records: Int, partition: String) => println("rollback: " + records + " @ " + partition)
+    case chunk: Table =>
+      if(table == null)
+        table = chunk
+      else
+        table ++= chunk
+
+  }
+}
+

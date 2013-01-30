@@ -1,0 +1,5 @@
+val dbi = widebase.db.instance(home + "/usr/data/demo/db")
+
+import dbi.asSegmentPath
+import dbi.tables._
+

@@ -1,0 +1,226 @@
+<refentry>
+  <refentryinfo>
+    <title>Widebase Plant</title>
+    <productname>Widebase</productname>
+
+    <authorgroup>
+      <author>
+        <firstname>myst3r10n</firstname>
+        <surname></surname>
+        <address>
+          <email>myst3r10n@rocketmail.com</email>
+        </address>
+        <contrib>Original author</contrib>
+      </author>
+    </authorgroup>
+  </refentryinfo>
+
+  <refmeta>
+    <refentrytitle>widebase-plant</refentrytitle>
+    <manvolnum>8</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+    <refname>widebase-plant</refname>
+    <refpurpose>a standalone broker</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>widebase-plant</command>
+      <arg choice='opt'>-a <replaceable>file</replaceable></arg>
+      <arg choice='opt'>-f <replaceable>pattern</replaceable></arg>
+      <arg choice='opt'>-i <replaceable>interval</replaceable></arg>
+      <arg choice='opt'>-p <replaceable>port</replaceable></arg>
+      <arg choice='opt'><replaceable>path</replaceable></arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+
+    <para>
+      A standalone broker to cover a publish-subscribe pattern.
+      Based on Widebase Stream/RQ, a message oriented communication protocol.
+      The broker acts as middleware between a producer where send table associated records and many consumers where've subscribed for that table.
+      Records could be persistent by partitioned table, domain is date.
+      The partition value is taken from the first published record and field.
+      Every date compatible type is supported: <ooclass>Long</ooclass>, <ooclass>Month</ooclass>, <ooclass> Time</ooclass>, <ooclass>DateTime</ooclass> and <ooclass>Timestamp</ooclass>.
+      A producer could force the broker to take a new partition from next record and notify consumers about that change.
+      Else every record will be written in the same partitioned table.
+      If persistence is enabled by <arg><replaceable>path</replaceable></arg> and pending records exists, new consumer will be informed with amount of records and the current partition.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Options</title>
+
+    <para>The following options are supported:</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>-a</option> <replaceable>file</replaceable></term>
+        <listitem>
+          <para>The authorization file.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-f</option> <replaceable>pattern</replaceable></term>
+        <listitem>
+          <para>The publish-subscribe filter, available pattern:</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><replaceable>l<replaceable>X</replaceable></replaceable></term>
+
+              <listitem>
+                <para>Compression level 0-9.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><replaceable>rg</replaceable></term>
+
+              <listitem>
+                <para>Read socket in Gzip format.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><replaceable>rz</replaceable></term>
+
+              <listitem>
+                <para>Read socket in Zlib format.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><replaceable>wg</replaceable></term>
+
+              <listitem>
+                <para>Write socket in Gzip format.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><replaceable>wz</replaceable></term>
+
+              <listitem>
+                <para>Write socket in Zlib format.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-i</option> <replaceable>seconds</replaceable></term>
+        <listitem>
+          <para>
+            The publishing latency.
+            Default is <quote>0</quote> latency.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-p</option> <replaceable>port</replaceable></term>
+        <listitem>
+          <para>
+            The port to listen consumers and producers.
+            Default port is <quote>60000</quote>.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Authorization</title>
+
+    <para>
+      The most messages sent from consumer or procuder requires explicit authorization.
+      This authorization is granted for users or groups by configurable file <filename>auths.properties</filename>, example:
+    </para>
+
+    <programlistingco>
+      <programlisting>JAAS=widebase-broker <co id="widebase-plant-co-ex-entry-name" /></programlisting>
+      <programlisting>PublishMessage<co id="widebase-plant-co-ex-publish-message" />=user,group <co id="widebase-plant-co-ex-username-group" /></programlisting>
+
+      <calloutlist>
+        <callout arearefs="widebase-plant-co-ex-entry-name">
+          <para>The entry name of JAAS.</para>
+        </callout>
+
+        <callout arearefs="widebase-plant-co-ex-publish-message">
+          <para>The message <quote>PublishMessage</quote>.</para>
+        </callout>
+
+        <callout arearefs="widebase-plant-co-ex-username-group">
+          <para>A comma-separated list of users or groups where're authorized to send <quote>PublishMessage</quote>.</para>
+        </callout>
+      </calloutlist>
+    </programlistingco>
+
+    <para>
+      A detailed list of all supported messages are specified in Widebase Handbook.
+      <footnote>
+        <para>The official Widebase Handbook: <ulink url="http://widebase.github.com/docs/books/widebase-handbook/html/index.html" /></para>
+      </footnote>
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Examples</title>
+
+    <para>Run a broker:</para>
+    <screen><prompt>$</prompt> <userinput>widebase-plant -a etc/widebase-plant/auths.properties usr/sync/demo/db</userinput></screen>
+  </refsect1>
+
+  <refsect1>
+    <title>Files</title>
+
+    <variablelist>
+      <varlistentry>
+        <term>
+          <filename>$WIDEBASE_PLANT_HOME/etc/widebase-plant/auths.properties</filename>
+        </term>
+
+        <listitem>
+          <para>The configuration file to authorize messages.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>
+          <filename>$WIDEBASE_PLANT_HOME/etc/widebase-plant/groups.properties</filename>
+        </term>
+
+        <listitem>
+          <para>The group configuration file of the default JAAS login module.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>
+          <filename>$WIDEBASE_PLANT_HOME/etc/widebase-plant/users.properties</filename>
+        </term>
+
+        <listitem>
+          <para>The user configuration file of the default JAAS login module.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>
+          <filename>$WIDEBASE_PLANT_HOME/etc/jaas.conf</filename>
+        </term>
+
+        <listitem>
+          <para>The configuration file of JAAS login modules.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
+
