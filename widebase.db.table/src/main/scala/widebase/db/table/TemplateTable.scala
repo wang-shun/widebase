@@ -43,7 +43,7 @@ trait TemplateTable[R] {
    *
    * @return filtered table
    */
-  def filter(predicate: Record => Boolean): TemplateTable[R]
+  def filter(predicate: R => Boolean): TemplateTable[R]
 
   /** Filters all elements of this table which do not satisfy a predicate.
    *
@@ -51,7 +51,7 @@ trait TemplateTable[R] {
    *
    * @return filtered table
    */
-  def filterNot(predicate: Record => Boolean) = filter(!predicate(_))
+  def filterNot(predicate: R => Boolean) = filter(!predicate(_))
 
   def foreach[U](f: R =>  U) =
     for(r <- 0 to records.length - 1)
