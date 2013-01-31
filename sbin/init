@@ -22,5 +22,9 @@ import widebase.stream.socket.rq
 import org.joda.time.LocalDateTime
 import widebase.stream.handler.rq.RecordListener
 
+// Joda date and time tools
+import org.joda.time. { Days, Minutes, Months, Seconds, Weeks, Years }
+
 def now = LocalDateTime.now
+def today = now.toLocalDate
 
