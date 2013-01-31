@@ -2,13 +2,13 @@ package widebase.db.table
 
 import widebase.db.column.TypedColumn
 
-/** A record.
+/** A label accessible record.
  *
  * @author myst3r10n
  */
 case class Record(labels: TypedColumn[_], values: Array[Any]) {
 
-  /** Select a value by its label in the record.
+  /** Select a value by its label.
    *
    * @param label where values are selected
    *
