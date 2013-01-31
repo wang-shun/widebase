@@ -122,6 +122,24 @@ trait HybridBufferLike[A] {
 
   }
 
+  /** Counts the number of elements in the hybrid buffer which satisfy a predicate..
+   *
+   * @param predicate used to test elements
+   *
+   * @return number of elements satisfying the predicate
+   */
+  def count(predicate: A => Boolean) = {
+
+    var i = 0
+
+    for(value <- this)
+      if(predicate(value))
+        i += 1
+
+    i
+
+  }
+
   /** Checks whether element exists within hybrid buffer.
    *
    * @param element to check
@@ -136,6 +154,22 @@ trait HybridBufferLike[A] {
           return true
 
     buffer.contains(element)
+
+  }
+
+  /** Tests whether a predicate holds for some of the elements of this hybrid buffer.
+   *
+   * @param predicate used to test elements
+   *
+   * @return true if exists, else false
+   */
+  def exists(predicate: A => Boolean): Boolean = {
+
+    for(value <- this)
+      if(predicate(value))
+        return true
+
+    false
 
   }
 
@@ -164,6 +198,22 @@ trait HybridBufferLike[A] {
    * @return filtered column
    */
   def filterNot(predicate: A => Boolean) = filter(!predicate(_))
+
+  /** Finds the first element of the hybrid buffer satisfying a predicate, if any.
+   *
+   * @param predicate used to test elements
+   *
+   * @return option of value
+   */
+  def find(predicate: A => Boolean): Option[A] = {
+
+    for(value <- this)
+      if(predicate(value))
+        return Some(value)
+
+    None
+
+  }
 
   /** Self-explanatory
    *
