@@ -59,6 +59,75 @@ class Table {
   /** Columns. */
   protected var map = LinkedHashMap[Any, TypedColumn[_]]()
 
+  /** Copy. */
+  protected object copy {
+
+    def label = {
+
+      val table = new Table
+      val thisColumns = columns.toBuffer // Performance purposes
+
+      var i = 0
+
+      labels.foreach { label =>
+
+        thisColumns(i).typeOf match {
+
+          case Datatype.Bool => table ++= (label, new BoolColumn)
+          case Datatype.Byte => table ++= (label, new ByteColumn)
+          case Datatype.Char => table ++= (label, new CharColumn)
+          case Datatype.Double => table ++= (label, new DoubleColumn)
+          case Datatype.Float => table ++= (label, new FloatColumn)
+          case Datatype.Int => table ++= (label, new IntColumn)
+          case Datatype.Long => table ++= (label, new LongColumn)
+          case Datatype.Short => table ++= (label, new ShortColumn)
+          case Datatype.Month => table ++= (label, new MonthColumn)
+          case Datatype.Date => table ++= (label, new DateColumn)
+          case Datatype.Minute => table ++= (label, new MinuteColumn)
+          case Datatype.Second => table ++= (label, new SecondColumn)
+          case Datatype.Time => table ++= (label, new TimeColumn)
+          case Datatype.DateTime => table ++= (label, new DateTimeColumn)
+          case Datatype.Timestamp => table ++= (label, new TimestampColumn)
+          case Datatype.Symbol => table ++= (label, new SymbolColumn)
+          case Datatype.String => table ++= (label, new StringColumn)
+
+        }
+
+        i += 1
+
+      }
+
+      table
+
+    }
+
+    def record(r: Int, from: Buffer[TypedColumn[_]], to: Buffer[TypedColumn[_]]) {
+
+      for(i <- 0 to columns.size - 1)
+        to(i) match {
+
+          case column: BoolColumn => column += from(i)(r).asInstanceOf[Boolean]
+          case column: ByteColumn => column += from(i)(r).asInstanceOf[Byte]
+          case column: CharColumn => column += from(i)(r).asInstanceOf[Char]
+          case column: DoubleColumn => column += from(i)(r).asInstanceOf[Double]
+          case column: FloatColumn => column += from(i)(r).asInstanceOf[Float]
+          case column: IntColumn => column += from(i)(r).asInstanceOf[Int]
+          case column: LongColumn => column += from(i)(r).asInstanceOf[Long]
+          case column: ShortColumn => column += from(i)(r).asInstanceOf[Short]
+          case column: MonthColumn => column += from(i)(r).asInstanceOf[YearMonth]
+          case column: DateColumn => column += from(i)(r).asInstanceOf[LocalDate]
+          case column: MinuteColumn => column += from(i)(r).asInstanceOf[Minutes]
+          case column: SecondColumn => column += from(i)(r).asInstanceOf[Seconds]
+          case column: TimeColumn => column += from(i)(r).asInstanceOf[LocalTime]
+          case column: DateTimeColumn => column += from(i)(r).asInstanceOf[LocalDateTime]
+          case column: TimestampColumn => column += from(i)(r).asInstanceOf[Timestamp]
+          case column: SymbolColumn => column += from(i)(r).asInstanceOf[Symbol]
+          case column: StringColumn => column += from(i)(r).asInstanceOf[String]
+
+        }
+    }
+  }
+
   /** Records. */
   object records {
 
@@ -73,6 +142,65 @@ class Table {
     def apply(n: Int) =
       for(column <- columns)
         yield(column(n))
+
+    /** Counts the number of records in the table which satisfy a predicate..
+     *
+     * @param predicate used to test elements
+     *
+     * @return number of elements satisfying the predicate
+     */
+    def count(predicate: Record => Boolean) = {
+
+      var i = 0
+
+      // Performance purposes
+      val thisColumns = columns.toBuffer
+
+      for(r <- 0 to records.length - 1)
+        if(predicate(Record(labels, records(r).toArray)))
+          i += 1
+
+      i
+
+    }
+
+    /** Tests whether a predicate holds for some of the records of this table.
+     *
+     * @param predicate used to test elements
+     *
+     * @return true if exists, else false
+     */
+    def exists(predicate: Record => Boolean): Boolean = {
+
+      // Performance purposes
+      val thisColumns = columns.toBuffer
+
+      for(r <- 0 to records.length - 1)
+        if(predicate(Record(labels, records(r).toArray)))
+          return true
+
+      false
+
+    }
+
+    /** Finds the first element of the table satisfying a predicate, if any.
+     *
+     * @param predicate used to test elements
+     *
+     * @return option of table
+     */
+    def find(predicate: Record => Boolean): Option[Iterable[_]] = {
+
+      // Performance purposes
+      val thisColumns = columns.toBuffer
+
+      for(r <- 0 to records.length - 1)
+        if(predicate(Record(labels, records(r).toArray)))
+          return Some(records(r))
+
+      None
+
+    }
 
     /** Applies a function to all records of this table.
      *
@@ -284,69 +412,15 @@ class Table {
    */
   def filter(predicate: Record => Boolean) = {
 
-    val filteredTable = new Table
+    val filteredTable = copy.label
 
-    var i = 0
-    val thisColumns = columns.toBuffer // Performance purposes
-
-    labels.foreach { label =>
-
-      thisColumns(i).typeOf match {
-
-        case Datatype.Bool => filteredTable ++= (label, new BoolColumn)
-        case Datatype.Byte => filteredTable ++= (label, new ByteColumn)
-        case Datatype.Char => filteredTable ++= (label, new CharColumn)
-        case Datatype.Double => filteredTable ++= (label, new DoubleColumn)
-        case Datatype.Float => filteredTable ++= (label, new FloatColumn)
-        case Datatype.Int => filteredTable ++= (label, new IntColumn)
-        case Datatype.Long => filteredTable ++= (label, new LongColumn)
-        case Datatype.Short => filteredTable ++= (label, new ShortColumn)
-        case Datatype.Month => filteredTable ++= (label, new MonthColumn)
-        case Datatype.Date => filteredTable ++= (label, new DateColumn)
-        case Datatype.Minute => filteredTable ++= (label, new MinuteColumn)
-        case Datatype.Second => filteredTable ++= (label, new SecondColumn)
-        case Datatype.Time => filteredTable ++= (label, new TimeColumn)
-        case Datatype.DateTime => filteredTable ++= (label, new DateTimeColumn)
-        case Datatype.Timestamp => filteredTable ++= (label, new TimestampColumn)
-        case Datatype.Symbol => filteredTable ++= (label, new SymbolColumn)
-        case Datatype.String => filteredTable ++= (label, new StringColumn)
-
-      }
-
-      i += 1
-
-    }
-
-    val filteredColumns = filteredTable.columns.toBuffer // Performance purposes
+    // Performance purposes
+    val thisColumns = columns.toBuffer
+    val filteredColumns = filteredTable.columns.toBuffer
 
     for(r <- 0 to records.length - 1)
-      if(predicate(Record(labels, records(r).toArray))) {
-
-        for(i <- 0 to columns.size - 1)
-
-          filteredColumns(i) match {
-
-            case column: BoolColumn => column += thisColumns(i)(r).asInstanceOf[Boolean]
-            case column: ByteColumn => column += thisColumns(i)(r).asInstanceOf[Byte]
-            case column: CharColumn => column += thisColumns(i)(r).asInstanceOf[Char]
-            case column: DoubleColumn => column += thisColumns(i)(r).asInstanceOf[Double]
-            case column: FloatColumn => column += thisColumns(i)(r).asInstanceOf[Float]
-            case column: IntColumn => column += thisColumns(i)(r).asInstanceOf[Int]
-            case column: LongColumn => column += thisColumns(i)(r).asInstanceOf[Long]
-            case column: ShortColumn => column += thisColumns(i)(r).asInstanceOf[Short]
-            case column: MonthColumn => column += thisColumns(i)(r).asInstanceOf[YearMonth]
-            case column: DateColumn => column += thisColumns(i)(r).asInstanceOf[LocalDate]
-            case column: MinuteColumn => column += thisColumns(i)(r).asInstanceOf[Minutes]
-            case column: SecondColumn => column += thisColumns(i)(r).asInstanceOf[Seconds]
-            case column: TimeColumn => column += thisColumns(i)(r).asInstanceOf[LocalTime]
-            case column: DateTimeColumn => column += thisColumns(i)(r).asInstanceOf[LocalDateTime]
-            case column: TimestampColumn => column += thisColumns(i)(r).asInstanceOf[Timestamp]
-            case column: SymbolColumn => column += thisColumns(i)(r).asInstanceOf[Symbol]
-            case column: StringColumn => column += thisColumns(i)(r).asInstanceOf[String]
-
-          }
-
-    }
+      if(predicate(Record(labels, records(r).toArray)))
+        copy.record(r, thisColumns, filteredColumns)
 
     filteredTable
 
