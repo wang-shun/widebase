@@ -66,6 +66,12 @@ class PartitionMap {
    */
   def filterNot(predicate: Record => Boolean) = filter(!predicate(_))
 
+  /** Applies a function to all tables of this partition.
+   *
+   * @param function apply to all tables
+   */
+  def foreach[U](function: ((String, Table)) =>  U) = map.foreach(function)
+
   /** A serie of partition domains. */
   def parts = map.keys
 
