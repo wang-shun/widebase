@@ -156,7 +156,7 @@ class Table {
       // Performance purposes
       val thisColumns = columns.toBuffer
 
-      for(r <- 0 to records.length - 1)
+      for(r <- 0 to length - 1)
         if(predicate(Record(labels, records(r).toArray)))
           i += 1
 
@@ -175,7 +175,7 @@ class Table {
       // Performance purposes
       val thisColumns = columns.toBuffer
 
-      for(r <- 0 to records.length - 1)
+      for(r <- 0 to length - 1)
         if(predicate(Record(labels, records(r).toArray)))
           return true
 
@@ -194,7 +194,7 @@ class Table {
       // Performance purposes
       val thisColumns = columns.toBuffer
 
-      for(r <- 0 to records.length - 1)
+      for(r <- 0 to length - 1)
         if(predicate(Record(labels, records(r).toArray)))
           return Some(records(r))
 
@@ -204,24 +204,108 @@ class Table {
 
     /** Applies a function to all records of this table.
      *
-     * @param f self-explanatory
+     * @param function apply to all records
      *
      * @note Due performance lack not use by bulk operations.
      **/
-    def foreach[U](f: Iterable[Any] => U) =
+    def foreach[U](function: Iterable[Any] => U) =
       for(r <- 0 to length - 1)
-        f(for(column <- columns)
+        function(for(column <- columns)
           yield(column(r)))
+
+    /** Tests whether a predicate holds for all records of this table.
+     *
+     * @param predicate used to test elements
+     *
+     * @return `true` if predicate holds for all records, else `false`
+     */
+    def forall(predicate: Record => Boolean): Boolean = {
+
+      val thisColumns = columns.toBuffer
+
+      for(r <- 0 to length - 1)
+        if(!predicate(Record(labels, records(r).toArray)))
+          return false
+
+      true
+
+    }
 
     /** Get first record */
     def head =
       for(column <- columns)
         yield(column.head)
 
+    /** Finds index of first record satisfying some predicate.
+     *
+     * @param predicate used to test elements
+     *
+     * @return >= 0 if found, else -1
+     */
+    def indexWhere(predicate: Record => Boolean): Int =
+      indexWhere(predicate, 0)
+
+    /** Finds index of first record satisfying some predicate.
+     *
+     * @param predicate used to test elements
+     * @param from start index
+     *
+     * @return >= 0 if found, else -1
+     */
+    def indexWhere(predicate: Record => Boolean, from: Int): Int = {
+
+      val thisColumns = columns.toBuffer
+
+      for(r <- from to length - 1)
+        if(!predicate(Record(labels, records(r).toArray)))
+          return r
+
+      -1
+
+    }
+
+    /** Tests whether any record exists. */
+    def isEmpty = length == 0
+
     /** Get last record */
     def last =
       for(column <- columns)
         yield(column.last)
+
+    /** Finds index of last record satisfying some predicate.
+     *
+     * @param predicate used to test elements
+     *
+     * @return >= 0 if found, else -1
+     */
+    def lastIndexWhere(predicate: Record => Boolean): Int =
+      lastIndexWhere(predicate, 0)
+
+    /** Finds index of last record satisfying some predicate.
+     *
+     * @param predicate used to test elements
+     * @param from start index
+     *
+     * @return >= 0 if found, else -1
+     */
+    def lastIndexWhere(predicate: Record => Boolean, from: Int): Int = {
+
+      val thisColumns = columns.toBuffer
+
+      var r = length - 1
+
+      while(r >= 0) {
+
+        if(!predicate(Record(labels, records(r).toArray)))
+          return r
+
+        r -= 1
+
+      }
+
+      -1
+
+    }
 
     /** Amount of records.
      *
@@ -436,9 +520,9 @@ class Table {
 
   /** Applies a function to all columns of this table.
    *
-   * @param f self-explanatory
+   * @param function apply to all emements
    */
-  def foreach[U](f: ((Any, TypedColumn[_])) =>  U) = map.foreach(f)
+  def foreach[U](function: ((Any, TypedColumn[_])) =>  U) = map.foreach(function)
 
   /** labels of columns.
    *
