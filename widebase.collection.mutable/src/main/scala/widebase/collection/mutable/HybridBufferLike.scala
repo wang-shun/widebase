@@ -387,8 +387,21 @@ trait HybridBufferLike[A] {
     else
       get(mappedElements - 1)
 
+  /** Find index of element within hybrid buffer.
+   *
+   * @param element to find
+   *
+   * @return >= 0 if found, else -1
+   */
   def lastIndexOf[B >: A](element: B): Int = lastIndexOf(element, 0)
 
+  /** Find index of element within hybrid buffer.
+   *
+   * @param element to find
+   * @param from start index
+   *
+   * @return >= 0 if found, else -1
+   */
   def lastIndexOf[B >: A](element: B, from: Int): Int = {
 
     val index = buffer.lastIndexOf(element, from)
