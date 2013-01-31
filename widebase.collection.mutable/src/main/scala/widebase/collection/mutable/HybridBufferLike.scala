@@ -130,13 +130,14 @@ trait HybridBufferLike[A] {
    */
   def count(predicate: A => Boolean) = {
 
-    var i = 0
+    var number = 0
 
-    for(value <- this)
-      if(predicate(value))
-        i += 1
+    if(mappers != null)
+      for(i <- 0 to mappedElements - 1)
+        if(predicate(get(i)))
+          number += 1
 
-    i
+    number + buffer.count(predicate)
 
   }
 
@@ -165,11 +166,17 @@ trait HybridBufferLike[A] {
    */
   def exists(predicate: A => Boolean): Boolean = {
 
-    for(value <- this)
-      if(predicate(value))
-        return true
+    if(mappers != null)
+      for(i <- 0 to mappedElements - 1) {
 
-    false
+        val value = get(i)
+
+        if(predicate(value))
+          return true
+
+      }
+
+    buffer.exists(predicate)
 
   }
 
@@ -183,11 +190,17 @@ trait HybridBufferLike[A] {
 
     val column = ArrayBuffer[A]()
 
-    for(value <- this)
-      if(predicate(value))
-        column += value
+    if(mappers != null)
+      for(i <- 0 to mappedElements - 1) {
 
-    column.result
+        val value = get(i)
+
+        if(predicate(value))
+          column += value
+
+      }
+
+    (column ++ buffer.filter(predicate)).result
 
   }
 
@@ -207,25 +220,53 @@ trait HybridBufferLike[A] {
    */
   def find(predicate: A => Boolean): Option[A] = {
 
-    for(value <- this)
-      if(predicate(value))
-        return Some(value)
+    if(mappers != null)
+      for(i <- 0 to mappedElements - 1) {
 
-    None
+        val value = get(i)
+
+        if(predicate(value))
+          return Some(value)
+
+      }
+
+    buffer.find(predicate)
 
   }
 
-  /** Self-explanatory
+  /** Applies a function to all elements of this hybrid buffer.
    *
-   * @param f self-explanatory
+   * @param function apply to all emements
    */
-  def foreach[U](f: A => U) = {
+  def foreach[U](function: A => U) = {
 
     if(mappers != null)
       for(i <- 0 to mappedElements - 1)
-        f(get(i))
+        function(get(i))
 
-    buffer.foreach(f)
+    buffer.foreach(function)
+
+  }
+
+  /** Tests whether a predicate holds for all elements of this hybrid buffer.
+   *
+   * @param predicate used to test elements
+   *
+   * @return `true` if predicate holds for all elements, else `false`
+   */
+  def forall[U](predicate: A => Boolean): Boolean = {
+
+    if(mappers != null)
+      for(i <- 0 to mappedElements - 1) {
+
+        val value = get(i)
+
+        if(!predicate(value))
+          return false
+
+      }
+
+    buffer.forall(predicate)
 
   }
 
@@ -242,14 +283,69 @@ trait HybridBufferLike[A] {
    *
    * @return >= 0 if found, else -1
    */
-  def indexOf[B >: A](element: B): Int = {
+  def indexOf[B >: A](element: B): Int = indexOf(element, 0)
 
-    if(mappers != null)
-      for(i <- 0 to mappedElements - 1)
+  /** Find index of element within hybrid buffer.
+   *
+   * @param element to find
+   * @param from start index
+   *
+   * @return >= 0 if found, else -1
+   */
+  def indexOf[B >: A](element: B, from: Int): Int = {
+
+    if(mappers != null && from < mappedElements)
+      for(i <- from to mappedElements - 1)
         if(element == get(i))
           return i
 
-    buffer.indexOf(element)
+    if(mappers == null)
+      buffer.indexOf(element, from)
+    else
+      buffer.indexOf(element, from - mappedElements + 1)
+
+  }
+
+  /** Finds index of first element satisfying some predicate.
+   *
+   * @param predicate used to test elements
+   *
+   * @return >= 0 if found, else -1
+   */
+  def indexWhere(predicate: A => Boolean): Int = indexWhere(predicate, 0)
+
+  /** Finds index of first element satisfying some predicate.
+   *
+   * @param predicate used to test elements
+   * @param from start index
+   *
+   * @return >= 0 if found, else -1
+   */
+  def indexWhere(predicate: A => Boolean, from: Int): Int = {
+
+    if(mappers != null && from < mappedElements)
+      for(i <- from to mappedElements - 1) {
+
+        val value = get(i)
+
+        if(predicate(value))
+          return i
+
+      }
+
+    val index =
+      if(mappers == null)
+        buffer.indexWhere(predicate, from)
+      else
+        buffer.indexWhere(predicate, from - mappedElements - 1)
+
+    if(index == -1)
+      return -1
+
+    if(mappers == null)
+      index
+    else
+      mappedElements - 1 + index
 
   }
 
@@ -281,12 +377,89 @@ trait HybridBufferLike[A] {
 
   }
 
+  /** Tests whether column is empty. */
+  def isEmpty = length == 0
+
   /** Last element within hybrid buffer. */
   def last =
     if(mappers == null || mappedElements == 0)
       buffer.last
     else
       get(mappedElements - 1)
+
+  def lastIndexOf[B >: A](element: B): Int = lastIndexOf(element, 0)
+
+  def lastIndexOf[B >: A](element: B, from: Int): Int = {
+
+    val index = buffer.lastIndexOf(element, from)
+
+    if(index != -1)
+      if(mappers == null)
+        return index
+      else
+        return mappedElements - 1 + index
+
+    if(mappers != null) {
+
+      var i = mappedElements - 1
+
+      while(i >= 0) {
+
+        if(element == get(i))
+          return i
+
+        i -= 1
+
+      }
+    }
+
+    -1
+
+  }
+
+  /** Finds index of last element satisfying some predicate.
+   *
+   * @param predicate used to test elements
+   *
+   * @return >= 0 if found, else -1
+   */
+  def lastIndexWhere(predicate: A => Boolean): Int =
+    lastIndexWhere(predicate, 0)
+
+  /** Finds index of last element satisfying some predicate.
+   *
+   * @param predicate used to test elements
+   * @param from start index
+   *
+   * @return >= 0 if found, else -1
+   */
+  def lastIndexWhere(predicate: A => Boolean, from: Int): Int = {
+
+    val index = buffer.lastIndexWhere(predicate, from)
+
+    if(mappers == null)
+      return index
+    else
+      return mappedElements - 1 + index
+
+    if(mappers != null && from < mappedElements) {
+
+      var i = mappedElements - 1
+
+      while(i >= 0) {
+
+        if(predicate(get(i)))
+          return i
+
+        i -= 1
+
+      }
+
+    }
+
+    -1
+
+  }
 
   /** Removes the element at a given index position.
    *
