@@ -135,8 +135,17 @@ object Filter extends Logger with Loggable {
 
       def apply(index: Int) = MyData(date(index), price(index))
 
-      def filter(predicate: widebase.db.table.Record => Boolean) =
-        MyTable(peer.filter(predicate))
+      def filter(predicate: MyData => Boolean) = {
+
+        val filteredTable = new MyTable
+
+        for(r <- 0 to records.length - 1)
+          if(predicate(this(r)))
+            filteredTable += this(r)
+
+        filteredTable
+
+      }
 
       def peer = table
 
@@ -166,8 +175,8 @@ object Filter extends Logger with Loggable {
       DateTimeConstants.FRIDAY)
 
     started = System.currentTimeMillis
-    val filteredTemplate = table.filter(record =>
-      days.contains(record("date").asInstanceOf[LocalDate].getDayOfWeek))
+    val filteredTemplate = table.filter(data =>
+      days.contains(data.date.getDayOfWeek))
     info("Template filtered " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
