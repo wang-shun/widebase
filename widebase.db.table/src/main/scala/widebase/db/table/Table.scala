@@ -488,9 +488,9 @@ class Table {
     }
   }
 
-  /** Filters all elements of this table which satisfy a predicate.
+  /** Filters all records of this table which satisfy a predicate.
    *
-   * @param predicate used to test elements.
+   * @param predicate used to test records.
    *
    * @return filtered table
    */
@@ -510,9 +510,9 @@ class Table {
 
   }
 
-  /** Filters all elements of this table which do not satisfy a predicate.
+  /** Filters all records of this table which do not satisfy a predicate.
    *
-   * @param predicate used to test elements.
+   * @param predicate used to test records.
    *
    * @return filtered table
    */
@@ -520,7 +520,7 @@ class Table {
 
   /** Applies a function to all columns of this table.
    *
-   * @param function apply to all emements
+   * @param function apply to all columns
    */
   def foreach[U](function: ((Any, TypedColumn[_])) =>  U) = map.foreach(function)
 
