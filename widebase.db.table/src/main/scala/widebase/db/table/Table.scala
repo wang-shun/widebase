@@ -731,6 +731,8 @@ object Table {
    *
    * @param labels of table
    * @param columns of table
+   *
+   * return table
    */
   def apply(labels: TypedColumn[_], columns: TypedColumn[_]*) = {
 
