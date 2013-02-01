@@ -492,6 +492,8 @@ class Table {
    *
    * @param predicate used to test records.
    *
+   * @note Is slower than `filter` by widebase.db.table.TemplateTable
+   *
    * @return filtered table
    */
   def filter(predicate: Record => Boolean) = {
