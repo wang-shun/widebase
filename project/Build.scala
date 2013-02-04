@@ -160,7 +160,8 @@ object WidebaseBuild extends Build {
     file("widebase.stream.handler.rq")) dependsOn(
     widebaseDbTable,
     widebaseStreamCodecRq,
-    widebaseStreamHandler)
+    widebaseStreamHandler) settings(
+    libraryDependencies ++= lib.eval ++ lib.log)
 
   /** Stream Socket */
   lazy val widebaseStreamSocket = Project(
@@ -196,6 +197,12 @@ object WidebaseBuild extends Build {
   System.setProperty(
     "java.security.auth.login.config",
     System.getProperty("user.dir") + "/etc/jaas.conf")
+
+  /** Security policy */
+  System.setProperty("java.security.manager", "true")
+  System.setProperty(
+    "java.security.policy",
+    System.getProperty("user.dir") + "/etc/java.policy")
 
   /** Build settings */
 	def buildSettings = Seq(
