@@ -14,6 +14,7 @@ trait MessageType extends widebase.stream.codec.MessageType {
     RollbackMessage,
     SubscribeMessage,
     TableMessage,
+    UnparsableMessage,
     UnsubscribeMessage = Value
 
 }
