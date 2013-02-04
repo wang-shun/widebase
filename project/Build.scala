@@ -207,7 +207,7 @@ object WidebaseBuild extends Build {
   /** Build settings */
 	def buildSettings = Seq(
 		organization := "com.github.widebase",
-		version := "0.3.1",
+		version := "0.3.2-SNAPSHOT",
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     resolvers ++= Seq(
       "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))
