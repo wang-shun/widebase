@@ -98,7 +98,20 @@ class BrokerDecoder extends ResponseDecoder with MessageTypeDecoder {
 
         new TableMessage(decodedBytes)
 
+      case MessageType.UnparsableMessage =>
+        val reason = readString(buffer)
+
+        if(reason == null) {
+
+          buffer.resetReaderIndex
+          return null
+
+        }
+
+        new UnparsableMessage(reason)
+
       case MessageType.UnsubscribeMessage => new UnsubscribeMessage
+
       case _ =>
         buffer.resetReaderIndex
         super.decode(ctx, channel, buffer)
