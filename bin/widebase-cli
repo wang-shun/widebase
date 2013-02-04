@@ -15,7 +15,7 @@ java \
   "Sonatype OSS at https://oss.sonatype.org/content/groups/public" \
   "Typesafe Repository at http://repo.typesafe.com/typesafe/releases/" \
   "com.github.widebase%%widebase-dsl%0.3.2-SNAPSHOT" \
-  "com.github.widebase%%widebase-stream-socket-cq%0.3.2-SNAPSHOT" \
-  "com.github.widebase%%widebase-stream-socket-rq%0.3.2-SNAPSHOT" \
+  "com.github.widebase%%widebase-stream-socket-cq%0.3.2" \
+  "com.github.widebase%%widebase-stream-socket-rq%0.3.2" \
   "$@"
 

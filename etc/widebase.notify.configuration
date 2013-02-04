@@ -1,0 +1,16 @@
+[scala]
+  version: 2.9.2
+[app]
+  org: com.github.widebase
+  name: widebase-notify
+  version: 0.3.2
+  class: widebase.notify.Main
+  cross-versioned: true
+[repositories]
+  local
+  sonatype-oss: https://oss.sonatype.org/content/groups/public
+  maven-central
+  scala-tools-releases
+[boot]
+ directory: ${sbt.boot.directory}
+
