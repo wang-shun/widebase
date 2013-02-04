@@ -1,8 +1,12 @@
 package widebase.stream.handler.rq
 
+import net.liftweb.common.Logger
+
 import org.jboss.netty.channel.Channel
 
 import scala.actors. { Actor, TIMEOUT }
+
+import widebase.db.table.Table
 
 import widebase.stream.codec.rq. {
 
@@ -18,7 +22,11 @@ import widebase.stream.codec.rq. {
  *
  * @author myst3r10n
  */
-class ConsumerWriter(channel: Channel, selector: String) extends Actor {
+class ConsumerWriter(
+  channel: Channel,
+  selector: Selector = null)
+  extends Actor
+  with Logger {
 
   def act {
 
@@ -38,15 +46,49 @@ class ConsumerWriter(channel: Channel, selector: String) extends Actor {
     msg match {
 
       case Abort => exit
+
       case message: NotifyMessage => channel.write(new EventMessage(message.text))
       case message: PublishMessage =>
-        if(!selector.isEmpty) {
 
-          // selector code to filter subscribed data...
+        if(selector == null)
+          channel.write(new TableMessage(message.bytes))
+        else {
+
+          val table = Table.fromBytes(message.bytes)
+
+          var filteredTable: Table = null
+
+          val filter = scala.actors.Actor.actor {
+
+            System.setSecurityManager(new SelectorPolicy)
+
+            scala.actors.Actor.react {
+
+              case true =>
+
+                try {
+
+                  filteredTable = selector(table)
+
+                  scala.actors.Actor.reply(true)
+
+                } catch {
+
+                  case e: Exception => scala.actors.Actor.reply(e)
+
+                }
+
+            }
+          }
+
+          val filtered = filter !? (true)
+
+          if(filtered.isInstanceOf[Exception])
+            throw filtered.asInstanceOf[Exception]
+          if(!filteredTable.records.isEmpty)
+            channel.write(new TableMessage(filteredTable.toBytes()))
 
         }
-
-        channel.write(new TableMessage(message.bytes))
 
       case message: RollbackMessage => channel.write(message)
 
