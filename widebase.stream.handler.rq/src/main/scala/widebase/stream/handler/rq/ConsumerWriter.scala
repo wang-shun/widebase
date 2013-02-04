@@ -64,7 +64,7 @@ class ConsumerWriter(
 
             scala.actors.Actor.react {
 
-              case true =>
+              case Filter =>
 
                 try {
 
@@ -81,7 +81,7 @@ class ConsumerWriter(
             }
           }
 
-          val filtered = filter !? (true)
+          val filtered = filter !? (Filter)
 
           if(filtered.isInstanceOf[Exception])
             throw filtered.asInstanceOf[Exception]

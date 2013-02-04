@@ -117,7 +117,7 @@ class SubscribingHandler(
 
               react {
 
-                case true =>
+                case Evaluation =>
 
                   try {
 
@@ -142,7 +142,7 @@ class SubscribingHandler(
               }
             }
 
-            val parsed = parser !? (5000, true)
+            val parsed = parser !? (5000, Evaluation)
 
             if(parsed == None)
               throw new Exception("Evaluation timeout: Selector")
