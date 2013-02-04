@@ -20,28 +20,44 @@ object Quicky extends Logger with Loggable {
 
   def main(args: Array[String]) {
 
+    val amount = 10
+    var received = 0
+    val records = 100
+
     var i = 1
     class Listener extends RecordListener {
       var c = Int.box(i); i += 1
-      def react = { case t: Table => println(c + ": " + t) }
+      def react = {
+
+        case t: Table =>
+
+          received += 1
+          println(c + ": " + t)
+
+      }
     }
 
     val producer = rq.producer
-    var consumers = Array.fill(10)(rq.consumer(new Listener))
+    var consumers = Array.fill(amount)(rq.consumer(new Listener))
 
     try {
 
       consumers.foreach(_.open.subscribe("quote"))
 
       producer.open
-      for(i <- 1 to 100)
+      for(i <- 1 to records)
         producer.publish("quote", Table(
           StringColumn("time", "bid", "ask", "symbol"),
           DateTimeColumn(LocalDateTime.now), IntColumn(i), IntColumn(i + 1), StringColumn("Share")))
 
+      while(received < amount * records)
+        Thread.sleep(100)
+
     } finally {
+
       producer.close
       consumers.foreach(_.close)
+
     }
   }
 }
