@@ -32,6 +32,8 @@ object Selector extends Logger with Loggable {
           elapsed = 0
           t.records.foreach(println(_))
 
+        case unparser: UnparsableMessage => error(unparser.reason)
+
       }
     }
 
