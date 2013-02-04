@@ -5,7 +5,7 @@ object Dependency {
   object lib {
 
     val commonsCli = Seq("commons-cli" % "commons-cli" % "1.2")
-
+    val eval = Seq("com.twitter" %% "util-eval" % "6.1.0")
     val jaas = Seq("org.apache.activemq" % "activemq-jaas" % "5.6.0")
 
     val jodaTime = Seq(
