@@ -39,7 +39,8 @@ import widebase.stream.codec.rq. {
 
   EventMessage,
   RollbackMessage,
-  TableMessage
+  TableMessage,
+  UnparsableMessage
 
 }
 
@@ -103,7 +104,8 @@ class ConsumerHandler(listener: RecordListener)
       case message: EventMessage => reader! message
       case message: RollbackMessage => reader ! message
       case message: TableMessage => reader ! message
-      case message: UnauthorizedMessage => Channels.fireMessageReceived(ctx, message)
+      case message: UnparsableMessage => reader ! message
+      case message: UnauthorizedMessage =>  Channels.fireMessageReceived(ctx, message)
       case message => error("Unfamiliar with message: " + message)
 
     }
@@ -155,6 +157,17 @@ class ConsumerHandler(listener: RecordListener)
           try {
 
             listener.react(Table.fromBytes(message.bytes))
+
+          } catch {
+
+            case e => e.printStackTrace
+
+          }
+
+        case message: UnparsableMessage =>
+          try {
+
+            listener.react(message)
 
           } catch {
 

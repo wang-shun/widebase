@@ -1,5 +1,7 @@
 package widebase.stream.handler.rq
 
+import com.twitter.util.Eval
+
 import java.io. { PrintWriter, StringWriter }
 
 import net.liftweb.common.Logger
@@ -23,6 +25,7 @@ import org.jboss.netty.handler.timeout. {
 
 }
 
+import scala.actors.Actor. { actor, react, reply }
 import scala.concurrent.Lock
 import scala.collection.mutable. { ArrayBuffer, Map }
 
@@ -34,6 +37,7 @@ import widebase.stream.codec.rq. {
   RollbackMessage,
   SubscribeMessage,
   TableMessage,
+  UnparsableMessage,
   UnsubscribeMessage
 
 }
@@ -50,6 +54,8 @@ class SubscribingHandler(
   protected val subscriptions: Map[String, ArrayBuffer[ConsumerWriter]])
   extends SimpleChannelUpstreamHandler
   with Logger {
+
+  private val eval = new Eval
 
   override def channelClosed(ctx: ChannelHandlerContext, evt: ChannelStateEvent) {
 
@@ -91,7 +97,67 @@ class SubscribingHandler(
           return
 
         val table = message.name
-        val selector = message.selector
+
+        var selector: Selector = null
+
+        if(!message.selector.isEmpty) {
+
+          if(!AuthHandler.hasAuthorization(
+            evt.getChannel,
+            "SelectorSupport"))
+            return
+
+          val originPolicy = System.getSecurityManager
+
+          try {
+
+            val parser = actor {
+
+              System.setSecurityManager(new SelectorPolicy)
+
+              react {
+
+                case Evaluation =>
+
+                  try {
+
+                    selector = eval[Selector](
+                      "import widebase.db.table.Table\n" +
+                      "import widebase.stream.handler.rq.Selector\n" +
+                      "\n" +
+                      "new Selector {\n" +
+                      "\n" +
+                      "  override def apply(table: Table) = table.filter(record => " +
+                        message.selector/*.replace("{", "").replace("}", "")*/ + ")\n" +
+                      "\n" +
+                      "}")
+
+                    reply(true)
+
+                  } catch {
+
+                    case e: Exception => reply(e)
+
+                  }
+              }
+            }
+
+            val parsed = parser !? (5000, Evaluation)
+
+            if(parsed == None)
+              throw new Exception("Evaluation timeout: Selector")
+            else if(parsed.get.isInstanceOf[Exception])
+              throw parsed.get.asInstanceOf[Exception]
+
+          } catch {
+
+            case e: Exception =>
+              error("Unparsable selector: " + e)
+              evt.getChannel.write(new UnparsableMessage(e.getMessage))
+              return
+
+          } finally { System.setSecurityManager(originPolicy) }
+        }
 
         if(SubscribingHandler.table.get(evt.getChannel) != null)
           unsubscribe(evt.getChannel)

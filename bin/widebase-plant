@@ -16,6 +16,8 @@ $JAVA \
   -Dsbt.boot.directory=$WIDEBASE_PLANT_HOME/var/sbt/boot \
   -Dwidebase.log=$WIDEBASE_PLANT_HOME/var/log \
   -Djava.security.auth.login.config=$WIDEBASE_PLANT_HOME/etc/jaas.conf \
+  -Djava.security.manager \
+  -Djava.security.policy=$WIDEBASE_PLANT_HOME/etc/java.policy \
   -jar $WIDEBASE_PLANT_HOME/lib/sbt-launch.jar \
   @$WIDEBASE_PLANT_HOME/etc/widebase.plant.configuration \
   "$@"

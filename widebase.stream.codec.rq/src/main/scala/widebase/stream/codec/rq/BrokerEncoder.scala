@@ -36,6 +36,10 @@ class BrokerEncoder extends ResponseEncoder with MessageTypeEncoder {
         buffer.writeInt(msg.bytes.length)
         buffer.writeBytes(msg.bytes)
 
+      case msg: UnparsableMessage =>
+        writeId(buffer, MessageType.UnparsableMessage.id)
+        writeString(buffer, msg.reason)
+
       case _: UnsubscribeMessage => writeId(buffer, MessageType.UnsubscribeMessage.id)
       case message => return super.encode(ctx, channel, msg)
 
