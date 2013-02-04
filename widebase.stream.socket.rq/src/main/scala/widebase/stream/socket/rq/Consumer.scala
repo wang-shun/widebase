@@ -25,6 +25,7 @@ import widebase.stream.codec.rq. {
   BrokerDecoder,
   ConsumerEncoder,
   SubscribeMessage,
+  UnparsableMessage,
   UnsubscribeMessage
 
 }
@@ -142,6 +143,7 @@ class Consumer(
       case message: DoneMessage =>
       case message: ForbiddenMessage => throw message
       case message: LoginRequiredMessage => throw message
+      case message: UnparsableMessage => throw message
       case message: UnauthorizedMessage => throw message
 
     }
