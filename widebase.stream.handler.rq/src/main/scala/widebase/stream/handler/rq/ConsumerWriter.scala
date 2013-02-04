@@ -14,7 +14,8 @@ import widebase.stream.codec.rq. {
   NotifyMessage,
   PublishMessage,
   RollbackMessage,
-  TableMessage
+  TableMessage,
+  UnparsableMessage
 
 }
 
@@ -83,9 +84,14 @@ class ConsumerWriter(
 
           val filtered = filter !? (Filter)
 
-          if(filtered.isInstanceOf[Exception])
-            throw filtered.asInstanceOf[Exception]
-          if(!filteredTable.records.isEmpty)
+          if(filtered.isInstanceOf[Exception]) {
+
+            val e = filtered.asInstanceOf[Exception]
+
+            channel.write(new UnparsableMessage(e.toString))
+            throw e
+
+          } else if(!filteredTable.records.isEmpty)
             channel.write(new TableMessage(filteredTable.toBytes()))
 
         }
