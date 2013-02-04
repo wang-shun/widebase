@@ -14,7 +14,7 @@ $JAVA \
   -Xmx1000m \
   -XX:+UseFastAccessorMethods \
   -Dsbt.boot.directory=$WIDEBASE_PLANT_HOME/var/sbt/boot \
-  -Dwidebase.plant.log=$WIDEBASE_PLANT_HOME/var/log \
+  -Dwidebase.log=$WIDEBASE_PLANT_HOME/var/log \
   -Djava.security.auth.login.config=$WIDEBASE_PLANT_HOME/etc/jaas.conf \
   -jar $WIDEBASE_PLANT_HOME/lib/sbt-launch.jar \
   @$WIDEBASE_PLANT_HOME/etc/widebase.plant.configuration \
