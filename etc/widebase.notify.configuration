@@ -3,7 +3,7 @@
 [app]
   org: com.github.widebase
   name: widebase-notify
-  version: 0.3.3-SNAPSHOT
+  version: 0.3.3
   class: widebase.notify.Main
   cross-versioned: true
 [repositories]
