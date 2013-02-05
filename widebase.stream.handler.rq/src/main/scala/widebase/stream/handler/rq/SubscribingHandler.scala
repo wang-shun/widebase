@@ -128,7 +128,7 @@ class SubscribingHandler(
                       "new Selector {\n" +
                       "\n" +
                       "  override def apply(table: Table) = table.filter(record => " +
-                        message.selector/*.replace("{", "").replace("}", "")*/ + ")\n" +
+                        message.selector.replace("{", "").replace("}", "") + ")\n" +
                       "\n" +
                       "}")
 
