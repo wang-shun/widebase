@@ -2,6 +2,7 @@
 doc/*
 !doc/src
 !doc/xsl
+!doc/index.html
 !usr/
 usr/*
 !usr/csv/
