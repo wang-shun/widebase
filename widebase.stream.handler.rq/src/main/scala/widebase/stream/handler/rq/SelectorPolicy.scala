@@ -9,13 +9,13 @@ import java.security.Permission
  * @author myst3r10n
  */
 class SelectorPolicy extends SecurityManager {
-
+/* Must be commented
   override def checkAccept(host: String, port: Int) {
 
     throw new SecurityException
 
   }
-/* Must be commented
+
   override def checkAccess(t: Thread) {
 
     throw new SecurityException
