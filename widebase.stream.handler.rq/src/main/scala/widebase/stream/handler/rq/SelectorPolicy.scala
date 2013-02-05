@@ -153,13 +153,13 @@ class SelectorPolicy extends SecurityManager {
     throw new SecurityException
 
   }
-
+/* Must be commented
   override def checkSecurityAccess(target: String) {
 
     throw new SecurityException
 
   }
-
+*/
   override def checkSetFactory {
 
     throw new SecurityException
