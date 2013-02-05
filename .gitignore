@@ -31,6 +31,12 @@ usr/data/test/seg/*
 !usr/data/test/seg/test/
 usr/data/test/seg/test/*
 !usr/data/test/seg/test/.gitignore
+!usr/share/
+usr/share/*
+!usr/share/demo/
+usr/share/demo/*
+!usr/share/demo/.gitignore
+!usr/share/.gitignore
 !usr/sync/
 usr/sync/*
 !usr/sync/demo/
