@@ -67,7 +67,7 @@ class PublishingHandler(
     val broadcaster = PublishingHandler.broadcaster.get(evt.getChannel)
 
     if(broadcaster != null)
-      broadcaster ! Abort
+      broadcaster !? Abort
 
     Channels.fireChannelClosed(ctx)
 
@@ -115,7 +115,7 @@ class PublishingHandler(
 
         }
 
-        broadcaster ! message
+        broadcaster !? message
 
         evt.getChannel.write(new DoneMessage)
 
@@ -135,7 +135,7 @@ class PublishingHandler(
 
         }
 
-        broadcaster ! message
+        broadcaster !? message
 
         evt.getChannel.write(new DoneMessage)
 
@@ -155,7 +155,7 @@ class PublishingHandler(
 
         }
 
-        broadcaster ! message
+        broadcaster !? message
 
         evt.getChannel.write(new DoneMessage)
 
@@ -172,9 +172,17 @@ class PublishingHandler(
 
         reactWithin(0) {
 
-          case Abort => action(Abort)
-          case TIMEOUT => react { case msg => action(msg) }
+          case Abort =>
+            reply(None)
+            action(Abort)
 
+          case TIMEOUT => react {
+
+            case msg =>
+              reply(None)
+              action(msg)
+
+          }
         }
       }
     }
