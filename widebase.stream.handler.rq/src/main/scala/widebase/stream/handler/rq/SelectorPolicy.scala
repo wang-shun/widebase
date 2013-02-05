@@ -69,13 +69,13 @@ class SelectorPolicy extends SecurityManager {
     throw new SecurityException
 
   }
-
+/* Must be commented
   override def checkLink(lib: String) {
 
     throw new SecurityException
 
   }
-
+*/
   override def checkListen(port: Int) {
 
     throw new SecurityException
