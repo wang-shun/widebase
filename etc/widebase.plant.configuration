@@ -3,7 +3,7 @@
 [app]
   org: com.github.widebase
   name: widebase-plant
-  version: 0.3.3-SNAPSHOT
+  version: 0.3.4-SNAPSHOT
   class: widebase.plant.Main
   cross-versioned: true
 [repositories]
