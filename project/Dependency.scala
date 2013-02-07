@@ -17,6 +17,8 @@ object Dependency {
       "net.liftweb" %% "lift-common" % "2.5-M1",
       "org.slf4j" % "slf4j-log4j12" % "1.7.1")
 
+    val morechart = Seq("com.github.myst3r10n" %% "morechart-chart" % "0.1.0")
+    val moreswing = Seq("com.github.myst3r10n" %% "moreswing-swing" % "0.1.1")
     val netty = Seq("io.netty" % "netty" % "3.5.7.Final")
 
     val sbtLauncher = Seq(

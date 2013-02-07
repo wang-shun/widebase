@@ -44,6 +44,7 @@ object WidebaseBuild extends Build {
       widebaseIoTable,
       widebaseNotify,
       widebasePlant,
+      widebasePlot,
       widebaseStreamCodec,
       widebaseStreamCodecCq,
       widebaseStreamCodecRq,
@@ -155,6 +156,14 @@ object WidebaseBuild extends Build {
     .settings(
       resolvers <+= sbtResolver,
       libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+
+  /** Plot */
+  lazy val widebasePlot = Project(
+    "widebase-plot",
+    file("widebase.plot"))
+    .dependsOn(widebaseDsl)
+    .settings(libraryDependencies ++= lib.morechart ++ lib.moreswing)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Stream Codec */
