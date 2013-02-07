@@ -1,6 +1,23 @@
 import sbt._
 import Keys._
 
+/** Build Widebase by sbt.
+ *
+ * APIs:
+ *
+ * * widebase.collectoin.mutable
+ * * widebase.db
+ * * widebase.dsl
+ * * widebase.stream.socket.cq
+ * * widebase.stream.socket.rq
+ *
+ * Apps:
+ *
+ * * widebase.notify
+ * * widebase.plant
+ *
+ * @author myst3r10n
+ */
 object WidebaseBuild extends Build {
 
   import Dependency._
@@ -10,7 +27,8 @@ object WidebaseBuild extends Build {
   lazy val widebase = Project(
     "widebase",
     file("."),
-    settings = Defaults.defaultSettings ++ Unidoc.settings) aggregate(
+    settings = Defaults.defaultSettings ++ Unidoc.settings)
+    .aggregate(
       widebaseCollectionMutable,
       widebaseData,
       widebaseDb,
@@ -40,63 +58,73 @@ object WidebaseBuild extends Build {
   /** Collection Mutable */
   lazy val widebaseCollectionMutable = Project(
     "widebase-collection-mutable",
-    file("widebase.collection.mutable")) dependsOn(widebaseIoFile)
+    file("widebase.collection.mutable"))
+    .dependsOn(widebaseIoFile)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Data */
-  lazy val widebaseData = Project("widebase-data", file("widebase.data")) settings(
-    libraryDependencies ++= lib.jodaTime)
+  lazy val widebaseData = Project(
+    "widebase-data",
+    file("widebase.data"))
+    .settings(libraryDependencies ++= lib.jodaTime)
 
   /** DB */
-  lazy val widebaseDb = Project("widebase-db", file("widebase.db")) dependsOn(
-    widebaseIoTable) settings(libraryDependencies ++= testlib.log)
+  lazy val widebaseDb = Project(
+    "widebase-db",
+    file("widebase.db"))
+    .dependsOn(widebaseIoTable)
+    .settings(libraryDependencies ++= testlib.log)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** DB Column */
   lazy val widebaseDbColumn = Project(
     "widebase-db-column",
-    file("widebase.db.column")) dependsOn(
-    widebaseCollectionMutable,
-    widebaseUtil)
+    file("widebase.db.column"))
+    .dependsOn(widebaseCollectionMutable, widebaseUtil)
 
   /** DB Table */
   lazy val widebaseDbTable = Project(
     "widebase-db-table",
-    file("widebase.db.table")) dependsOn(widebaseIoColumn)
+    file("widebase.db.table"))
+    .dependsOn(widebaseIoColumn)
 
-  /** DB Table */
+  /** DSL */
   lazy val widebaseDsl = Project(
     "widebase-dsl",
-    file("widebase.dsl")) dependsOn(widebaseIoCsv)
+    file("widebase.dsl"))
+    .dependsOn(widebaseIoCsv)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** I/O */
   lazy val widebaseIo = Project(
     "widebase-io",
-    file("widebase.io")) dependsOn(widebaseData, widebaseIoFilter)
+    file("widebase.io"))
+    .dependsOn(widebaseData, widebaseIoFilter)
 
   /** I/O Column */
   lazy val widebaseIoColumn = Project(
     "widebase-io-column",
-    file("widebase.io.column")) dependsOn(
-      widebaseDbColumn,
-      widebaseIoFilter,
-      widebaseUtil)
+    file("widebase.io.column"))
+    .dependsOn(widebaseDbColumn, widebaseIoFilter, widebaseUtil)
 
   /** I/O CSV */
   lazy val widebaseIoCsv = Project(
     "widebase-io-csv",
-    file("widebase.io.csv")) dependsOn(
-    widebaseDb,
-    widebaseIoCsvFilter) settings(libraryDependencies ++= lib.log)
+    file("widebase.io.csv"))
+    .dependsOn(widebaseDb, widebaseIoCsvFilter)
+    .settings(libraryDependencies ++= lib.log)
 
   /** I/O CSV Filter */
   lazy val widebaseIoCsvFilter = Project(
     "widebase-io-csv-filter",
-    file("widebase.io.csv.filter")) dependsOn(widebaseDbTable)
+    file("widebase.io.csv.filter"))
+    .dependsOn(widebaseDbTable)
 
   /** I/O File */
   lazy val widebaseIoFile = Project(
     "widebase-io-file",
-    file("widebase.io.file")) dependsOn(widebaseIo) settings(
-    libraryDependencies ++= testlib.log)
+    file("widebase.io.file"))
+    .dependsOn(widebaseIo)
 
   /** I/O Filter */
   lazy val widebaseIoFilter = Project(
@@ -106,87 +134,96 @@ object WidebaseBuild extends Build {
   /** I/O Table */
   lazy val widebaseIoTable = Project(
     "widebase-io-table",
-    file("widebase.io.table")) dependsOn(widebaseDbTable)
+    file("widebase.io.table"))
+    .dependsOn(widebaseDbTable)
 
   /** Notify */
   lazy val widebaseNotify = Project(
     "widebase-notify",
-    file("widebase.notify")) dependsOn(widebaseStreamSocketRq) settings(
-    resolvers <+= sbtResolver,
-    libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
+    file("widebase.notify"))
+    .dependsOn(widebaseStreamSocketRq)
+    .settings(
+      resolvers <+= sbtResolver,
+      libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Plant */
   lazy val widebasePlant = Project(
     "widebase-plant",
-    file("widebase.plant")) dependsOn(widebaseStreamSocketRq) settings(
-    resolvers <+= sbtResolver,
-    libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
+    file("widebase.plant"))
+    .dependsOn(widebaseStreamSocketRq)
+    .settings(
+      resolvers <+= sbtResolver,
+      libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Stream Codec */
   lazy val widebaseStreamCodec = Project(
     "widebase-stream-codec",
-    file("widebase.stream.codec")) dependsOn(
-    widebaseData,
-    widebaseUtil) settings(libraryDependencies ++= lib.netty)
+    file("widebase.stream.codec"))
+    .dependsOn(widebaseData, widebaseUtil)
+    .settings(libraryDependencies ++= lib.netty)
 
   /** Stream Codec CQ */
   lazy val widebaseStreamCodecCq = Project(
     "widebase-stream-codec-cq",
-    file("widebase.stream.codec.cq")) dependsOn(
-    widebaseDbTable,
-    widebaseStreamCodec)
+    file("widebase.stream.codec.cq"))
+    .dependsOn(widebaseDbTable, widebaseStreamCodec)
 
   /** Stream Codec RQ */
   lazy val widebaseStreamCodecRq = Project(
     "widebase-stream-codec-rq",
-    file("widebase.stream.codec.rq"))  dependsOn(widebaseStreamCodec)
+    file("widebase.stream.codec.rq"))
+    .dependsOn(widebaseStreamCodec)
 
   /** Stream Handler */
   lazy val widebaseStreamHandler = Project(
     "widebase-stream-handler",
-    file("widebase.stream.handler")) dependsOn(widebaseStreamCodec) settings(
-    libraryDependencies ++= lib.jaas ++ lib.log)
+    file("widebase.stream.handler"))
+    .dependsOn(widebaseStreamCodec)
+    .settings(libraryDependencies ++= lib.jaas ++ lib.log)
 
   /** Stream Handler CQ */
   lazy val widebaseStreamHandlerCq = Project(
     "widebase-stream-handler-cq",
-    file("widebase.stream.handler.cq")) dependsOn(
-    widebaseStreamCodecCq,
-    widebaseStreamHandler)
+    file("widebase.stream.handler.cq"))
+    .dependsOn(widebaseStreamCodecCq, widebaseStreamHandler)
 
   /** Stream Handler RQ */
   lazy val widebaseStreamHandlerRq = Project(
     "widebase-stream-handler-rq",
-    file("widebase.stream.handler.rq")) dependsOn(
-    widebaseDbTable,
-    widebaseStreamCodecRq,
-    widebaseStreamHandler) settings(
-    libraryDependencies ++= lib.eval ++ lib.log)
+    file("widebase.stream.handler.rq"))
+    .dependsOn(widebaseDbTable, widebaseStreamCodecRq, widebaseStreamHandler)
+    .settings(libraryDependencies ++= lib.eval ++ lib.log)
 
   /** Stream Socket */
   lazy val widebaseStreamSocket = Project(
     "widebase-stream-socket",
-    file("widebase.stream.socket")) dependsOn(widebaseStreamHandler)
+    file("widebase.stream.socket"))
+    .dependsOn(widebaseStreamHandler)
 
   /** Stream Socket CQ */
   lazy val widebaseStreamSocketCq = Project(
     "widebase-stream-socket-cq",
-    file("widebase.stream.socket.cq")) dependsOn(
-    widebaseStreamHandlerCq,
-    widebaseStreamSocket)
+    file("widebase.stream.socket.cq"))
+    .dependsOn(widebaseStreamHandlerCq, widebaseStreamSocket)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Stream Socket RQ */
   lazy val widebaseStreamSocketRq = Project(
     "widebase-stream-socket-rq",
-    file("widebase.stream.socket.rq")) dependsOn(
-    widebaseDsl % "test",
-    widebaseStreamHandlerRq,
-    widebaseStreamSocket)
+    file("widebase.stream.socket.rq"))
+    .dependsOn(
+      widebaseDsl % "test",
+      widebaseStreamHandlerRq,
+      widebaseStreamSocket)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Utilities */
   lazy val widebaseUtil = Project(
     "widebase-util",
-    file("widebase.util")) dependsOn(widebaseIoFilter)
+    file("widebase.util"))
+    .dependsOn(widebaseIoFilter)
 
   /** Log path */
   System.setProperty(

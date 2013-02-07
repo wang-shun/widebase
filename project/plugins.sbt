@@ -2,3 +2,5 @@ resolvers += Resolver.url("scalasbt", new URL("http://scalasbt.artifactoryonline
 
 addSbtPlugin("com.jsuereth" % "xsbt-gpg-plugin" % "0.6")
 
+addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.7.0")
+
