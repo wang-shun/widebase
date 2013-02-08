@@ -15,19 +15,28 @@ import java.awt.BorderLayout
 
 import javax.swing.JOptionPane
 
-import moreswing.swing.i18n.LMainFrame
+import moreswing.swing.i18n.LFrame
 
 import net.liftweb.common.Logger
 
+import org.jfree.chart.ChartPanel
 import org.joda.time.format.DateTimeFormat
 
-import scala.swing. { BorderPanel, Component, Dimension, ScrollPane }
+import scala.swing. {
 
-/** Main frame.
+  BorderPanel,
+  Component,
+  Dimension,
+  Publisher,
+  ScrollPane
+
+}
+
+/** Plot's frame.
  * 
  * @author myst3r10n
  */
-class PlotFrame(plotPanel: PlotPanel) extends LMainFrame with Logger {
+class PlotFrame(plotPanel: ChartPanel with Publisher) extends LFrame with Logger {
 
   title = "app.title"
   preferredSize = new Dimension(1024, 768)

@@ -12,6 +12,12 @@ import org.joda.time.LocalDateTime
 
 import widebase.db.column.TypedColumn
 
+/** A table file and directory table compatible `TimeSeries`.
+ *
+ * @param events column
+ * @param values column
+ * @param name of series
+ **/
 class TimeSeries(
   protected val events: TypedColumn[LocalDateTime],
   protected val values: TypedColumn[Double],

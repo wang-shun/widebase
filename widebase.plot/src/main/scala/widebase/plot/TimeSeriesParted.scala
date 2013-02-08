@@ -12,6 +12,12 @@ import org.joda.time.LocalDateTime
 
 import widebase.db.column.TypedColumn
 
+/** A partitioned table compatible `TimeSeries`.
+ *
+ * @param events columns
+ * @param values columns
+ * @param name of series
+ **/
 class TimeSeriesParted(
   protected val events: Array[TypedColumn[LocalDateTime]],
   protected val values: Array[TypedColumn[Double]],

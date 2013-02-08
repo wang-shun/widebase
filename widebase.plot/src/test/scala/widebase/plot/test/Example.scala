@@ -188,12 +188,7 @@ object Example extends Logger with Loggable {
 
   def plotTable(name: String) {
 
-    var started = 0L
-
-    started = System.currentTimeMillis
     val table = DataTable(load(name))
-    info("Table loaded " + table.records.length + " records in " +
-      diff(started, System.currentTimeMillis))
 
     val collection = new TimeSeriesCollection {
 
@@ -201,18 +196,13 @@ object Example extends Logger with Loggable {
 
     }
 
-    plot.show(collection)
+    plot.xy(collection, records = 12)
 
   }
 
   def plotDirTable(name: String) {
 
-    var started = 0L
-
-    started = System.currentTimeMillis
     val table = DataTable(map(name))
-    info("Dir table mapped " + table.records.length + " records in " +
-      diff(started, System.currentTimeMillis))
 
     val collection = new TimeSeriesCollection {
 
@@ -220,7 +210,7 @@ object Example extends Logger with Loggable {
 
     }
 
-    plot.show(collection)
+    plot.xy(collection, records = 12)
 
   }
 
@@ -252,7 +242,7 @@ object Example extends Logger with Loggable {
 
     }
 
-    plot.show(collection)
+    plot.xy(collection, records = 12)
 
   }
 
@@ -263,24 +253,12 @@ object Example extends Logger with Loggable {
     from: LocalDate,
     till: LocalDate) {
 
-    var started = 0L
-
-    started = System.currentTimeMillis
     val table = DataTable(load(name))
-    info("Table loaded " + table.records.length + " records in " +
-      diff(started, System.currentTimeMillis))
-
-    started = System.currentTimeMillis
     val dirTable = DataTable(map(dirName))
-    info("Dir table mapped " + dirTable.records.length + " records in " +
-      diff(started, System.currentTimeMillis))
 
-    started = System.currentTimeMillis
     val partedTable =
       for(table <- map.dates(partedName, from, till).tables)
         yield(DataTable(table))
-    info("Parted dir table mapped " + partedTable.size + " tables in " +
-      diff(started, System.currentTimeMillis))
 
     val events =
       for(table <- partedTable)
@@ -298,7 +276,7 @@ object Example extends Logger with Loggable {
 
     }
 
-    plot.show(collection)
+    plot.xy(collection, records = 12)
 
   }
 }
