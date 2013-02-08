@@ -34,7 +34,7 @@ class TimeSeries(
     val event = events(index)
     val value = values(index)
 
-    new org.jfree.data.time.TimeSeriesDataItem(
+    new TimeSeriesDataItem(
       new Millisecond(
         event.getMillisOfSecond,
         event.getSecondOfMinute,

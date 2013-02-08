@@ -45,7 +45,7 @@ class TimeSeriesParted(
     val event = events(part)(record)
     val value = values(part)(record)
 
-    new org.jfree.data.time.TimeSeriesDataItem(
+    new TimeSeriesDataItem(
       new Millisecond(
         event.getMillisOfSecond,
         event.getSecondOfMinute,

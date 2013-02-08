@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 
 import net.liftweb.common. { Loggable, Logger }
 
-import org.jfree.data.time.TimeSeriesCollection
+import org.jfree.data.xy.XYSeriesCollection
 
 import org.joda.time. { LocalDate, LocalDateTime }
 import org.joda.time.format.DateTimeFormat
@@ -13,14 +13,14 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 import widebase.db.table. { Table, TemplateTable }
-import widebase.plot. { TimeSeries, TimeSeriesParted }
+import widebase.plot. { XYSeries/*, XYSeriesParted*/ }
 import widebase.plot
 
-/* Test a plot of table file, directory table and partitioned table.
+/* Test xy plotter of table file, directory table and partitioned table.
  *
  * @author myst3r10n
  */
-object Example extends Logger with Loggable {
+object PlotXY extends Logger with Loggable {
 
   protected var debug: Boolean = _
   protected var parts: Int = _
@@ -38,26 +38,26 @@ object Example extends Logger with Loggable {
   import widebase.dsl.datatype._
   import widebase.dsl.function._
 
-  case class Data(val time: LocalDateTime, val value: Double)
+  case class Data(val x: Double, val y: Double)
 
   case class DataTable(
-    table: Table = Table(string("time", "value"), dateTime(), double()))
+    table: Table = Table(string("x", "y"), double(), double()))
     extends TemplateTable[Data] {
 
-    val time = table("time").Z
-    val value = table("value").d
+    val x = table("x").d
+    val y = table("y").d
 
     def +=(data: Data) = {
 
-      time += data.time
-      value += data.value
+      x += data.x
+      y += data.y
 
       this
 
     }
 
-    def +=(time: LocalDateTime, value: Double): DataTable =
-      this += Data(time, value)
+    def +=(x: Double, y: Double): DataTable =
+      this += Data(x, y)
 
     def ++=(table: DataTable) = {
 
@@ -68,7 +68,7 @@ object Example extends Logger with Loggable {
 
     }
 
-    def apply(index: Int) = Data(time(index), value(index))
+    def apply(index: Int) = Data(x(index), y(index))
 
     def filter(predicate: Data => Boolean) = {
 
@@ -96,29 +96,21 @@ object Example extends Logger with Loggable {
 
     val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
-    var from = LocalDateTime.parse("2013-01-01 00:00:00.000", formatter)
-    val till = LocalDateTime.parse("2013-02-01 00:00:00.000", formatter)
+    var from = 1
+    val till = 100
 
     saveTable("plot", fillTable(from, till))
     println("")
     saveDirTable("dirPlot", fillTable(from, till))
-    println("")
-    savePartedDirTable("dirPlot", fillTable(from, till))
 
     plotTable("plot")
     plotDirTable("dirPlot")
-    plotPartedDirTable("dirPlot", from.toLocalDate, till.toLocalDate)
 
-    plotMixedTable(
-      "plot",
-      "dirPlot",
-      "dirPlot",
-      from.toLocalDate,
-      till.toLocalDate)
+    plotMixedTable("plot", "dirPlot")
 
   }
 
-  def fillTable(from: LocalDateTime, till: LocalDateTime) = {
+  def fillTable(from: Int, till: Int) = {
 
     var started = 0L
 
@@ -128,16 +120,16 @@ object Example extends Logger with Loggable {
     var move = from
 
     started = System.currentTimeMillis
-    while(move.compareTo(till) == -1) {
+    for(i <- from to till) {
 
-      table.time += move
+      table.x += i
+
       if(Random.nextBoolean)
-        table.value += (math.random * 10).toInt
+        table.y += (math.random * 10).toInt
       else
-        table.value += -(math.random * 10).toInt
+        table.y += -(math.random * 10).toInt
 
       records += 1
-      move = move.plusHours(1)
 
     }
     info("Table filled " + records + " records in " +
@@ -190,9 +182,9 @@ object Example extends Logger with Loggable {
 
     val table = DataTable(load(name))
 
-    val collection = new TimeSeriesCollection {
+    val collection = new XYSeriesCollection {
 
-      addSeries(new TimeSeries(table.time, table.value, "Table File"))
+      addSeries(new XYSeries(table.x, table.y, "Table File"))
 
     }
 
@@ -204,41 +196,9 @@ object Example extends Logger with Loggable {
 
     val table = DataTable(map(name))
 
-    val collection = new TimeSeriesCollection {
+    val collection = new XYSeriesCollection {
 
-      addSeries(new TimeSeries(table.time, table.value, "Directory Table"))
-
-    }
-
-    plot.xy(collection, records = 12)
-
-  }
-
-  def plotPartedDirTable(name: String, from: LocalDate, till: LocalDate) {
-
-    var started = 0L
-
-    started = System.currentTimeMillis
-    val tables =
-      for(table <- map.dates(name, from, till).tables)
-        yield(DataTable(table))
-    info("Parted dir table mapped " + tables.size + " tables in " +
-      diff(started, System.currentTimeMillis))
-
-    val events =
-      for(table <- tables)
-        yield(table.time)
-
-    val values =
-      for(table <- tables)
-        yield(table.value)
-
-    val collection = new TimeSeriesCollection {
-
-      addSeries(new TimeSeriesParted(
-        events.toArray,
-        values.toArray,
-        "Partitioned Table"))
+      addSeries(new XYSeries(table.x, table.y, "Directory Table"))
 
     }
 
@@ -246,33 +206,15 @@ object Example extends Logger with Loggable {
 
   }
 
-  def plotMixedTable(
-    name: String,
-    dirName: String,
-    partedName: String,
-    from: LocalDate,
-    till: LocalDate) {
+  def plotMixedTable(name: String, dirName: String) {
 
     val table = DataTable(load(name))
     val dirTable = DataTable(map(dirName))
 
-    val partedTable =
-      for(table <- map.dates(partedName, from, till).tables)
-        yield(DataTable(table))
+    val collection = new XYSeriesCollection {
 
-    val events =
-      for(table <- partedTable)
-        yield(table.time)
-
-    val values =
-      for(table <- partedTable)
-        yield(table.value)
-
-    val collection = new TimeSeriesCollection {
-
-      addSeries(new TimeSeries(table.time, table.value, "Table File"))
-      addSeries(new TimeSeries(dirTable.time, dirTable.value, "Directory Table"))
-      addSeries(new TimeSeriesParted(events.toArray, values.toArray, "Partitioned Table"))
+      addSeries(new XYSeries(table.x, table.y, "Table File"))
+      addSeries(new XYSeries(dirTable.x, dirTable.y, "Directory Table"))
 
     }
 
