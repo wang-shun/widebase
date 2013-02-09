@@ -15,7 +15,7 @@ import org.joda.time. {
 
 }
 
-import scala.collection.mutable. { Buffer, LinkedHashMap, WrappedArray }
+import scala.collection.mutable. { Buffer, LinkedHashMap }
 
 import widebase.collection.mutable.HybridBufferLike
 import widebase.data.Datatype
@@ -333,7 +333,7 @@ class Table {
    */
   def +=(records: Any*) = {
 
-    append(records.asInstanceOf[WrappedArray[_]])
+    append(records: _*)
     this
 
   }
@@ -638,7 +638,7 @@ class Table {
    *
    * @note Due performance lack not use by bulk operations.
    */
-  protected def append(records: WrappedArray[_]) {
+  protected def append(records: Any*) {
 
     if(map.values.size != records.length)
       throw LengthMismatchException(map.values.size, records.length)
