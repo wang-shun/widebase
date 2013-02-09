@@ -439,7 +439,7 @@ package object plot {
    * @param series of collection
    * @param domainAxis of plotter
    * @param property name
-   * @param property value
+   * @param value of property
    **/
   protected def property(
     series: Series,
