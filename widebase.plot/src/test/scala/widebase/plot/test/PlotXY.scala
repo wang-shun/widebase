@@ -13,7 +13,6 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 import widebase.db.table. { Table, TemplateTable }
-import widebase.plot. { XYSeries/*, XYSeriesParted*/ }
 import widebase.plot
 
 /* Test xy plotter of table file, directory table and partitioned table.
@@ -105,7 +104,6 @@ object PlotXY extends Logger with Loggable {
 
     plotTable("plot")
     plotDirTable("dirPlot")
-
     plotMixedTable("plot", "dirPlot")
 
   }
@@ -182,13 +180,7 @@ object PlotXY extends Logger with Loggable {
 
     val table = DataTable(load(name))
 
-    val collection = new XYSeriesCollection {
-
-      addSeries(new XYSeries(table.x, table.y, "Table File"))
-
-    }
-
-    plot.xy(collection, records = 12)
+    plot.xy(table.x, table.y, ";Table File;")
 
   }
 
@@ -196,13 +188,7 @@ object PlotXY extends Logger with Loggable {
 
     val table = DataTable(map(name))
 
-    val collection = new XYSeriesCollection {
-
-      addSeries(new XYSeries(table.x, table.y, "Directory Table"))
-
-    }
-
-    plot.xy(collection, records = 12)
+    plot.xy(table.x, table.y, ";Directory Table;")
 
   }
 
@@ -211,14 +197,9 @@ object PlotXY extends Logger with Loggable {
     val table = DataTable(load(name))
     val dirTable = DataTable(map(dirName))
 
-    val collection = new XYSeriesCollection {
-
-      addSeries(new XYSeries(table.x, table.y, "Table File"))
-      addSeries(new XYSeries(dirTable.x, dirTable.y, "Directory Table"))
-
-    }
-
-    plot.xy(collection, records = 12)
+    plot.xy(
+      table.x, table.y, ";Table File;",
+      dirTable.x, dirTable.y, ";Directory Table;")
 
   }
 }

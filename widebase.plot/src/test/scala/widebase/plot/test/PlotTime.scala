@@ -13,7 +13,6 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 import widebase.db.table. { Table, TemplateTable }
-import widebase.plot. { TimeSeries, TimeSeriesParted }
 import widebase.plot
 
 /* Test time plotter of table file, directory table and partitioned table.
@@ -191,13 +190,7 @@ object PlotTime extends Logger with Loggable {
 
     val table = DataTable(load(name))
 
-    val collection = new TimeSeriesCollection {
-
-      addSeries(new TimeSeries(table.time, table.value, "Table File"))
-
-    }
-
-    plot.time(collection, records = 12)
+    plot.time(table.time, table.value, ";Table File;")
 
   }
 
@@ -205,13 +198,7 @@ object PlotTime extends Logger with Loggable {
 
     val table = DataTable(map(name))
 
-    val collection = new TimeSeriesCollection {
-
-      addSeries(new TimeSeries(table.time, table.value, "Directory Table"))
-
-    }
-
-    plot.time(collection, records = 12)
+    plot.time(table.time, table.value, ";Directory Table;")
 
   }
 
@@ -234,16 +221,7 @@ object PlotTime extends Logger with Loggable {
       for(table <- tables)
         yield(table.value)
 
-    val collection = new TimeSeriesCollection {
-
-      addSeries(new TimeSeriesParted(
-        events.toArray,
-        values.toArray,
-        "Partitioned Table"))
-
-    }
-
-    plot.time(collection, records = 12)
+    plot.time(events.toArray, values.toArray, ";Partitioned Table;")
 
   }
 
@@ -269,15 +247,10 @@ object PlotTime extends Logger with Loggable {
       for(table <- partedTable)
         yield(table.value)
 
-    val collection = new TimeSeriesCollection {
-
-      addSeries(new TimeSeries(table.time, table.value, "Table File"))
-      addSeries(new TimeSeries(dirTable.time, dirTable.value, "Directory Table"))
-      addSeries(new TimeSeriesParted(events.toArray, values.toArray, "Partitioned Table"))
-
-    }
-
-    plot.time(collection, records = 12)
+    plot.time(
+      table.time, table.value, ";Table File;",
+      dirTable.time, dirTable.value, ";Directory Table;",
+      events.toArray, values.toArray, ";Partitioned Table;")
 
   }
 }

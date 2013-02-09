@@ -34,9 +34,11 @@ import scala.swing. {
 
 /** Plot's frame.
  * 
+ * @param plotPanel self-explanatory
+ *
  * @author myst3r10n
  */
-class PlotFrame(plotPanel: ChartPanel with Publisher) extends LFrame with Logger {
+case class PlotFrame(plotPanel: ChartPanel with Publisher) extends LFrame with Logger {
 
   title = "app.title"
   preferredSize = new Dimension(1024, 768)

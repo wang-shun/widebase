@@ -1,4 +1,4 @@
-package widebase.plot
+package widebase.plot.data.xy
 
 import org.jfree.data.xy. { XYDataItem, XYSeriesWorkaround }
 
@@ -9,15 +9,14 @@ import widebase.db.column.TypedColumn
  * @param x columns
  * @param y columns
  * @param name of series
+ *
+ * @author myst3r10n
  **/
 class XYSeriesParted(
   protected val x: Array[TypedColumn[Double]],
   protected val y: Array[TypedColumn[Double]],
   name: String)
   extends XYSeriesWorkaround(name) {
-
-  override def getDataItem(index: Int): XYDataItem =
-    getRawDataItem(index)
 
   override def getItemCount = {
 

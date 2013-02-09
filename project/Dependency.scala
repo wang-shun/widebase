@@ -7,6 +7,7 @@ object Dependency {
     val commonsCli = Seq("commons-cli" % "commons-cli" % "1.2")
     val eval = Seq("com.twitter" %% "util-eval" % "6.1.0")
     val jaas = Seq("org.apache.activemq" % "activemq-jaas" % "5.6.0")
+    val jfreechart = Seq("org.jfree" % "jfreechart" % "1.0.14")
 
     val jodaTime = Seq(
       "org.joda" % "joda-convert" % "1.2",
@@ -18,7 +19,7 @@ object Dependency {
       "org.slf4j" % "slf4j-log4j12" % "1.7.1")
 
     val morechart = Seq("com.github.myst3r10n" %% "morechart-chart" % "0.1.0")
-    val moreswing = Seq("com.github.myst3r10n" %% "moreswing-swing" % "0.1.2-SNAPSHOT")
+    val moreswing = Seq("com.github.myst3r10n" %% "moreswing-swing" % "0.1.2")
     val netty = Seq("io.netty" % "netty" % "3.5.7.Final")
 
     val sbtLauncher = Seq(

@@ -1,38 +1,26 @@
-package widebase.plot
+package widebase.plot.data.time
 
-import org.jfree.data.time. {
+import org.jfree.data.time. { Millisecond, TimeSeriesDataItem }
 
-  Millisecond,
-  TimeSeriesDataItem,
-  TimeSeriesWorkaround
-
-}
-
-import org.joda.time.LocalDateTime
-
-import widebase.db.column.TypedColumn
+import widebase.db.column. { DateTimeColumn, TypedColumn }
 
 /** A table file and directory table compatible `TimeSeries`.
  *
  * @param events column
  * @param values column
  * @param name of series
+ *
+ * @author myst3r10n
  **/
-class TimeSeries(
-  protected val events: TypedColumn[LocalDateTime],
-  protected val values: TypedColumn[Double],
+class DateTimeSeries(
+  protected val events: DateTimeColumn,
+  protected val values: TypedColumn[Number],
   name: String)
-  extends TimeSeriesWorkaround(name) {
-
-  override def getDataItem(index: Int): TimeSeriesDataItem =
-    getRawDataItem(index)
-
-  override def getItemCount = events.length
+  extends TimeSeriesLike(name) {
 
   override def getRawDataItem(index: Int): TimeSeriesDataItem = {
 
     val event = events(index)
-    val value = values(index)
 
     new TimeSeriesDataItem(
       new Millisecond(
@@ -43,8 +31,7 @@ class TimeSeries(
         event.getDayOfMonth,
         event.getMonthOfYear,
         event.getYear),
-      value)
+      values(index))
 
   }
 }
-
