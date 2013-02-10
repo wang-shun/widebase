@@ -1,0 +1,27 @@
+object demo {
+
+  def random = {
+
+    val table = Table(string("time", "value"))
+
+    for(h <- 0 to Hours.hoursBetween("2012-01-01".D, "2012-01-07".D).getHours) 
+      try {
+
+        val time = "2013-01-03T00:00:00.000".Z.plusHours(h)
+
+        time.toDateTime // Check illegal instant, see link below
+
+        table += ("2013-01-03T00:00:00.000".Z.plusHours(h), math.random * 10)
+
+      } catch {
+
+        case e: IllegalArgumentException =>
+          // NOTE: http://joda-time.sourceforge.net/faq.html#illegalinstant
+
+      }
+
+    table
+
+  }
+}
+
