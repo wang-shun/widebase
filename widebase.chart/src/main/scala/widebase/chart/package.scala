@@ -140,255 +140,15 @@ package object chart {
    *
    * @return chart frame
    */
-  def plot(values: Any*) = show(plotChart(values:_*))
-
-  /** Print chart.
-   *
-   * @param values of data, properties and format
-   *
-   * @return image
-   */
-  def print(width: Int, height: Int) = {
-
-    var image: BufferedImage = null
-
-    if(figures.contains(figure))
-      image = figures(figure).panel.getChart.createBufferedImage(width, height)
-
-    image
-
-  }
-
-  /** Anti aliais of text.
-   *
-   * @param flag true or false
-   *
-   * @return chart frame
-   */
-  def taa(flag: Boolean) = {
-
-    var frame: ChartFrame = null
-
-    if(figures.contains(figure)) {
-
-      frame = figures(figure)
-      frame.panel.getChart.setAntiAlias(flag)
-
-    }
-
-    frame
-
-  }
-
-  /** Set title of chart.
-   *
-   * @param title of chart
-   *
-   * @return chart frame
-   */
-  def title(title: String) = {
-
-    var frame: ChartFrame = null
-
-    if(figures.contains(figure)) {
-
-      frame = figures(figure)
-      frame.panel.getChart.setTitle(title)
-
-    }
-
-    frame
-
-  }
-
-  /** Set label of x axis.
-   *
-   * @param label of x axis
-   *
-   * @return chart frame
-   */
-  def xlabel(label: String) = {
-
-    var frame: ChartFrame = null
-
-    if(figures.contains(figure)) {
-
-      frame = figures(figure)
-      val plot = frame.panel.getChart.getPlot
-
-      if(plot.isInstanceOf[XYPlot])
-        plot.asInstanceOf[XYPlot].getDomainAxis.setLabel(label)
-
-    }
-
-    frame
-
-  }
-
-  /** Set label of y axis.
-   *
-   * @param label of y axis
-   *
-   * @return chart frame
-   */
-  def ylabel(label: String) = {
-
-    var frame: ChartFrame = null
-
-    if(figures.contains(figure)) {
-
-      frame = figures(figure)
-      val plot = frame.panel.getChart.getPlot
-
-      if(plot.isInstanceOf[XYPlot])
-        plot.asInstanceOf[XYPlot].getRangeAxis.setLabel(label)
-
-    }
-
-    frame
-
-  }
-
-  /** Set unit of x axis.
-   *
-   * @param unit of x axis
-   *
-   * @return chart frame
-   */
-  def xunit(unit: TickUnitSource) = {
-
-    var frame: ChartFrame = null
-
-    if(figures.contains(figure)) {
-
-      frame = figures(figure)
-      val plot = frame.panel.getChart.getPlot
-
-      if(plot.isInstanceOf[XYPlot])
-        plot.asInstanceOf[XYPlot].getDomainAxis.setStandardTickUnits(unit)
-
-    }
-
-    frame
-
-  }
-
-  /** Set unit of y axis.
-   *
-   * @param unit of y axis
-   *
-   * @return chart frame
-   */
-  def yunit(unit: TickUnitSource) = {
-
-    var frame: ChartFrame = null
-
-    if(figures.contains(figure)) {
-
-      frame = figures(figure)
-      val plot = frame.panel.getChart.getPlot
-
-      if(plot.isInstanceOf[XYPlot])
-        plot.asInstanceOf[XYPlot].getRangeAxis.setStandardTickUnits(unit)
-
-    }
-
-    frame
-
-  }
-
-  /** Format chart.
-   *
-   * @param collection of chart
-   * @param series of collection
-   * @param renderer of plotter
-   * @param format itself
-   **/
-  protected def format(
-    collection: AbstractIntervalXYDataset,
-    series: Series,
-    renderer: AbstractXYItemRenderer,
-    format: String) {
-
-    val title = """;.*;""".r.findAllIn(format).toSeq.lastOption
-
-    if(!title.isEmpty)
-      series.setKey(title.get.drop(1).dropRight(1))
-
-    val format2 = """;.*;""".r.replaceAllIn(format, "")
-
-    val color = """[0-6|k|r|g|b|m|c|w]""".r
-      .findAllIn(format2).toSeq.lastOption
-
-    if(!color.isEmpty)
-      color.get match {
-
-        case "0" | "k" => renderer.setSeriesPaint(collection.getSeriesCount, Color.BLACK)
-        case "1" | "r" => renderer.setSeriesPaint(collection.getSeriesCount, Color.RED)
-        case "2" | "g" => renderer.setSeriesPaint(collection.getSeriesCount, Color.GREEN)
-        case "3" | "b" => renderer.setSeriesPaint(collection.getSeriesCount, Color.BLUE)
-        case "4" | "m" => renderer.setSeriesPaint(collection.getSeriesCount, Color.MAGENTA)
-        case "5" | "c" => renderer.setSeriesPaint(collection.getSeriesCount, Color.CYAN)
-        case "6" | "w" => renderer.setSeriesPaint(collection.getSeriesCount, Color.WHITE)
-
-      }
-
-    val line = """-""".r.findAllIn(format2).toSeq.lastOption
-
-    val style = """[.|+|*|o|x|^]""".r
-      .findAllIn(format2).toSeq.lastOption
-
-
-    if(!style.isEmpty && style.get != "-") {
-
-      if(line.isEmpty && renderer.isInstanceOf[XYLineAndShapeRenderer])
-        renderer.asInstanceOf[XYLineAndShapeRenderer]
-          .setSeriesLinesVisible(collection.getSeriesCount, false)
-
-      style.get match {
-
-        case "." => renderer.setSeriesShape(
-          collection.getSeriesCount,
-          widebase.chart.util.ShapeUtilities.createDot(1.0f))
-
-        case "+" => renderer.setSeriesShape(
-          collection.getSeriesCount,
-          widebase.chart.util.ShapeUtilities.createRegularCross(6.0f))
-
-        case "*" => renderer.setSeriesShape(
-          collection.getSeriesCount,
-          widebase.chart.util.ShapeUtilities.createDiagonalCross(
-            6.0f,
-            widebase.chart.util.ShapeUtilities.createRegularCross(6.0f)))
-
-        case "o" => renderer.setSeriesShape(
-          collection.getSeriesCount,
-          widebase.chart.util.ShapeUtilities.createCircle(6.0f))
-
-        case "x" => renderer.setSeriesShape(
-          collection.getSeriesCount,
-          widebase.chart.util.ShapeUtilities.createDiagonalCross(6.0f))
-
-        case "^" => renderer.setSeriesShape(
-          collection.getSeriesCount,
-          ShapeUtilities.createUpTriangle(6.0f))
-
-      }
-
-      if(renderer.isInstanceOf[XYLineAndShapeRenderer])
-        renderer.asInstanceOf[XYLineAndShapeRenderer]
-          .setSeriesShapesVisible(collection.getSeriesCount, true)
-
-    }
-  }
+  def plot(values: Any*) = show(plotPanel(values:_*))
 
   /** Plot collection of time or xy series.
    *
    * @param values of data, properties and format
    *
-   * @return chart
+   * @return chart panel
    */
-  protected def plotChart(values: Any*) = {
+  def plotPanel(values: Any*) = {
 
     var collection: AbstractIntervalXYDataset = null
     var domainAxis: ValueAxis = null
@@ -644,6 +404,246 @@ package object chart {
         super.paintComponent(g)
 
       }
+    }
+  }
+
+  /** Print chart.
+   *
+   * @param values of data, properties and format
+   *
+   * @return image
+   */
+  def print(width: Int, height: Int) = {
+
+    var image: BufferedImage = null
+
+    if(figures.contains(figure))
+      image = figures(figure).panel.getChart.createBufferedImage(width, height)
+
+    image
+
+  }
+
+  /** Anti aliais of text.
+   *
+   * @param flag true or false
+   *
+   * @return chart frame
+   */
+  def taa(flag: Boolean) = {
+
+    var frame: ChartFrame = null
+
+    if(figures.contains(figure)) {
+
+      frame = figures(figure)
+      frame.panel.getChart.setAntiAlias(flag)
+
+    }
+
+    frame
+
+  }
+
+  /** Set title of chart.
+   *
+   * @param title of chart
+   *
+   * @return chart frame
+   */
+  def title(title: String) = {
+
+    var frame: ChartFrame = null
+
+    if(figures.contains(figure)) {
+
+      frame = figures(figure)
+      frame.panel.getChart.setTitle(title)
+
+    }
+
+    frame
+
+  }
+
+  /** Set label of x axis.
+   *
+   * @param label of x axis
+   *
+   * @return chart frame
+   */
+  def xlabel(label: String) = {
+
+    var frame: ChartFrame = null
+
+    if(figures.contains(figure)) {
+
+      frame = figures(figure)
+      val plot = frame.panel.getChart.getPlot
+
+      if(plot.isInstanceOf[XYPlot])
+        plot.asInstanceOf[XYPlot].getDomainAxis.setLabel(label)
+
+    }
+
+    frame
+
+  }
+
+  /** Set label of y axis.
+   *
+   * @param label of y axis
+   *
+   * @return chart frame
+   */
+  def ylabel(label: String) = {
+
+    var frame: ChartFrame = null
+
+    if(figures.contains(figure)) {
+
+      frame = figures(figure)
+      val plot = frame.panel.getChart.getPlot
+
+      if(plot.isInstanceOf[XYPlot])
+        plot.asInstanceOf[XYPlot].getRangeAxis.setLabel(label)
+
+    }
+
+    frame
+
+  }
+
+  /** Set unit of x axis.
+   *
+   * @param unit of x axis
+   *
+   * @return chart frame
+   */
+  def xunit(unit: TickUnitSource) = {
+
+    var frame: ChartFrame = null
+
+    if(figures.contains(figure)) {
+
+      frame = figures(figure)
+      val plot = frame.panel.getChart.getPlot
+
+      if(plot.isInstanceOf[XYPlot])
+        plot.asInstanceOf[XYPlot].getDomainAxis.setStandardTickUnits(unit)
+
+    }
+
+    frame
+
+  }
+
+  /** Set unit of y axis.
+   *
+   * @param unit of y axis
+   *
+   * @return chart frame
+   */
+  def yunit(unit: TickUnitSource) = {
+
+    var frame: ChartFrame = null
+
+    if(figures.contains(figure)) {
+
+      frame = figures(figure)
+      val plot = frame.panel.getChart.getPlot
+
+      if(plot.isInstanceOf[XYPlot])
+        plot.asInstanceOf[XYPlot].getRangeAxis.setStandardTickUnits(unit)
+
+    }
+
+    frame
+
+  }
+
+  /** Format chart.
+   *
+   * @param collection of chart
+   * @param series of collection
+   * @param renderer of plotter
+   * @param format itself
+   **/
+  protected def format(
+    collection: AbstractIntervalXYDataset,
+    series: Series,
+    renderer: AbstractXYItemRenderer,
+    format: String) {
+
+    val title = """;.*;""".r.findAllIn(format).toSeq.lastOption
+
+    if(!title.isEmpty)
+      series.setKey(title.get.drop(1).dropRight(1))
+
+    val format2 = """;.*;""".r.replaceAllIn(format, "")
+
+    val color = """[0-6|k|r|g|b|m|c|w]""".r
+      .findAllIn(format2).toSeq.lastOption
+
+    if(!color.isEmpty)
+      color.get match {
+
+        case "0" | "k" => renderer.setSeriesPaint(collection.getSeriesCount, Color.BLACK)
+        case "1" | "r" => renderer.setSeriesPaint(collection.getSeriesCount, Color.RED)
+        case "2" | "g" => renderer.setSeriesPaint(collection.getSeriesCount, Color.GREEN)
+        case "3" | "b" => renderer.setSeriesPaint(collection.getSeriesCount, Color.BLUE)
+        case "4" | "m" => renderer.setSeriesPaint(collection.getSeriesCount, Color.MAGENTA)
+        case "5" | "c" => renderer.setSeriesPaint(collection.getSeriesCount, Color.CYAN)
+        case "6" | "w" => renderer.setSeriesPaint(collection.getSeriesCount, Color.WHITE)
+
+      }
+
+    val line = """-""".r.findAllIn(format2).toSeq.lastOption
+
+    val style = """[.|+|*|o|x|^]""".r
+      .findAllIn(format2).toSeq.lastOption
+
+
+    if(!style.isEmpty && style.get != "-") {
+
+      if(line.isEmpty && renderer.isInstanceOf[XYLineAndShapeRenderer])
+        renderer.asInstanceOf[XYLineAndShapeRenderer]
+          .setSeriesLinesVisible(collection.getSeriesCount, false)
+
+      style.get match {
+
+        case "." => renderer.setSeriesShape(
+          collection.getSeriesCount,
+          widebase.chart.util.ShapeUtilities.createDot(1.0f))
+
+        case "+" => renderer.setSeriesShape(
+          collection.getSeriesCount,
+          widebase.chart.util.ShapeUtilities.createRegularCross(6.0f))
+
+        case "*" => renderer.setSeriesShape(
+          collection.getSeriesCount,
+          widebase.chart.util.ShapeUtilities.createDiagonalCross(
+            6.0f,
+            widebase.chart.util.ShapeUtilities.createRegularCross(6.0f)))
+
+        case "o" => renderer.setSeriesShape(
+          collection.getSeriesCount,
+          widebase.chart.util.ShapeUtilities.createCircle(6.0f))
+
+        case "x" => renderer.setSeriesShape(
+          collection.getSeriesCount,
+          widebase.chart.util.ShapeUtilities.createDiagonalCross(6.0f))
+
+        case "^" => renderer.setSeriesShape(
+          collection.getSeriesCount,
+          ShapeUtilities.createUpTriangle(6.0f))
+
+      }
+
+      if(renderer.isInstanceOf[XYLineAndShapeRenderer])
+        renderer.asInstanceOf[XYLineAndShapeRenderer]
+          .setSeriesShapesVisible(collection.getSeriesCount, true)
+
     }
   }
 
