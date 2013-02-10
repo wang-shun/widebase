@@ -119,7 +119,7 @@ package object plot {
     val rangeAxis = new NumberAxis
     val renderer = new XYLineAndShapeRenderer(true, false)
 
-    var from = 0
+    var from = -1
     var till = -1
 
     while(i < values.length) {
@@ -204,6 +204,16 @@ package object plot {
             break
 
       }
+
+      if(from != -1 && till == -1) {
+
+        till = series.getItemCount - 1
+        domainAxis.setUpperBound(series.getTimePeriod(till).getStart.getTime)
+
+      }
+
+      if(series.getKey == "")
+        renderer.setSeriesVisibleInLegend(collection.getSeriesCount, false)
 
       collection.addSeries(series)
 
@@ -345,6 +355,9 @@ package object plot {
     val rangeAxis = new NumberAxis
     val renderer = new XYLineAndShapeRenderer(true, false)
 
+    var from = -1
+    var till = -1
+
     while(i < values.length) {
 
       val series = new XYSeries(
@@ -367,6 +380,14 @@ package object plot {
 
               i += 1
 
+              property match {
+
+                case "from" => from = values(i).asInstanceOf[Int]
+                case "till" => till = values(i).asInstanceOf[Int]
+                case _ =>
+
+              }
+
               this.property(series, domainAxis, property, values(i))
 
               i += 1
@@ -380,6 +401,13 @@ package object plot {
             }
           } else
             break
+
+      }
+
+      if(from != -1 && till == -1) {
+
+        till = series.getItemCount - 1
+        domainAxis.setUpperBound(series.getX(till).doubleValue)
 
       }
 
