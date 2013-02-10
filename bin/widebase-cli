@@ -17,6 +17,6 @@ java \
   "com.github.widebase%%widebase-dsl%0.3.4-SNAPSHOT" \
   "com.github.widebase%%widebase-stream-socket-cq%0.3.4-SNAPSHOT" \
   "com.github.widebase%%widebase-stream-socket-rq%0.3.4-SNAPSHOT" \
-  "com.github.widebase%%widebase.plot%0.3.4-SNAPSHOT" \
+  "com.github.widebase%%widebase-plot%0.3.4-SNAPSHOT" \
   "$@"
 
