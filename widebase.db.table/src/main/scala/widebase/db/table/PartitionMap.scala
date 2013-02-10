@@ -5,6 +5,8 @@ import java.util.concurrent.CountDownLatch
 import scala.actors.Futures.future
 import scala.collection.mutable. { Buffer, LinkedHashMap }
 
+import widebase.db.column.TypedColumn
+
 /** A [[scala.collection.mutable.LinkedHashMap]] for pairs of string based partition domain and [[widebase.db.table.Table]].
  *
  * @author myst3r10n
@@ -58,6 +60,8 @@ class PartitionMap {
 
   }
 
+  def +=(pair: (String, Table)) = map += pair._1 -> pair._2
+
   /** Filters all tables of this partition which do not satisfy a predicate.
    *
    * @param predicate used to test elements.
@@ -72,13 +76,23 @@ class PartitionMap {
    */
   def foreach[U](function: ((String, Table)) =>  U) = map.foreach(function)
 
+  def size = map.size
+
   /** A serie of partition domains. */
   def parts = map.keys
 
-  def +=(pair: (String, Table)) = map += pair._1 -> pair._2
-
   /** A serie of tables. */
   def tables = map.values
+
+  /** Select a series of columns by its label in the tables.
+   *
+   * @param label where columns are selected
+   *
+   * @return [[scala.collection.immutable.Array]] of [[widebase.db.column.TypedColumn]] by label
+   */
+  def tables(label: Any): Iterable[TypedColumn[_]] =
+    for(table <- tables)
+      yield(table(label))
 
   /** A printable [[widebase.db.table.PartitionMap]]. */
   override def toString =

@@ -29,6 +29,10 @@ object WidebaseBuild extends Build {
     file("."),
     settings = Defaults.defaultSettings ++ Unidoc.settings)
     .aggregate(
+      widebaseChart,
+      widebaseChartDataTime,
+      widebaseChartDataXY,
+      widebaseChartUtil,
       widebaseCollectionMutable,
       widebaseData,
       widebaseDb,
@@ -44,10 +48,6 @@ object WidebaseBuild extends Build {
       widebaseIoTable,
       widebaseNotify,
       widebasePlant,
-      widebasePlot,
-      widebasePlotDataTime,
-      widebasePlotDataXY,
-      widebasePlotUtil,
       widebaseStreamCodec,
       widebaseStreamCodecCq,
       widebaseStreamCodecRq,
@@ -58,6 +58,37 @@ object WidebaseBuild extends Build {
       widebaseStreamSocketCq,
       widebaseStreamSocketRq,
       widebaseUtil)
+
+  /** Chart */
+  lazy val widebaseChart = Project(
+    "widebase-chart",
+    file("widebase.chart"))
+    .dependsOn(
+      widebaseDsl % "test",
+      widebaseChartDataTime,
+      widebaseChartDataXY,
+      widebaseChartUtil)
+    .settings(libraryDependencies ++= lib.morechart ++ lib.moreswing)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+
+  /** Chart Data Time */
+  lazy val widebaseChartDataTime = Project(
+    "widebase-chart-data-time",
+    file("widebase.chart.data.time"))
+    .dependsOn(widebaseDbColumn)
+    .settings(libraryDependencies ++= lib.jfreechart)
+
+  /** Chart Data XY */
+  lazy val widebaseChartDataXY = Project(
+    "widebase-chart-data-xy",
+    file("widebase.chart.data.xy"))
+    .dependsOn(widebaseDbColumn)
+    .settings(libraryDependencies ++= lib.jfreechart)
+
+  /** Chart Utilities */
+  lazy val widebaseChartUtil = Project(
+    "widebase-chart-util",
+    file("widebase.chart.util"))
 
   /** Collection Mutable */
   lazy val widebaseCollectionMutable = Project(
@@ -160,37 +191,6 @@ object WidebaseBuild extends Build {
       resolvers <+= sbtResolver,
       libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
-
-  /** Plot */
-  lazy val widebasePlot = Project(
-    "widebase-plot",
-    file("widebase.plot"))
-    .dependsOn(
-      widebaseDsl % "test",
-      widebasePlotDataTime,
-      widebasePlotDataXY,
-      widebasePlotUtil)
-    .settings(libraryDependencies ++= lib.morechart ++ lib.moreswing)
-    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
-
-  /** Plot Data Time */
-  lazy val widebasePlotDataTime = Project(
-    "widebase-plot-data-time",
-    file("widebase.plot.data.time"))
-    .dependsOn(widebaseDbColumn)
-    .settings(libraryDependencies ++= lib.jfreechart)
-
-  /** Plot Data XY */
-  lazy val widebasePlotDataXY = Project(
-    "widebase-plot-data-xy",
-    file("widebase.plot.data.xy"))
-    .dependsOn(widebaseDbColumn)
-    .settings(libraryDependencies ++= lib.jfreechart)
-
-  /** Plot Utilities */
-  lazy val widebasePlotUtil = Project(
-    "widebase-plot-util",
-    file("widebase.plot.util"))
 
   /** Stream Codec */
   lazy val widebaseStreamCodec = Project(

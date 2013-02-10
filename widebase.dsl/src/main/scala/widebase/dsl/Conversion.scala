@@ -208,5 +208,32 @@ object Conversion {
   implicit def asColumnConversion(column: TypedColumn[_]) =
     new ColumnConversion(column)
 
+  /** Implicitly converts a array of [[widebase.db.column.TypedColumn]] into [[widebase.dsl.ArrayConversion]].
+   *
+   * @param iterable column to convert
+   *
+   * @return a conversion purposed object
+   */
+  implicit def asArrayConversion(array: Array[TypedColumn[_]]) =
+    new ArrayConversion(array)
+
+  /** Implicitly converts a iterable [[widebase.db.column.TypedColumn]] into [[widebase.dsl.ArrayIterableConversion]].
+   *
+   * @param iterable column to convert
+   *
+   * @return a conversion purposed object
+   */
+  implicit def asArrayIterableConversion(iterable: Iterable[TypedColumn[_]]) =
+    new ArrayIterableConversion(iterable)
+
+  /** Implicitly converts a iterable [[widebase.db.column.TypedColumn]] into [[widebase.dsl.IterableConversion]].
+   *
+   * @param iterable column to convert
+   *
+   * @return a conversion purposed object
+   */
+  implicit def asIterableConversion(iterable: Iterable[TypedColumn[_]]) =
+    new IterableConversion(iterable)
+
 }
 
