@@ -5,6 +5,7 @@ import event. {
   PlotZoomIn,
   PlotZoomInX,
   PlotZoomInY,
+  PlotZoomMouse,
   PlotZoomOut,
   PlotZoomOutX,
   PlotZoomOutY
@@ -18,7 +19,7 @@ import javax.swing. { ImageIcon, SwingConstants }
 
 import moreswing.swing.i18n.LocaleManager
 
-import scala.swing. { Button, Publisher }
+import scala.swing. { Button, Publisher, ToggleButton }
 import scala.swing.event.ButtonClicked
 
 /** Plot frame's tool bar.
@@ -111,6 +112,21 @@ class PlotToolBar(n: String, o: Int) extends JToolBar(n, o) with Publisher {
     reactions += {
 
       case ButtonClicked(_) => PlotToolBar.this.publish(PlotZoomOutY)
+
+    }
+  } ).peer)
+
+  addSeparator
+
+  add((new ToggleButton {
+
+    icon = new ImageIcon(getClass.getResource("/icon/zoom-mouse.png"))
+    tooltip = LocaleManager.text("Zoom_mouse")
+
+    listenTo(this)
+    reactions += {
+
+      case ButtonClicked(_) => PlotToolBar.this.publish(PlotZoomMouse(selected))
 
     }
   } ).peer)
