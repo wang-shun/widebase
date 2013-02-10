@@ -4,12 +4,9 @@ import java.text.SimpleDateFormat
 
 import net.liftweb.common. { Loggable, Logger }
 
-import org.jfree.data.xy.XYSeriesCollection
-
 import org.joda.time. { LocalDate, LocalDateTime }
 import org.joda.time.format.DateTimeFormat
 
-import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 import widebase.db.table. { Table, TemplateTable }
@@ -103,7 +100,9 @@ object PlotXY extends Logger with Loggable {
     saveDirTable("dirPlot", fillTable(from, till))
 
     plotTable("plot")
+    plot.figure += 1
     plotDirTable("dirPlot")
+    plot.figure += 1
     plotMixedTable("plot", "dirPlot")
 
   }

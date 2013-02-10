@@ -5,6 +5,7 @@ import event. {
   PlotZoomIn,
   PlotZoomInX,
   PlotZoomInY,
+  PlotZoomMouse,
   PlotZoomOut,
   PlotZoomOutX,
   PlotZoomOutY
@@ -15,9 +16,7 @@ import java.awt.BorderLayout
 
 import javax.swing.JOptionPane
 
-import moreswing.swing.i18n.LFrame
-
-import net.liftweb.common.Logger
+import moreswing.swing.i18n. { LFrame, LocaleManager }
 
 import org.jfree.chart.ChartPanel
 import org.joda.time.format.DateTimeFormat
@@ -35,50 +34,62 @@ import scala.swing. {
 /** Plot's frame.
  * 
  * @param plotPanel self-explanatory
+ * @param number of plot
  *
  * @author myst3r10n
  */
-case class PlotFrame(plotPanel: ChartPanel with Publisher) extends LFrame with Logger {
+case class PlotFrame(
+  protected var plotPanel: ChartPanel with Publisher,
+  val number: Int) extends LFrame {
 
-  title = "app.title"
-  preferredSize = new Dimension(1024, 768)
+  title = LocaleManager.text("plot.title_?", number)
+
+  preferredSize = new Dimension(800, 600)
 
   val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
-  var target = ""
+  set(plotPanel)
 
-  val toolBar = new PlotToolBar
+  def panel = plotPanel
 
-  val scrollPane = new ScrollPane {
+  def set(plotPanel: ChartPanel with Publisher) {
 
-    contents = new Component {
+    this.plotPanel = plotPanel
 
-      PlotFrame.this.deafTo(PlotFrame.this.plotPanel)
-      PlotFrame.this.listenTo(plotPanel)
+    val toolBar = new PlotToolBar
 
-      override lazy val peer = plotPanel
+    val scrollPane = new ScrollPane {
+
+      contents = new Component {
+
+        PlotFrame.this.deafTo(PlotFrame.this.plotPanel)
+        PlotFrame.this.listenTo(plotPanel)
+
+        override lazy val peer = plotPanel
+
+      }
+    }
+
+    contents = new scala.swing.BorderPanel {
+
+      peer.add(toolBar, BorderLayout.NORTH)
+      add(scrollPane, BorderPanel.Position.Center)
 
     }
-  }
 
-  contents = new scala.swing.BorderPanel {
+    listenTo(this, toolBar)
 
-    peer.add(toolBar, BorderLayout.NORTH)
-    add(scrollPane, BorderPanel.Position.Center)
+    reactions += {
 
-  }
+      case PlotZoomIn => plotPanel.zoomInBoth(0.0, 0.0)
+      case PlotZoomInX => plotPanel.zoomInDomain(0.0, 0.0)
+      case PlotZoomInY => plotPanel.zoomInRange(0.0, 0.0)
+      case event: PlotZoomMouse => plotPanel.setMouseZoomable(event.enabled)
+      case PlotZoomOut => plotPanel.zoomOutBoth(0.0, 0.0)
+      case PlotZoomOutX => plotPanel.zoomOutDomain(0.0, 0.0)
+      case PlotZoomOutY => plotPanel.zoomOutRange(0.0, 0.0)
 
-  listenTo(this, toolBar)
-
-  reactions += {
-
-    case PlotZoomIn => plotPanel.zoomInBoth(0.0, 0.0)
-    case PlotZoomInX => plotPanel.zoomInDomain(0.0, 0.0)
-    case PlotZoomInY => plotPanel.zoomInRange(0.0, 0.0)
-    case PlotZoomOut => plotPanel.zoomOutBoth(0.0, 0.0)
-    case PlotZoomOutX => plotPanel.zoomOutDomain(0.0, 0.0)
-    case PlotZoomOutY => plotPanel.zoomOutRange(0.0, 0.0)
-
+    }
   }
 }
 

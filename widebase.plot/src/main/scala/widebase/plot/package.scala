@@ -5,7 +5,7 @@ import plot.ui.PlotFrame
 import java.awt.Color
 import java.awt.geom.Point2D
 
-import morechart.chart.ShiftableChartPanel
+import morechart.chart. { ShiftableChartPanel, ZoomableChartPanel }
 
 import org.jfree.chart. { ChartPanel, JFreeChart }
 
@@ -18,7 +18,7 @@ import org.jfree.chart.axis. {
 
 }
 
-import org.jfree.chart.plot.XYPlot
+import org.jfree.chart.plot. { Plot, XYPlot }
 
 import org.jfree.chart.renderer.xy. {
 
@@ -32,6 +32,7 @@ import org.jfree.data.time. { TimeSeriesCollection, TimeSeriesWorkaround }
 import org.jfree.data.xy. { AbstractIntervalXYDataset, XYSeriesCollection }
 import org.jfree.util.ShapeUtilities
 
+import scala.collection.mutable.HashMap
 import scala.swing.Publisher
 import scala.swing.event.WindowClosing
 import scala.util.control.Breaks. { break, breakable }
@@ -68,36 +69,54 @@ import widebase.plot.data.xy.XYSeries
  */
 package object plot {
 
-  /** Unit of x axis. */
-  var xaxis: TickUnitSource = null
+  protected val figures = HashMap[Int, PlotFrame]()
 
-  /** Unit of y axis. */
-  var yaxis: TickUnitSource = null
+  /** Current plot. */
+  var figure = 1
+
+  /** Set anti alias of plotter.
+   *
+   * @param flag true or false
+   */
+  def aa(flag: Boolean) {
+
+    if(figures.contains(figure))
+      figures(figure).panel.getChart.setTextAntiAlias(flag)
+
+  }
+
+  /** Close all figures. */
+  def clear {
+
+    figures.values.foreach(_.close)
+    figures.clear
+
+  }
+
+  /** Anti aliais of text.
+   *
+   * @param flag true or false
+   */
+  def taa(flag: Boolean) {
+
+    if(figures.contains(figure))
+      figures(figure).panel.getChart.setAntiAlias(flag)
+
+  }
 
   /** Plot collection of time series.
    *
    * @param values of data, properties and format
+   *
+   * @return plot
    */
-  def time(values: Any*) {
+  def time(values: Any*) = {
 
     var i = 0
 
     val collection = new TimeSeriesCollection
-
-    val domainAxis = new DateAxis {
-
-      if(xaxis != null)
-        setStandardTickUnits(xaxis)
-
-    }
-
-    val rangeAxis = new NumberAxis {
-
-      if(yaxis != null)
-        setStandardTickUnits(yaxis)
-
-    }
-
+    val domainAxis = new DateAxis
+    val rangeAxis = new NumberAxis
     val renderer = new XYLineAndShapeRenderer(true, false)
 
     var from = 0
@@ -221,14 +240,12 @@ package object plot {
 
     val plot = new XYPlot(collection, domainAxis, rangeAxis, renderer)
 
-    val chart = new JFreeChart(plot) {
+    val chart = this.chart(plot)
 
-      setAntiAlias(false)
-      setTextAntiAlias(false)
-
-    }
-
-    val plotPanel = new ChartPanel(chart) with Publisher with ShiftableChartPanel {
+    val plotPanel = new ChartPanel(chart)
+      with Publisher
+      with ShiftableChartPanel
+      with ZoomableChartPanel {
 
       setMouseZoomable(false)
       setZoomInFactor(0.9)
@@ -248,32 +265,84 @@ package object plot {
 
     show(plotPanel)
 
+    plot
+
+  }
+
+  /** Set title of plotter. */
+  def title(title: String) {
+
+    if(figures.contains(figure))
+      figures(figure).panel.getChart.setTitle(title)
+
+  }
+
+  /** Set label of x axis. */
+  def xlabel(label: String) {
+
+    if(figures.contains(figure)) {
+
+      val plot = figures(figure).panel.getChart.getPlot
+
+      if(plot.isInstanceOf[XYPlot])
+        plot.asInstanceOf[XYPlot].getDomainAxis.setLabel(label)
+
+    }
+
+  }
+
+  /** Set label of y axis. */
+  def ylabel(label: String) {
+
+    if(figures.contains(figure)) {
+
+      val plot = figures(figure).panel.getChart.getPlot
+
+      if(plot.isInstanceOf[XYPlot])
+        plot.asInstanceOf[XYPlot].getRangeAxis.setLabel(label)
+
+    }
+  }
+
+  /** Set unit of x axis. */
+  def xunit(unit: TickUnitSource) {
+
+    if(figures.contains(figure)) {
+
+      val plot = figures(figure).panel.getChart.getPlot
+
+      if(plot.isInstanceOf[XYPlot])
+        plot.asInstanceOf[XYPlot].getDomainAxis.setStandardTickUnits(unit)
+
+    }
+  }
+
+  /** Set unit of y axis. */
+  def yunit(unit: TickUnitSource) {
+
+    if(figures.contains(figure)) {
+
+      val plot = figures(figure).panel.getChart.getPlot
+
+      if(plot.isInstanceOf[XYPlot])
+        plot.asInstanceOf[XYPlot].getRangeAxis.setStandardTickUnits(unit)
+
+    }
   }
 
   /** Plot collection of xy series.
    *
    * @param values of data, properties and format
+   *
+   * @return plot
    */
-  def xy(values: Any*) {
+  def xy(values: Any*) = {
 
     var i = 0
 
     val collection = new XYSeriesCollection
-
-    val domainAxis = new NumberAxis {
-
-      if(xaxis != null)
-        setStandardTickUnits(xaxis)
-
-    }
-
-    val rangeAxis = new NumberAxis {
-
-      if(yaxis != null)
-        setStandardTickUnits(yaxis)
-
-    }
-
+    val domainAxis = new NumberAxis
+    val rangeAxis = new NumberAxis
     val renderer = new XYLineAndShapeRenderer(true, false)
 
     while(i < values.length) {
@@ -314,20 +383,20 @@ package object plot {
 
       }
 
+      if(series.getKey == "")
+        renderer.setSeriesVisibleInLegend(collection.getSeriesCount, false)
+
       collection.addSeries(series)
 
     }
 
     val plot = new XYPlot(collection, domainAxis, rangeAxis, renderer)
+    val chart = this.chart(plot)
 
-    val chart = new JFreeChart(plot) {
-
-      setAntiAlias(false)
-      setTextAntiAlias(false)
-
-    }
-
-    val plotPanel = new ChartPanel(chart) with Publisher with ShiftableChartPanel {
+    val plotPanel = new ChartPanel(chart)
+      with Publisher
+      with ShiftableChartPanel
+      with ZoomableChartPanel {
 
       setMouseZoomable(false)
       setZoomInFactor(0.9)
@@ -346,6 +415,15 @@ package object plot {
     }
 
     show(plotPanel)
+
+    plot
+
+  }
+
+  protected def chart(plot: Plot) = new JFreeChart(plot) {
+
+    setAntiAlias(false)
+    setTextAntiAlias(false)
 
   }
 
@@ -476,19 +554,31 @@ package object plot {
    *
    * @param panel of plotter
    */
-  protected def show(panel: ChartPanel with Publisher) {
+  protected def show(panel: ChartPanel with Publisher) = {
 
-    val frame = new PlotFrame(panel) {
+    if(!figures.contains(figure)) {
 
-      reactions += {
+      val frame = new PlotFrame(panel, figure) {
 
-        case WindowClosing(source) => source.dispose
-          
+        reactions += {
+
+          case WindowClosing(source) =>
+            val frame = source.asInstanceOf[PlotFrame]
+            figures -= frame.number
+            source.dispose
+
+        }
       }
-    }
 
-    frame.pack
-    frame.visible = true
+      frame.pack
+      frame.visible = true
+
+      figures += figure -> frame
+
+    } else
+      figures(figure).set(panel)
+
+    figures(figure)
 
   }
 }
