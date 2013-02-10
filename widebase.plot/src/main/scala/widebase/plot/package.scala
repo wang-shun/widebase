@@ -32,7 +32,7 @@ import org.jfree.data.time. { TimeSeriesCollection, TimeSeriesWorkaround }
 import org.jfree.data.xy. { AbstractIntervalXYDataset, XYSeriesCollection }
 import org.jfree.util.ShapeUtilities
 
-import scala.collection.mutable.HashMap
+import scala.collection.mutable. { ArrayBuffer, HashMap }
 import scala.swing.Publisher
 import scala.swing.event.WindowClosing
 import scala.util.control.Breaks. { break, breakable }
@@ -119,10 +119,13 @@ package object plot {
     val rangeAxis = new NumberAxis
     val renderer = new XYLineAndShapeRenderer(true, false)
 
-    var from = -1
-    var till = -1
+    var fromRecord = ArrayBuffer[Int]()
+    var tillRecord = ArrayBuffer[Int]()
 
     while(i < values.length) {
+
+      fromRecord += -1
+      tillRecord += -1
 
       val series =
         if(values(i).isInstanceOf[MonthColumn])
@@ -183,8 +186,8 @@ package object plot {
 
               property match {
 
-                case "from" => from = values(i).asInstanceOf[Int]
-                case "till" => till = values(i).asInstanceOf[Int]
+                case "from" => fromRecord(collection.getSeriesCount) = values(i).asInstanceOf[Int]
+                case "till" => tillRecord(collection.getSeriesCount) = values(i).asInstanceOf[Int]
                 case _ =>
 
               }
@@ -205,10 +208,21 @@ package object plot {
 
       }
 
-      if(from != -1 && till == -1) {
+      if(fromRecord.last == -1 && tillRecord.last != -1) {
 
-        till = series.getItemCount - 1
-        domainAxis.setUpperBound(series.getTimePeriod(till).getStart.getTime)
+        fromRecord(collection.getSeriesCount) = 0
+
+        domainAxis.setLowerBound(series.getTimePeriod(
+          fromRecord(collection.getSeriesCount)).getStart.getTime)
+
+      }
+
+      if(fromRecord.last != -1 && tillRecord.last == -1) {
+
+        tillRecord(collection.getSeriesCount) = series.getItemCount - 1
+
+        domainAxis.setUpperBound(series.getTimePeriod(
+          tillRecord(collection.getSeriesCount)).getStart.getTime)
 
       }
 
@@ -226,13 +240,19 @@ package object plot {
 
       val series = collection.getSeries(i)
 
-      val end =
-          if(till == -1 || series.getItemCount < till)
+      val _tillRecord =
+          if(tillRecord(i) == -1 || series.getItemCount < tillRecord(i))
           series.getItemCount - 1
         else
-          till
+          tillRecord(i)
 
-      for(i <- from to end) {
+      val _fromRecord =
+      if(fromRecord(i) == -1)
+        0
+      else
+        fromRecord(i)
+
+      for(i <- _fromRecord to _tillRecord) {
 
         val value = series.getDataItem(i).getValue.doubleValue
 
@@ -355,10 +375,10 @@ package object plot {
     val rangeAxis = new NumberAxis
     val renderer = new XYLineAndShapeRenderer(true, false)
 
-    var from = -1
-    var till = -1
-
     while(i < values.length) {
+
+      var fromRecord = -1
+      var tillRecord = -1
 
       val series = new XYSeries(
         values(i).asInstanceOf[TypedColumn[Number]],
@@ -382,8 +402,8 @@ package object plot {
 
               property match {
 
-                case "from" => from = values(i).asInstanceOf[Int]
-                case "till" => till = values(i).asInstanceOf[Int]
+                case "from" => fromRecord = values(i).asInstanceOf[Int]
+                case "till" => tillRecord = values(i).asInstanceOf[Int]
                 case _ =>
 
               }
@@ -394,7 +414,8 @@ package object plot {
 
             } else {
 
-              format(collection, series, renderer, values(i).asInstanceOf[String])
+              format(collection, series, renderer, values(i)
+                .asInstanceOf[String])
 
               i += 1
 
@@ -404,12 +425,12 @@ package object plot {
 
       }
 
-      if(from != -1 && till == -1) {
+      if(fromRecord == -1 && tillRecord != -1)
+        domainAxis.setLowerBound(series.getX(0).doubleValue)
 
-        till = series.getItemCount - 1
-        domainAxis.setUpperBound(series.getX(till).doubleValue)
-
-      }
+      if(fromRecord != -1 && tillRecord == -1)
+        domainAxis.setUpperBound(
+          series.getX(series.getItemCount - 1).doubleValue)
 
       if(series.getKey == "")
         renderer.setSeriesVisibleInLegend(collection.getSeriesCount, false)
@@ -557,21 +578,26 @@ package object plot {
 
       case "from" =>
 
-        val from = value.asInstanceOf[Int]
+        val fromRecord = value.asInstanceOf[Int]
 
         if(series.isInstanceOf[XYSeries])
-          domainAxis.setLowerBound(series.asInstanceOf[XYSeries].getX(from).doubleValue)
+          domainAxis.setLowerBound(
+            series.asInstanceOf[XYSeries].getX(fromRecord).doubleValue)
         else if(series.isInstanceOf[TimeSeriesWorkaround])
-          domainAxis.setLowerBound(series.asInstanceOf[TimeSeriesWorkaround].getTimePeriod(from).getStart.getTime)
+          domainAxis.setLowerBound(
+            series.asInstanceOf[TimeSeriesWorkaround]
+              .getTimePeriod(fromRecord).getStart.getTime)
 
       case "till" =>
 
-        val till = value.asInstanceOf[Int]
+        val tillRecord = value.asInstanceOf[Int]
 
         if(series.isInstanceOf[XYSeries])
-          domainAxis.setUpperBound(series.asInstanceOf[XYSeries].getX(till).doubleValue)
+          domainAxis.setUpperBound(
+            series.asInstanceOf[XYSeries].getX(tillRecord).doubleValue)
         else if(series.isInstanceOf[TimeSeriesWorkaround])
-          domainAxis.setUpperBound(series.asInstanceOf[TimeSeriesWorkaround].getTimePeriod(till).getStart.getTime)
+          domainAxis.setUpperBound(series.asInstanceOf[TimeSeriesWorkaround]
+            .getTimePeriod(tillRecord).getStart.getTime)
 
       case _ => throw new Exception("Property not found: " + property)
 
