@@ -166,7 +166,7 @@ object WidebaseBuild extends Build {
     "widebase-plot",
     file("widebase.plot"))
     .dependsOn(
-      widebaseDsl,
+      widebaseDsl % "test",
       widebasePlotDataTime,
       widebasePlotDataXY,
       widebasePlotUtil)
