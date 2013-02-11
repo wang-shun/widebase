@@ -25,6 +25,8 @@ object Dependency {
     val sbtLauncher = Seq(
       "org.scala-tools.sbt" % "launcher-interface_2.9.1" % "0.11.2" % "provided")
 
+    val swing = Seq("org.scala-lang" % "scala-swing" % "2.9.2")
+
   }
 
   object testlib {

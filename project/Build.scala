@@ -29,10 +29,6 @@ object WidebaseBuild extends Build {
     file("."),
     settings = Defaults.defaultSettings ++ Unidoc.settings)
     .aggregate(
-      widebaseChart,
-      widebaseChartDataTime,
-      widebaseChartDataXY,
-      widebaseChartUtil,
       widebaseCollectionMutable,
       widebaseData,
       widebaseDb,
@@ -57,38 +53,15 @@ object WidebaseBuild extends Build {
       widebaseStreamSocket,
       widebaseStreamSocketCq,
       widebaseStreamSocketRq,
+      widebaseUiChart,
+      widebaseUiChartDataTime,
+      widebaseUiChartDataTimeOHLC,
+      widebaseUiChartDataXY,
+      widebaseUiChartEvent,
+      widebaseUiChartLive,
+      widebaseUiChartPlot,
+      widebaseUiChartUtil,
       widebaseUtil)
-
-  /** Chart */
-  lazy val widebaseChart = Project(
-    "widebase-chart",
-    file("widebase.chart"))
-    .dependsOn(
-      widebaseDsl % "test",
-      widebaseChartDataTime,
-      widebaseChartDataXY,
-      widebaseChartUtil)
-    .settings(libraryDependencies ++= lib.morechart ++ lib.moreswing)
-    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
-
-  /** Chart Data Time */
-  lazy val widebaseChartDataTime = Project(
-    "widebase-chart-data-time",
-    file("widebase.chart.data.time"))
-    .dependsOn(widebaseDbColumn)
-    .settings(libraryDependencies ++= lib.jfreechart)
-
-  /** Chart Data XY */
-  lazy val widebaseChartDataXY = Project(
-    "widebase-chart-data-xy",
-    file("widebase.chart.data.xy"))
-    .dependsOn(widebaseDbColumn)
-    .settings(libraryDependencies ++= lib.jfreechart)
-
-  /** Chart Utilities */
-  lazy val widebaseChartUtil = Project(
-    "widebase-chart-util",
-    file("widebase.chart.util"))
 
   /** Collection Mutable */
   lazy val widebaseCollectionMutable = Project(
@@ -253,6 +226,66 @@ object WidebaseBuild extends Build {
       widebaseStreamHandlerRq,
       widebaseStreamSocket)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+
+  /** UI Chart */
+  lazy val widebaseUiChart = Project(
+    "widebase-ui-chart",
+    file("widebase.ui.chart"))
+    .dependsOn(widebaseUiChartEvent)
+    .settings(libraryDependencies ++= lib.morechart ++ lib.moreswing)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+
+  /** UI Chart Event */
+  lazy val widebaseUiChartEvent = Project(
+    "widebase-ui-chart-event",
+    file("widebase.ui.chart.event"))
+    .settings(libraryDependencies ++= lib.swing)
+
+  /** UI Chart Data Time */
+  lazy val widebaseUiChartDataTime = Project(
+    "widebase-ui-chart-data-time",
+    file("widebase.ui.chart.data.time"))
+    .dependsOn(widebaseDbColumn)
+    .settings(libraryDependencies ++= lib.jfreechart)
+
+  /** UI Chart Data Time OHLC */
+  lazy val widebaseUiChartDataTimeOHLC = Project(
+    "widebase-ui-chart-data-time-ohlc",
+    file("widebase.ui.chart.data.time.ohlc"))
+    .dependsOn(widebaseDbColumn)
+    .settings(libraryDependencies ++= lib.jfreechart)
+
+  /** UI Chart Data XY */
+  lazy val widebaseUiChartDataXY = Project(
+    "widebase-ui-chart-data-xy",
+    file("widebase.ui.chart.data.xy"))
+    .dependsOn(widebaseDbColumn)
+    .settings(libraryDependencies ++= lib.jfreechart)
+
+  /** UI Chart Live */
+  lazy val widebaseUiChartLive = Project(
+    "widebase-ui-chart-live",
+    file("widebase.ui.chart.live"))
+    .dependsOn(
+      widebaseDsl % "test",
+      widebaseUiChart,
+      widebaseUiChartPlot)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+
+  /** UI Chart Plot */
+  lazy val widebaseUiChartPlot = Project(
+    "widebase-ui-chart-plot",
+    file("widebase.ui.chart.plot"))
+    .dependsOn(
+      widebaseUiChartDataTime,
+      widebaseUiChartDataTimeOHLC,
+      widebaseUiChartDataXY,
+      widebaseUiChartUtil)
+
+  /** UI Chart Utilities */
+  lazy val widebaseUiChartUtil = Project(
+    "widebase-ui-chart-util",
+    file("widebase.ui.chart.util"))
 
   /** Utilities */
   lazy val widebaseUtil = Project(
