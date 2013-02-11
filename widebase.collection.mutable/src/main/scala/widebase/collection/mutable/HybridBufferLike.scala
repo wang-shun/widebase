@@ -106,11 +106,16 @@ trait HybridBufferLike[A] {
    *
    * @param index to apply
    */
-  def apply(index: Int) =
-    if(mappers == null || index > mappedElements)
+  def apply(index: Int) = {
+
+    if(mappers == null)
       buffer(index)
+    else if(index > mappedElements - 1)
+      buffer(index - mappedElements)
     else
       get(index)
+
+  }
 
   /** Clear hybrid buffer. */
   def clear {
