@@ -3,8 +3,6 @@ package widebase.ui.table
 import java.sql.Timestamp
 import java.util.Vector
 
-import javax.swing.table.DefaultTableModel
-
 import org.joda.time. {
 
   LocalDate,
@@ -48,9 +46,11 @@ import widebase.db.table.Table
  *
  * @author myst3r10n
  */
-case class TableModelParted(val tables: Array[Table]) extends DefaultTableModel {
+case class TableModelParted(val tables: Array[Table]) extends TableModelLike {
 
   import scala.collection.JavaConverters._
+
+  val table = null
 
   protected val columns = tables.head.columns.toArray
   protected val parts = ArrayBuffer[(Int, Int, Int)]()

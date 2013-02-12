@@ -3,8 +3,6 @@ package widebase.ui.table
 import java.sql.Timestamp
 import java.util.Vector
 
-import javax.swing.table.DefaultTableModel
-
 import org.joda.time. {
 
   LocalDate,
@@ -46,9 +44,11 @@ import widebase.db.table.Table
  *
  * @author myst3r10n
  */
-case class TableModel(val table: Table) extends DefaultTableModel {
+case class TableModel(val table: Table) extends TableModelLike {
 
   import scala.collection.JavaConverters._
+
+  val tables = null
 
   protected val columns = table.columns.toBuffer // Performance purpose
 
