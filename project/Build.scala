@@ -61,6 +61,7 @@ object WidebaseBuild extends Build {
       widebaseUiChartLive,
       widebaseUiChartPlot,
       widebaseUiChartUtil,
+      widebaseUiI18n,
       widebaseUiTable,
       widebaseUiTableEvent,
       widebaseUiTableLive,
@@ -272,7 +273,8 @@ object WidebaseBuild extends Build {
     .dependsOn(
       widebaseDsl % "test",
       widebaseUiChart,
-      widebaseUiChartPlot)
+      widebaseUiChartPlot,
+      widebaseUiI18n)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** UI Chart Plot */
@@ -306,12 +308,18 @@ object WidebaseBuild extends Build {
     file("widebase.ui.table.event"))
     .settings(libraryDependencies ++= lib.swing)
 
+  /** UI i18n */
+  lazy val widebaseUiI18n = Project(
+    "widebase-ui-i18n",
+    file("widebase.ui.i18n"))
+
   /** UI Table Live */
   lazy val widebaseUiTableLive = Project(
     "widebase-ui-table-live",
     file("widebase.ui.table.live"))
     .dependsOn(
       widebaseDsl % "test",
+      widebaseUiI18n,
       widebaseUiTable)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
