@@ -3,9 +3,13 @@ package widebase.ui.chart.plot
 import org.jfree.chart.axis.DateAxis
 import org.jfree.data.time.ohlc.OHLCSeries
 
-object OHLCProperty {
+/** Highlow properties.
+ *
+ * @author myst3r10n
+ */
+object HighlowProperty {
 
-  /** Property chart.
+  /** Perform a property.
    *
    * @param series of collection
    * @param domainAxis of plotter

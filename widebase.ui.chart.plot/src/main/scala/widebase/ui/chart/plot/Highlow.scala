@@ -2,7 +2,7 @@ package widebase.ui.chart.plot
 
 import org.jfree.chart.axis. { DateAxis, NumberAxis }
 import org.jfree.chart.plot.XYPlot
-import org.jfree.chart.renderer.xy.HighLowRenderer
+import org.jfree.chart.renderer.xy. { AbstractXYItemRenderer, HighLowRenderer }
 import org.jfree.data.time.ohlc.OHLCSeriesCollection
 
 import scala.collection.mutable.ArrayBuffer
@@ -33,20 +33,23 @@ import widebase.ui.chart.data.time.ohlc. {
 
 }
 
-object HighLow {
+/** Highlow Plot.
+ *
+ * @author myst3r10n
+ */
+object Highlow {
 
-  /** HighLow of time or xy series.
+  /** Perform highlow.
    *
    * @param values of data, properties and format
    *
-   * @return high low
+   * @return highlow plot
    */
-  def apply(values: Any*) = {
+  def apply(values: Any*)(implicit renderer: AbstractXYItemRenderer = new HighLowRenderer) = {
 
     val collection = new OHLCSeriesCollection
     val domainAxis = new DateAxis
     val rangeAxis = new NumberAxis
-    val renderer = new HighLowRenderer
 
     var fromRecord = ArrayBuffer[Int]()
     var tillRecord = ArrayBuffer[Int]()
@@ -157,7 +160,7 @@ object HighLow {
               }
 
               // Resolve generic properties
-              OHLCProperty(series, domainAxis, property, values(i))
+              HighlowProperty(series, domainAxis, property, values(i))
 
               i += 1
 
@@ -165,7 +168,7 @@ object HighLow {
             } else {
 
               // Format chart
-              OHLCFormat(
+              HighlowFormat(
                 collection,
                 series,
                 renderer,

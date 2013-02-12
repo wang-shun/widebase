@@ -8,7 +8,7 @@ import org.jfree.data.time. { TimeSeriesCollection, TimeSeriesWorkaround }
 
 import org.jfree.data.xy. {
 
-  AbstractIntervalXYDataset,
+  AbstractXYDataset,
   XYSeriesCollection,
   XYSeriesWorkaround
 
@@ -43,9 +43,13 @@ import widebase.ui.chart.data.time. {
 
 import widebase.ui.chart.data.xy.XYSeries
 
+/** Plot.
+ *
+ * @author myst3r10n
+ */
 object Plot {
 
-  /** Plot of time or xy series.
+  /** Perform plot.
    *
    * @param values of data, properties and format
    *
@@ -53,7 +57,7 @@ object Plot {
    */
   def apply(values: Any*) = {
 
-    var collection: AbstractIntervalXYDataset = null
+    var collection: AbstractXYDataset = null
     var domainAxis: ValueAxis = null
 
     val rangeAxis = new NumberAxis

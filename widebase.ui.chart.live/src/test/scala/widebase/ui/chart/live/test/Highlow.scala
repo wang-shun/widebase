@@ -11,11 +11,11 @@ import scala.util.Random
 
 import widebase.db.table. { Table, TemplateTable }
 
-/* Test OHLC chart for table file, directory table and partitioned table.
+/* Test highlow chart for table file, directory table and partitioned table.
  *
  * @author myst3r10n
  */
-object OHLC extends Logger with Loggable {
+object Highlow extends Logger with Loggable {
 
   protected var debug: Boolean = _
   protected var parts: Int = _
@@ -107,6 +107,8 @@ object OHLC extends Logger with Loggable {
 
   }
 
+  val useCandle = false // Enable candlestick renderer
+
   val millis = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S")
     .parse("2012-01-23 12:34:56.789").getTime
 
@@ -120,24 +122,24 @@ object OHLC extends Logger with Loggable {
     var from = LocalDateTime.parse("2013-01-01 00:00:00.000", formatter)
     val till = LocalDateTime.parse("2013-02-01 00:00:00.000", formatter)
 
-    saveTable("plotOhlc", fillTable(from, till))
+    saveTable("plotHighlow", fillTable(from, till))
     println("")
-    saveDirTable("dirPlotOhlc", fillTable(from, till))
+    saveDirTable("dirPlotHighlow", fillTable(from, till))
     println("")
-    savePartedDirTable("dirPlotOhlc", fillTable(from, till))
+    savePartedDirTable("dirPlotHighlow", fillTable(from, till))
 
-    plotTable("plotOhlc")
+    plotTable("plotHighlow")
     figure += 1
-    plotDirTable("dirPlotOhlc")
+    plotDirTable("dirPlotHighlow")
     figure += 1
-    plotPartedDirTable("dirPlotOhlc", from.toLocalDate, till.toLocalDate)
+    plotPartedDirTable("dirPlotHighlow", from.toLocalDate, till.toLocalDate)
 
     figure += 1
 
     plotMixedTable(
-      "plotOhlc",
-      "dirPlotOhlc",
-      "dirPlotOhlc",
+      "plotHighlow",
+      "dirPlotHighlow",
+      "dirPlotHighlow",
       from.toLocalDate,
       till.toLocalDate)
 
@@ -242,7 +244,7 @@ object OHLC extends Logger with Loggable {
 
     val table = DataTable(load(name))
 
-    highlow(
+    candle(
       table.time,
       table.open,
       table.high,
@@ -250,19 +252,45 @@ object OHLC extends Logger with Loggable {
       table.close
       , "from", 0, "till", 24, ";Table File;")
 
+    if(useCandle)
+      candle(
+        table.time,
+        table.open,
+        table.high,
+        table.low,
+        table.close
+        , "from", 0, "till", 24, ";Table File;")
+    else
+      highlow(
+        table.time,
+        table.open,
+        table.high,
+        table.low,
+        table.close
+        , "from", 0, "till", 24, ";Table File;")
+
   }
 
   def plotDirTable(name: String) {
 
     val table = DataTable(map(name))
 
-    highlow(
-      table.time,
-      table.open,
-      table.high,
-      table.low,
-      table.close
-      , "from", 0, "till", 24, ";Directory Table;")
+    if(useCandle)
+      candle(
+        table.time,
+        table.open,
+        table.high,
+        table.low,
+        table.close
+        , "from", 0, "till", 24, ";Directory Table;")
+    else
+      highlow(
+        table.time,
+        table.open,
+        table.high,
+        table.low,
+        table.close
+        , "from", 0, "till", 24, ";Directory Table;")
 
   }
 
@@ -275,13 +303,22 @@ object OHLC extends Logger with Loggable {
     info("Parted dir table mapped " + parts.size + " tables in " +
       diff(started, System.currentTimeMillis))
 
-    highlow(
-      parts.tables("time").Zia,
-      parts.tables("open").dia,
-      parts.tables("high").dia,
-      parts.tables("low").dia,
-      parts.tables("close").dia,
-      "from", 0, "till", 24, ";Partitioned Table;")
+    if(useCandle)
+      candle(
+        parts.tables("time").Zia,
+        parts.tables("open").dia,
+        parts.tables("high").dia,
+        parts.tables("low").dia,
+        parts.tables("close").dia,
+        "from", 0, "till", 24, ";Partitioned Table;")
+    else
+      highlow(
+        parts.tables("time").Zia,
+        parts.tables("open").dia,
+        parts.tables("high").dia,
+        parts.tables("low").dia,
+        parts.tables("close").dia,
+        "from", 0, "till", 24, ";Partitioned Table;")
 
   }
 
@@ -296,25 +333,46 @@ object OHLC extends Logger with Loggable {
     val dirTable = DataTable(map(dirName))
     val parts = map.dates(partedName, from, till)
 
-    highlow(
-      table.time,
-      table.open,
-      table.high,
-      table.low,
-      table.close,
-      "from", 0, "till", 24, ";Table File;",
-      dirTable.time,
-      dirTable.open,
-      dirTable.high,
-      dirTable.low,
-      dirTable.close,
-      ";Directory Table;",
-      parts.tables("time").Zia,
-      parts.tables("open").dia,
-      parts.tables("high").dia,
-      parts.tables("low").dia,
-      parts.tables("close").dia,
-      ";Partitioned Table;")
+    if(useCandle)
+      candle(
+        table.time,
+        table.open,
+        table.high,
+        table.low,
+        table.close,
+        "from", 0, "till", 24, ";Table File;",
+        dirTable.time,
+        dirTable.open,
+        dirTable.high,
+        dirTable.low,
+        dirTable.close,
+        ";Directory Table;",
+        parts.tables("time").Zia,
+        parts.tables("open").dia,
+        parts.tables("high").dia,
+        parts.tables("low").dia,
+        parts.tables("close").dia,
+        ";Partitioned Table;")
+    else
+      highlow(
+        table.time,
+        table.open,
+        table.high,
+        table.low,
+        table.close,
+        "from", 0, "till", 24, ";Table File;",
+        dirTable.time,
+        dirTable.open,
+        dirTable.high,
+        dirTable.low,
+        dirTable.close,
+        ";Directory Table;",
+        parts.tables("time").Zia,
+        parts.tables("open").dia,
+        parts.tables("high").dia,
+        parts.tables("low").dia,
+        parts.tables("close").dia,
+        ";Partitioned Table;")
 
   }
 }

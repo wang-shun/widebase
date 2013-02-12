@@ -2,12 +2,16 @@ package widebase.ui.chart.plot
 
 import java.awt.Color
 
-import org.jfree.chart.renderer.xy.HighLowRenderer
+import org.jfree.chart.renderer.xy.AbstractXYItemRenderer
 import org.jfree.data.time.ohlc. { OHLCSeries, OHLCSeriesCollection }
 
-object OHLCFormat {
+/** Highlow format.
+ *
+ * @author myst3r10n
+ */
+object HighlowFormat {
 
-  /** Format plot.
+  /** Perform format.
    *
    * @param collection of chart
    * @param series of collection
@@ -17,7 +21,7 @@ object OHLCFormat {
   def apply(
     collection: OHLCSeriesCollection,
     series: OHLCSeries,
-    renderer: HighLowRenderer,
+    renderer: AbstractXYItemRenderer,
     format: String) {
 
     val title = """;.*;""".r.findAllIn(format).toSeq.lastOption

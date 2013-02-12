@@ -9,19 +9,31 @@ import moreswing.swing.i18n.LocaleManager
 import org.jfree.chart. { ChartPanel, JFreeChart }
 import org.jfree.chart.axis.TickUnitSource
 import org.jfree.chart.plot. { Plot, XYPlot }
+
+import org.jfree.chart.renderer.xy. {
+
+  AbstractXYItemRenderer,
+  CandlestickRenderer,
+  HighLowRenderer
+
+}
+
 import org.jfree.data.time.TimeSeriesCollection
 
 import scala.collection.mutable.HashMap
 import scala.swing.Publisher
 import scala.swing.event.WindowClosing
 
-/** Live package.
+import widebase.ui.chart.plot.Highlow
+
+/** Interactive charting.
  *
  * @author myst3r10n
  */
 package object live {
 
-  protected val figures = HashMap[Int, ChartFrame]()
+  /** Hold all figures global. */
+  protected val figures = HashMap[Int, FigureFrame]()
 
   /** Default entities.
    *
@@ -43,7 +55,7 @@ package object live {
     }
   }
 
-  /** Current chart. */
+  /** Current figure. */
   var figure = 1
 
   /** Set anti alias of chart.
@@ -54,7 +66,7 @@ package object live {
    */
   def aa(flag: Boolean) = {
 
-    var frame: ChartFrame = null
+    var frame: FigureFrame = null
 
     if(figures.contains(figure)) {
 
@@ -75,11 +87,33 @@ package object live {
 
   }
 
-  def highlow(values: Any*) = show(highlowPanel(values:_*))
+  /** Show candlestick figure.
+   *
+   * @param values of data, properties and format
+   *
+   * @return figure frame
+   */
+  def candle(values: Any*) =
+    show(highlowPanel(values:_*)(new CandlestickRenderer))
 
-  def highlowPanel(values: Any*) =
-    new ChartPanel(
-      default.chart(widebase.ui.chart.plot.HighLow(values:_*)))
+  /** Show highlow figure.
+   *
+   * @param values of data, properties and format
+   *
+   * @return figure frame
+   */
+  def highlow(values: Any*) =
+    show(highlowPanel(values:_*)(new HighLowRenderer))
+
+  /** Highlow panel.
+   *
+   * @param values of data, properties and format
+   *
+   * @return highlow panel
+   */
+  def highlowPanel(values: Any*)(implicit
+    renderer: AbstractXYItemRenderer = new HighLowRenderer) =
+    new ChartPanel(default.chart(Highlow(values:_*)))
       with Publisher
       with ShiftableChartPanel
       with ZoomableChartPanel {
@@ -101,7 +135,13 @@ package object live {
       }
     }
 
-  def plotx(values: Any*) = show(plotPanel(values:_*))
+  /** Show plot figure of time or xy series.
+   *
+   * @param values of data, properties and format
+   *
+   * @return figure frame
+   */
+  def plot(values: Any*) = show(plotPanel(values:_*))
 
   /** Plot panel of time or xy series.
    *
@@ -161,7 +201,7 @@ package object live {
    */
   def taa(flag: Boolean) = {
 
-    var frame: ChartFrame = null
+    var frame: FigureFrame = null
 
     if(figures.contains(figure)) {
 
@@ -182,7 +222,7 @@ package object live {
    */
   def title(title: String) = {
 
-    var frame: ChartFrame = null
+    var frame: FigureFrame = null
 
     if(figures.contains(figure)) {
 
@@ -203,7 +243,7 @@ package object live {
    */
   def xlabel(label: String) = {
 
-    var frame: ChartFrame = null
+    var frame: FigureFrame = null
 
     if(figures.contains(figure)) {
 
@@ -227,7 +267,7 @@ package object live {
    */
   def ylabel(label: String) = {
 
-    var frame: ChartFrame = null
+    var frame: FigureFrame = null
 
     if(figures.contains(figure)) {
 
@@ -251,7 +291,7 @@ package object live {
    */
   def xunit(unit: TickUnitSource) = {
 
-    var frame: ChartFrame = null
+    var frame: FigureFrame = null
 
     if(figures.contains(figure)) {
 
@@ -275,7 +315,7 @@ package object live {
    */
   def yunit(unit: TickUnitSource) = {
 
-    var frame: ChartFrame = null
+    var frame: FigureFrame = null
 
     if(figures.contains(figure)) {
 
@@ -301,14 +341,14 @@ package object live {
 
     if(!figures.contains(figure)) {
 
-      val frame = new ChartFrame(panel, 800, 600, figure) {
+      val frame = new FigureFrame(panel, 800, 600, figure) {
 
-        title = LocaleManager.text("chart.title_?", figure)
+        title = LocaleManager.text("figure.title_?", figure)
 
         reactions += {
 
           case WindowClosing(source) =>
-            val frame = source.asInstanceOf[ChartFrame]
+            val frame = source.asInstanceOf[FigureFrame]
             figures -= frame.figure
             source.dispose
 

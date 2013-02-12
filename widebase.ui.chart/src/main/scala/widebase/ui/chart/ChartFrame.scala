@@ -28,27 +28,25 @@ import scala.swing. {
 
 }
 
-/** Chart's frame.
+/** Frame of chart.
  * 
- * @param chartPanel self-explanatory
+ * @param panel0 of chart
  * @param width of frame
  * @param height of frame
  *
  * @author myst3r10n
  */
 class ChartFrame(
-  protected var chartPanel: ChartPanel with Publisher,
+  protected var panel0: ChartPanel with Publisher,
   width: Int = 800,
   height: Int = 600)
   extends LFrame {
 
   preferredSize = new Dimension(width, height)
 
-  title = "chart.title"
+  set(panel0)
 
-  set(chartPanel)
-
-  def panel = chartPanel
+  def panel = panel0
 
   /** Replace chart panel.
    *
@@ -58,7 +56,7 @@ class ChartFrame(
    */
   def set(panel: ChartPanel with Publisher) = {
 
-    this.chartPanel = panel
+    this.panel0 = panel
 
     val toolBar = new ChartToolBar
 

@@ -10,12 +10,16 @@ import org.jfree.chart.renderer.xy. {
 }
 
 import org.jfree.data.general.Series
-import org.jfree.data.xy.AbstractIntervalXYDataset
+import org.jfree.data.xy.AbstractXYDataset
 import org.jfree.util.ShapeUtilities
 
+/** Plot format.
+ *
+ * @author myst3r10n
+ */
 object PlotFormat {
 
-  /** Format plot.
+  /** Perform a format.
    *
    * @param collection of chart
    * @param series of collection
@@ -23,7 +27,7 @@ object PlotFormat {
    * @param format itself
    **/
   def apply(
-    collection: AbstractIntervalXYDataset,
+    collection: AbstractXYDataset,
     series: Series,
     renderer: AbstractXYItemRenderer,
     format: String) {

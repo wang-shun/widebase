@@ -6,9 +6,13 @@ import org.jfree.data.time.TimeSeriesWorkaround
 
 import widebase.ui.chart.data.xy.XYSeries
 
+/** Plot properties.
+ *
+ * @author myst3r10n
+ */
 object PlotProperty {
 
-  /** Property chart.
+  /** Perform a property.
    *
    * @param series of collection
    * @param domainAxis of plotter

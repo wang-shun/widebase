@@ -205,7 +205,7 @@ object Time extends Logger with Loggable {
 
     val table = DataTable(load(name))
 
-    plotx(table.time, table.value, "from", 0, "till", 24, ";Table File;")
+    plot(table.time, table.value, "from", 0, "till", 24, ";Table File;")
 
   }
 
@@ -213,7 +213,7 @@ object Time extends Logger with Loggable {
 
     val table = DataTable(map(name))
 
-    plotx(table.time, table.value, "from", 0, "till", 24, ";Directory Table;")
+    plot(table.time, table.value, "from", 0, "till", 24, ";Directory Table;")
 
   }
 
@@ -226,7 +226,7 @@ object Time extends Logger with Loggable {
     info("Parted dir table mapped " + parts.size + " tables in " +
       diff(started, System.currentTimeMillis))
 
-    plotx(parts.tables("time").Zia, parts.tables("value").dia, "from", 0, "till", 24, ";Partitioned Table;")
+    plot(parts.tables("time").Zia, parts.tables("value").dia, "from", 0, "till", 24, ";Partitioned Table;")
 
   }
 
@@ -241,7 +241,7 @@ object Time extends Logger with Loggable {
     val dirTable = DataTable(map(dirName))
     val parts = map.dates(partedName, from, till)
 
-    plotx(
+    plot(
       table.time, table.value, "from", 0, "till", 24, ";Table File;",
       dirTable.time, dirTable.value, ";Directory Table;",
       parts.tables("time").Zia, parts.tables("value").dia, ";Partitioned Table;")

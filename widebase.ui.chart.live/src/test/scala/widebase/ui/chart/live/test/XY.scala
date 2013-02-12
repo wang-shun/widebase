@@ -97,15 +97,15 @@ object XY extends Logger with Loggable {
     var from = 1
     val till = 100
 
-    saveTable("plotXy", fillTable(from, till))
+    saveTable("plotXY", fillTable(from, till))
     println("")
-    saveDirTable("dirPlotXy", fillTable(from, till))
+    saveDirTable("dirPlotXY", fillTable(from, till))
 
-    plotTable("plotXy")
+    plotTable("plotXY")
     figure += 1
-    plotDirTable("dirPlotXy")
+    plotDirTable("dirPlotXY")
     figure += 1
-    plotMixedTable("plotXy", "dirPlotXy")
+    plotMixedTable("plotXY", "dirPlotXY")
 
   }
 
@@ -181,7 +181,7 @@ object XY extends Logger with Loggable {
 
     val table = DataTable(load(name))
 
-    plotx(table.x, table.y, "from", 0, "till", 24, ";Table File;")
+    plot(table.x, table.y, "from", 0, "till", 24, ";Table File;")
 
   }
 
@@ -189,7 +189,7 @@ object XY extends Logger with Loggable {
 
     val table = DataTable(map(name))
 
-    plotx(table.x, table.y, "from", 0, "till", 24, ";Directory Table;")
+    plot(table.x, table.y, "from", 0, "till", 24, ";Directory Table;")
 
   }
 
@@ -198,7 +198,7 @@ object XY extends Logger with Loggable {
     val table = DataTable(load(name))
     val dirTable = DataTable(map(dirName))
 
-    plotx(
+    plot(
       table.x, table.y, "from", 0, "till", 24, ";Table File;",
       dirTable.x, dirTable.y, ";Directory Table;")
 

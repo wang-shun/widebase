@@ -22,7 +22,7 @@ import moreswing.swing.i18n.LocaleManager
 import scala.swing. { Button, Publisher, ToggleButton }
 import scala.swing.event.ButtonClicked
 
-/** Chart frame's tool bar.
+/** Tool bar of frame.
  *
  * @param name of tool bar
  * @param orientation of tool bar
