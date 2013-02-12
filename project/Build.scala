@@ -61,6 +61,9 @@ object WidebaseBuild extends Build {
       widebaseUiChartLive,
       widebaseUiChartPlot,
       widebaseUiChartUtil,
+      widebaseUiTable,
+      widebaseUiTableEvent,
+      widebaseUiTableLive,
       widebaseUtil)
 
   /** Collection Mutable */
@@ -286,6 +289,31 @@ object WidebaseBuild extends Build {
   lazy val widebaseUiChartUtil = Project(
     "widebase-ui-chart-util",
     file("widebase.ui.chart.util"))
+
+  /** UI Table */
+  lazy val widebaseUiTable = Project(
+    "widebase-ui-table",
+    file("widebase.ui.table"))
+    .dependsOn(
+      widebaseDsl % "test",
+      widebaseDbTable,
+      widebaseUiTableEvent)
+    .settings(libraryDependencies ++= lib.moreswing)
+
+  /** UI Table Event */
+  lazy val widebaseUiTableEvent = Project(
+    "widebase-ui-table-event",
+    file("widebase.ui.table.event"))
+    .settings(libraryDependencies ++= lib.swing)
+
+  /** UI Table Live */
+  lazy val widebaseUiTableLive = Project(
+    "widebase-ui-table-live",
+    file("widebase.ui.table.live"))
+    .dependsOn(
+      widebaseDsl % "test",
+      widebaseUiTable)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Utilities */
   lazy val widebaseUtil = Project(
