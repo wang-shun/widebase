@@ -34,7 +34,7 @@ package object live {
    *
    * @return sheet frame
    */
-  def gtable(values: Any*) = show(tablePanel(values:_*))
+  def uitable(values: Any*) = show(uitablePanel(values:_*))
 
   /** Table panel.
    *
@@ -42,7 +42,7 @@ package object live {
    *
    * @return table panel
    */
-  def tablePanel(values: Any*) = {
+  def uitablePanel(values: Any*) = {
 
     val table =
       if(values.head.isInstanceOf[Table])

@@ -357,19 +357,19 @@ object Edit extends Logger with Loggable {
 
   def visualTable(name: String) {
 
-    gtable(load(name))
+    uitable(load(name))
 
   }
 
   def visualDirTable(name: String) {
 
-    gtable(map(name))
+    uitable(map(name))
 
   }
 
   def visualPartedDirTable(name: String, from: LocalDate, till: LocalDate) {
 
-    gtable(map.dates(name, from, till).tables.toArray)
+    uitable(map.dates(name, from, till).tables.toArray)
 
   }
 }
