@@ -248,7 +248,7 @@ object Edit extends Logger with Loggable {
     val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
     var from = LocalDateTime.parse("2013-01-01 00:00:00.000", formatter)
-    val till = LocalDateTime.parse("2013-01-02 00:00:00.000", formatter)
+    val till = LocalDateTime.parse("2013-02-01 00:00:00.000", formatter)
 
     saveTable("visualTable", fillTable(from, till))
     println("")
