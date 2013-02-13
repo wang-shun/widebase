@@ -18,11 +18,8 @@ import widebase.stream.socket.cq
 // Init Stream/RQ
 import widebase.stream.socket.rq
 
-// Init UI Chart
-import widebase.ui.chart.live._
-
-// Init UI Table
-import widebase.ui.table.live._
+// Init UI
+import widebase.ui._
 
 // Convenience purpose
 import org.joda.time.LocalDateTime

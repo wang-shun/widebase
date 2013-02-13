@@ -121,7 +121,7 @@ object Highlow {
             values(i + 3).asInstanceOf[Array[DoubleColumn]],
             values(i + 4).asInstanceOf[Array[DoubleColumn]],
             "")
-        else
+        else if(values(i).isInstanceOf[Array[TimestampColumn]])
           new TimestampSeriesParted(
             values(i).asInstanceOf[Array[TimestampColumn]],
             values(i + 1).asInstanceOf[Array[DoubleColumn]],
@@ -129,6 +129,73 @@ object Highlow {
             values(i + 3).asInstanceOf[Array[DoubleColumn]],
             values(i + 4).asInstanceOf[Array[DoubleColumn]],
             "")
+        // Init time series (Octave compatibility)
+        else if(values(i + 4).isInstanceOf[MonthColumn])
+          new widebase.ui.chart.data.time.ohlc.MonthSeries(
+            values(i + 4).asInstanceOf[MonthColumn],
+            values(i + 3).asInstanceOf[DoubleColumn],
+            values(i).asInstanceOf[DoubleColumn],
+            values(i + 1).asInstanceOf[DoubleColumn],
+            values(i + 2).asInstanceOf[DoubleColumn],
+            "")
+        else if(values(i + 4).isInstanceOf[DateColumn])
+          new DateSeries(
+            values(i + 4).asInstanceOf[DateColumn],
+            values(i + 3).asInstanceOf[DoubleColumn],
+            values(i).asInstanceOf[DoubleColumn],
+            values(i + 1).asInstanceOf[DoubleColumn],
+            values(i + 2).asInstanceOf[DoubleColumn],
+            "")
+        else if(values(i + 4).isInstanceOf[DateTimeColumn])
+          new DateTimeSeries(
+            values(i + 4).asInstanceOf[DateTimeColumn],
+            values(i + 3).asInstanceOf[DoubleColumn],
+            values(i).asInstanceOf[DoubleColumn],
+            values(i + 1).asInstanceOf[DoubleColumn],
+            values(i + 2).asInstanceOf[DoubleColumn],
+            "")
+        else if(values(i + 4).isInstanceOf[TimestampColumn])
+          new TimestampSeries(
+            values(i + 4).asInstanceOf[TimestampColumn],
+            values(i + 3).asInstanceOf[DoubleColumn],
+            values(i).asInstanceOf[DoubleColumn],
+            values(i + 1).asInstanceOf[DoubleColumn],
+            values(i + 2).asInstanceOf[DoubleColumn],
+            "")
+        // Init time series (partitioned table and Octave compatibility)
+        else if(values(i + 4).isInstanceOf[Array[MonthColumn]])
+          new MonthSeriesParted(
+            values(i + 4).asInstanceOf[Array[MonthColumn]],
+            values(i + 3).asInstanceOf[Array[DoubleColumn]],
+            values(i).asInstanceOf[Array[DoubleColumn]],
+            values(i + 1).asInstanceOf[Array[DoubleColumn]],
+            values(i + 2).asInstanceOf[Array[DoubleColumn]],
+            "")
+        else if(values(i + 4).isInstanceOf[Array[DateColumn]])
+          new DateSeriesParted(
+            values(i + 4).asInstanceOf[Array[DateColumn]],
+            values(i + 3).asInstanceOf[Array[DoubleColumn]],
+            values(i).asInstanceOf[Array[DoubleColumn]],
+            values(i + 1).asInstanceOf[Array[DoubleColumn]],
+            values(i + 2).asInstanceOf[Array[DoubleColumn]],
+            "")
+        else if(values(i + 4).isInstanceOf[Array[DateTimeColumn]])
+          new DateTimeSeriesParted(
+            values(i + 4).asInstanceOf[Array[DateTimeColumn]],
+            values(i + 3).asInstanceOf[Array[DoubleColumn]],
+            values(i).asInstanceOf[Array[DoubleColumn]],
+            values(i + 1).asInstanceOf[Array[DoubleColumn]],
+            values(i + 2).asInstanceOf[Array[DoubleColumn]],
+            "")
+        else
+          new TimestampSeriesParted(
+            values(i + 4).asInstanceOf[Array[TimestampColumn]],
+            values(i + 3).asInstanceOf[Array[DoubleColumn]],
+            values(i).asInstanceOf[Array[DoubleColumn]],
+            values(i + 1).asInstanceOf[Array[DoubleColumn]],
+            values(i + 2).asInstanceOf[Array[DoubleColumn]],
+            "")
+
 
       i += 5
 

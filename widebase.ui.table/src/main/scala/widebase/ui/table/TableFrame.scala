@@ -21,15 +21,7 @@ import org.joda.time. {
 
 }
 
-import scala.swing. {
-
-  BorderPanel,
-  Component,
-  Dimension,
-  Publisher,
-  ScrollPane
-
-}
+import scala.swing. { BorderPanel, Component, Publisher, ScrollPane }
 
 import widebase.db.column. {
 
@@ -56,108 +48,68 @@ import widebase.db.column. {
 /** Frame of table.
  * 
  * @param panel0 of table
- * @param width of frame
- * @param height of frame
  *
  * @author myst3r10n
  */
-class TableFrame(
-  protected var panel0: TablePanel,
-  width: Int = 800,
-  height: Int = 600)
-  extends LFrame {
+class TableFrame(protected var panel0: TablePanel = null) extends LFrame {
 
-  preferredSize = new Dimension(width, height)
+  val toolBar = new TableToolBar
+  val scrollPane = new ScrollPane
 
-  set(panel0)
+  if(panel0 != null)
+    panel = panel0
 
   def panel = panel0
 
-  /** Replace table panel.
-   *
-   * @param panel to replace
-   *
-   * @return frame
-   */
-  def set(panel: TablePanel) = {
+  def panel_=(panel: TablePanel) {
 
-    this.panel0 = panel
+    scrollPane.contents = new Component {
 
-    val toolBar = new TableToolBar
+      deafTo(panel)
+      listenTo(panel)
 
-    val scrollPane = new ScrollPane {
-
-      contents = panel
+      override lazy val peer = panel.peer
 
     }
 
-    contents = new scala.swing.BorderPanel {
+    panel0 = panel
 
-      peer.add(toolBar, BorderLayout.NORTH)
-      add(scrollPane, BorderPanel.Position.Center)
+  }
 
-    }
+  contents = new scala.swing.BorderPanel {
 
-    listenTo(this, toolBar)
+    peer.add(toolBar, BorderLayout.NORTH)
+    add(scrollPane, BorderPanel.Position.Center)
 
-    reactions += {
+  }
 
-      case TableAddRecord =>
+  listenTo(this, toolBar)
 
-        if(panel.model.isInstanceOf[TableModel])
-          panel.model.asInstanceOf[TableModel].addRow(blankRecord)
-        else
-          panel.model.asInstanceOf[TableModelParted].addRow(blankRecord)
+  reactions += {
 
-      case TableInsertRecord =>
+    case TableAddRecord =>
 
-        if(panel.model.isInstanceOf[TableModel]) {
+      if(panel.model.isInstanceOf[TableModel])
+        panel.model.asInstanceOf[TableModel].addRow(blankRecord)
+      else
+        panel.model.asInstanceOf[TableModelParted].addRow(blankRecord)
 
-          if(panel.peer.getSelectedRow != -1)
-            try {
+    case TableInsertRecord =>
 
-              panel.model.asInstanceOf[TableModel].insertRow(
-                panel.peer.getSelectedRow, blankRecord)
+      if(panel.model.isInstanceOf[TableModel]) {
 
-            } catch {
-
-              case e: UnsupportedOperationException =>
-                JOptionPane.showMessageDialog(
-                  peer,
-                  LocaleManager.text("Mapped_table_not_support_insert_record"),
-                  LocaleManager.text("Exception"),
-                  JOptionPane.ERROR_MESSAGE);
-
-            }
-          else
-            JOptionPane.showMessageDialog(
-              peer,
-              LocaleManager.text("Table_not_selected"),
-              LocaleManager.text("Insert"),
-              JOptionPane.ERROR_MESSAGE);
-
-        } else
-          JOptionPane.showMessageDialog(
-            peer,
-            LocaleManager.text("Mapped_table_not_support_insert_record"),
-            LocaleManager.text("Exception"),
-            JOptionPane.ERROR_MESSAGE);
-
-      case TableRemoveRecord =>
-
-        if(panel.model.isInstanceOf[TableModel])
+        if(panel.peer.getSelectedRow != -1)
           try {
 
-            for(i <- 0 to panel.peer.getSelectedRowCount - 1)
-              panel.model.asInstanceOf[DefaultTableModel]
-                .removeRow(panel.peer.getSelectedRow)
+            panel.model.asInstanceOf[TableModel].insertRow(
+              panel.peer.getSelectedRow, blankRecord)
 
           } catch {
 
             case e: UnsupportedOperationException =>
               JOptionPane.showMessageDialog(
                 peer,
-                LocaleManager.text("Mapped_table_not_support_removable_records"),
+                LocaleManager.text("Mapped_table_not_support_insert_record"),
                 LocaleManager.text("Exception"),
                 JOptionPane.ERROR_MESSAGE);
 
@@ -165,13 +117,42 @@ class TableFrame(
         else
           JOptionPane.showMessageDialog(
             peer,
-            LocaleManager.text("Mapped_table_not_support_removable_records"),
-            LocaleManager.text("Exception"),
+            LocaleManager.text("Table_not_selected"),
+            LocaleManager.text("Insert"),
             JOptionPane.ERROR_MESSAGE);
 
-    }
+      } else
+        JOptionPane.showMessageDialog(
+          peer,
+          LocaleManager.text("Mapped_table_not_support_insert_record"),
+          LocaleManager.text("Exception"),
+          JOptionPane.ERROR_MESSAGE);
 
-    this
+    case TableRemoveRecord =>
+
+      if(panel.model.isInstanceOf[TableModel])
+        try {
+
+          for(i <- 0 to panel.peer.getSelectedRowCount - 1)
+            panel.model.asInstanceOf[DefaultTableModel]
+              .removeRow(panel.peer.getSelectedRow)
+
+        } catch {
+
+          case e: UnsupportedOperationException =>
+            JOptionPane.showMessageDialog(
+              peer,
+              LocaleManager.text("Mapped_table_not_support_removable_records"),
+              LocaleManager.text("Exception"),
+              JOptionPane.ERROR_MESSAGE);
+
+        }
+      else
+        JOptionPane.showMessageDialog(
+          peer,
+          LocaleManager.text("Mapped_table_not_support_removable_records"),
+          LocaleManager.text("Exception"),
+          JOptionPane.ERROR_MESSAGE);
 
   }
 

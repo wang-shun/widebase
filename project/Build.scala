@@ -53,18 +53,16 @@ object WidebaseBuild extends Build {
       widebaseStreamSocket,
       widebaseStreamSocketCq,
       widebaseStreamSocketRq,
+      widebaseUi,
       widebaseUiChart,
       widebaseUiChartDataTime,
       widebaseUiChartDataTimeOHLC,
       widebaseUiChartDataXY,
       widebaseUiChartEvent,
-      widebaseUiChartLive,
       widebaseUiChartPlot,
       widebaseUiChartUtil,
-      widebaseUiI18n,
       widebaseUiTable,
       widebaseUiTableEvent,
-      widebaseUiTableLive,
       widebaseUtil)
 
   /** Collection Mutable */
@@ -231,11 +229,23 @@ object WidebaseBuild extends Build {
       widebaseStreamSocket)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
+  /** UI */
+  lazy val widebaseUi = Project(
+    "widebase-ui",
+    file("widebase.ui"))
+    .dependsOn(
+      widebaseDsl % "test",
+      widebaseUiChart,
+      widebaseUiTable)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+
   /** UI Chart */
   lazy val widebaseUiChart = Project(
     "widebase-ui-chart",
     file("widebase.ui.chart"))
-    .dependsOn(widebaseUiChartEvent)
+    .dependsOn(
+      widebaseUiChartEvent,
+      widebaseUiChartPlot)
     .settings(libraryDependencies ++= lib.morechart ++ lib.moreswing)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
@@ -265,17 +275,6 @@ object WidebaseBuild extends Build {
     file("widebase.ui.chart.data.xy"))
     .dependsOn(widebaseDbColumn)
     .settings(libraryDependencies ++= lib.jfreechart)
-
-  /** UI Chart Live */
-  lazy val widebaseUiChartLive = Project(
-    "widebase-ui-chart-live",
-    file("widebase.ui.chart.live"))
-    .dependsOn(
-      widebaseDsl % "test",
-      widebaseUiChart,
-      widebaseUiChartPlot,
-      widebaseUiI18n)
-    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** UI Chart Plot */
   lazy val widebaseUiChartPlot = Project(
@@ -307,21 +306,6 @@ object WidebaseBuild extends Build {
     "widebase-ui-table-event",
     file("widebase.ui.table.event"))
     .settings(libraryDependencies ++= lib.swing)
-
-  /** UI i18n */
-  lazy val widebaseUiI18n = Project(
-    "widebase-ui-i18n",
-    file("widebase.ui.i18n"))
-
-  /** UI Table Live */
-  lazy val widebaseUiTableLive = Project(
-    "widebase-ui-table-live",
-    file("widebase.ui.table.live"))
-    .dependsOn(
-      widebaseDsl % "test",
-      widebaseUiI18n,
-      widebaseUiTable)
-    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Utilities */
   lazy val widebaseUtil = Project(
