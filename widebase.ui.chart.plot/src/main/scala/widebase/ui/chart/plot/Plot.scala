@@ -28,26 +28,46 @@ import widebase.db.column. {
 
 }
 
+import widebase.ui.chart.data. { ValueFunction, ValuePartitionFunction }
+
 import widebase.ui.chart.data.time. {
 
+  DatePartitionSeries,
   DateSeries,
-  DateSeriesParted,
+  DateTimePartitionSeries,
   DateTimeSeries,
-  DateTimeSeriesParted,
+  MonthPartitionSeries,
   MonthSeries,
-  MonthSeriesParted,
-  TimestampSeries,
-  TimestampSeriesParted
+  TimestampPartitionSeries,
+  TimestampSeries
 
 }
 
-import widebase.ui.chart.data.xy.XYSeries
+import widebase.ui.chart.data.xy. { XYPartitionSeries, XYSeries }
 
 /** Plot.
  *
  * @author myst3r10n
  */
 object Plot {
+
+  /** Add plot.
+   *
+   * @param values of data, properties and format
+   *
+   * @return plot
+   */
+  def add(plot: org.jfree.chart.plot.Plot, values: Any*) = {
+
+    val overlay = this(values:_*)
+    val current = plot.asInstanceOf[XYPlot]
+
+    current.setDataset(current.getDatasetCount, overlay.getDataset)
+    current.setRenderer(current.getRendererCount, overlay.getRenderer)
+
+    current
+
+  }
 
   /** Perform plot.
    *
@@ -75,64 +95,147 @@ object Plot {
 
       // Init any time series or if not found a xy series
       val series =
-        // Init time series
-        if(values(i).isInstanceOf[MonthColumn])
+        // Init time series (column, column)
+        if(values(i).isInstanceOf[MonthColumn] &&
+          values(i + 1).isInstanceOf[TypedColumn[_]])
           new MonthSeries(
+            "",
             values(i).asInstanceOf[MonthColumn],
-            values(i + 1).asInstanceOf[TypedColumn[Number]],
-            "")
-        else if(values(i).isInstanceOf[DateColumn])
+            values(i + 1).asInstanceOf[TypedColumn[Number]])
+        else if(values(i).isInstanceOf[DateColumn] &&
+          values(i + 1).isInstanceOf[TypedColumn[_]])
           new DateSeries(
+            "",
             values(i).asInstanceOf[DateColumn],
-            values(i + 1).asInstanceOf[TypedColumn[Number]],
-            "")
-        else if(values(i).isInstanceOf[DateTimeColumn])
+            values(i + 1).asInstanceOf[TypedColumn[Number]])
+        else if(values(i).isInstanceOf[DateTimeColumn] &&
+          values(i + 1).isInstanceOf[TypedColumn[_]])
           new DateTimeSeries(
+            "",
             values(i).asInstanceOf[DateTimeColumn],
-            values(i + 1).asInstanceOf[TypedColumn[Number]],
-            "")
-        else if(values(i).isInstanceOf[TimestampColumn])
+            values(i + 1).asInstanceOf[TypedColumn[Number]])
+        else if(values(i).isInstanceOf[TimestampColumn] &&
+          values(i + 1).isInstanceOf[TypedColumn[_]])
           new TimestampSeries(
+            "",
             values(i).asInstanceOf[TimestampColumn],
-            values(i + 1).asInstanceOf[TypedColumn[Number]],
-            "")
-        // Init time series (partitioned table)
-        else if(values(i).isInstanceOf[Array[MonthColumn]])
-          new MonthSeriesParted(
+            values(i + 1).asInstanceOf[TypedColumn[Number]])
+        // Init time series (partitioned column, partitioned column)
+        else if(values(i).isInstanceOf[Array[MonthColumn]] &&
+          values(i + 1).isInstanceOf[Array[TypedColumn[_]]])
+          new MonthPartitionSeries(
+            "",
             values(i).asInstanceOf[Array[MonthColumn]],
-            values(i + 1).asInstanceOf[Array[TypedColumn[Number]]],
-            "")
-        else if(values(i).isInstanceOf[Array[DateColumn]])
-          new DateSeriesParted(
+            values(i + 1).asInstanceOf[Array[TypedColumn[Number]]])
+        else if(values(i).isInstanceOf[Array[DateColumn]] &&
+          values(i + 1).isInstanceOf[Array[TypedColumn[_]]])
+          new DatePartitionSeries(
+            "",
             values(i).asInstanceOf[Array[DateColumn]],
-            values(i + 1).asInstanceOf[Array[TypedColumn[Number]]],
-            "")
-        else if(values(i).isInstanceOf[Array[DateTimeColumn]])
-          new DateTimeSeriesParted(
+            values(i + 1).asInstanceOf[Array[TypedColumn[Number]]])
+        else if(values(i).isInstanceOf[Array[DateTimeColumn]] &&
+          values(i + 1).isInstanceOf[Array[TypedColumn[_]]])
+          new DateTimePartitionSeries(
+            "",
             values(i).asInstanceOf[Array[DateTimeColumn]],
-            values(i + 1).asInstanceOf[Array[TypedColumn[Number]]],
-            "")
-        else if(values(i).isInstanceOf[Array[TimestampColumn]])
-          new TimestampSeriesParted(
+            values(i + 1).asInstanceOf[Array[TypedColumn[Number]]])
+        else if(values(i).isInstanceOf[Array[TimestampColumn]] &&
+          values(i + 1).isInstanceOf[Array[TypedColumn[_]]])
+          new TimestampPartitionSeries(
+            "",
             values(i).asInstanceOf[Array[TimestampColumn]],
-            values(i + 1).asInstanceOf[Array[TypedColumn[Number]]],
-            "")
-        // Init a xy series
+            values(i + 1).asInstanceOf[Array[TypedColumn[Number]]])
+        // Init time series (column, function)
+        else if(values(i).isInstanceOf[MonthColumn] &&
+          values(i + 1).isInstanceOf[ValueFunction])
+          new MonthSeries(
+            "",
+            values(i).asInstanceOf[MonthColumn],
+            values(i + 1).asInstanceOf[ValueFunction])
+        else if(values(i).isInstanceOf[DateColumn] &&
+          values(i + 1).isInstanceOf[ValueFunction])
+          new DateSeries(
+            "",
+            values(i).asInstanceOf[DateColumn],
+            values(i + 1).asInstanceOf[ValueFunction])
+        else if(values(i).isInstanceOf[DateTimeColumn] &&
+          values(i + 1).isInstanceOf[ValueFunction])
+          new DateTimeSeries(
+            "",
+            values(i).asInstanceOf[DateTimeColumn],
+            values(i + 1).asInstanceOf[ValueFunction])
+        else if(values(i).isInstanceOf[TimestampColumn] &&
+          values(i + 1).isInstanceOf[ValueFunction])
+          new TimestampSeries(
+            "",
+            values(i).asInstanceOf[TimestampColumn],
+            values(i + 1).asInstanceOf[ValueFunction])
+        // Init time series (partitioned column, function)
+        else if(values(i).isInstanceOf[Array[MonthColumn]] &&
+          values(i + 1).isInstanceOf[ValuePartitionFunction])
+          new MonthPartitionSeries(
+            "",
+            values(i).asInstanceOf[Array[MonthColumn]],
+            values(i + 1).asInstanceOf[ValuePartitionFunction])
+        else if(values(i).isInstanceOf[Array[DateColumn]] &&
+          values(i + 1).isInstanceOf[ValuePartitionFunction])
+          new DatePartitionSeries(
+            "",
+            values(i).asInstanceOf[Array[DateColumn]],
+            values(i + 1).asInstanceOf[ValuePartitionFunction])
+        else if(values(i).isInstanceOf[Array[DateTimeColumn]] &&
+          values(i + 1).isInstanceOf[ValuePartitionFunction])
+          new DateTimePartitionSeries(
+            "",
+            values(i).asInstanceOf[Array[DateTimeColumn]],
+            values(i + 1).asInstanceOf[ValuePartitionFunction])
+        else if(values(i).isInstanceOf[Array[TimestampColumn]] &&
+          values(i + 1).isInstanceOf[ValuePartitionFunction])
+          new TimestampPartitionSeries(
+            "",
+            values(i).asInstanceOf[Array[TimestampColumn]],
+            values(i + 1).asInstanceOf[ValuePartitionFunction])
+        // Init xy series (column, column)
+        else if(values(i).isInstanceOf[TypedColumn[_]] &&
+          values(i + 1).isInstanceOf[TypedColumn[_]])
+          new XYSeries(
+            "",
+            values(i).asInstanceOf[TypedColumn[Number]],
+            values(i + 1).asInstanceOf[TypedColumn[Number]])
+        // Init xy series (partitioned column, partitioned column)
+        else if(values(i).isInstanceOf[Array[TypedColumn[_]]] &&
+          values(i + 1).isInstanceOf[Array[TypedColumn[_]]])
+          new XYPartitionSeries(
+            "",
+            values(i).asInstanceOf[Array[TypedColumn[Number]]],
+            values(i + 1).asInstanceOf[Array[TypedColumn[Number]]])
+        // Init xy series (column, function)
+        else if(values(i).isInstanceOf[TypedColumn[_]] &&
+          values(i + 1).isInstanceOf[ValueFunction])
+          new XYSeries(
+            "",
+            values(i).asInstanceOf[TypedColumn[Number]],
+            values(i + 1).asInstanceOf[ValueFunction])
+        // Init xy series (partitioned column, function)
+        else if(values(i).isInstanceOf[Array[TypedColumn[_]]] &&
+          values(i + 1).isInstanceOf[ValuePartitionFunction])
+          new XYPartitionSeries(
+            "",
+            values(i).asInstanceOf[Array[TypedColumn[Number]]],
+            values(i + 1).asInstanceOf[ValuePartitionFunction])
         else
-         new XYSeries(
-          values(i).asInstanceOf[TypedColumn[Number]],
-          values(i + 1).asInstanceOf[TypedColumn[Number]],
-          "")
+          throw new Exception("Series type not found")
 
       // Init series collection
       if(collection == null)
-        if(series.isInstanceOf[TimeSeriesWorkaround]) { // A time based
+        // A time based series
+        if(series.isInstanceOf[TimeSeriesWorkaround]) {
 
           collection = new TimeSeriesCollection
           domainAxis = new DateAxis
 
-        // A xy based
-        } else {
+        // A xy based series
+        } else if(series.isInstanceOf[XYSeriesWorkaround]) {
 
           collection = new XYSeriesCollection
           domainAxis = new NumberAxis
@@ -148,6 +251,8 @@ object Plot {
 
             // Is property pair?
             if(i + 1 < values.length &&
+              !values(i + 1).isInstanceOf[ValueFunction] &&
+              !values(i + 1).isInstanceOf[ValuePartitionFunction] &&
               !values(i + 1).isInstanceOf[TypedColumn[_]] &&
               !values(i + 1).isInstanceOf[Array[TypedColumn[_]]]) {
 
@@ -224,7 +329,7 @@ object Plot {
           .addSeries(series.asInstanceOf[TimeSeriesWorkaround])
 
       // Final handling for xy based series
-      } else {
+      } else if(series.isInstanceOf[XYSeriesWorkaround]) {
 
           // Fix lower bound if only upper bound was set
           if(fromRecord.last == -1 && tillRecord.last != -1)
