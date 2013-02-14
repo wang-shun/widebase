@@ -13,6 +13,8 @@ import scala.swing. { Component, Dimension, Point, Publisher }
 import scala.swing.event.WindowClosing
 
 import widebase.ui.chart. { ChartFrame, ChartPanel }
+import widebase.ui.chart.data. { ValueFunction, ValuePartitionFunction }
+import widebase.ui.chart.plot. { Highlow, Plot }
 import widebase.ui.table. { TableFrame, TablePanel }
 
 /** User interface.
@@ -29,6 +31,9 @@ package object ui {
 
   /** Current figure. */
   var figure = 1
+
+  /** Hold figure. */
+  var hold = false
 
   /** Set anti alias of chart.
    *
@@ -78,8 +83,17 @@ package object ui {
    *
    * @return frame
    */
-  def candle(values: Any*) =
-    showChart(chart.highlowPanel(values:_*)(new CandlestickRenderer))
+  def candle(values: Any*) = {
+
+    if(hold &&
+      figures.contains(figure) &&
+      figures(figure).isInstanceOf[ChartFrame])
+      Highlow.add(figures(figure).asInstanceOf[ChartFrame]
+        .panel.peer.getChart.getPlot, values:_*)(new CandlestickRenderer)
+    else
+      showChart(chart.highlowPanel(values:_*)(new CandlestickRenderer))
+
+  }
 
   /** Close all figures. */
   def clear {
@@ -89,14 +103,39 @@ package object ui {
 
   }
 
+  /** Wraps a function that is called everytime a new value is plotted.
+   *
+   * @param function itself
+   *
+   * @return wrapper of function
+   */
+  def func(function: (Int) => Number) = ValueFunction(function)
+
+  /** Wraps a function that is called everytime a new value is plotted (partition).
+   *
+   * @param function itself
+   *
+   * @return wrapper of function
+   */
+  def funcp(function: (Int, Int) => Number) = ValuePartitionFunction(function)
+
   /** Show frame with high, low, open and close chart.
    *
    * @param values of data, properties and format
    *
    * @return frame
    */
-  def highlow(values: Any*) =
-    showChart(chart.highlowPanel(values:_*)(new HighLowRenderer))
+  def highlow(values: Any*) = {
+
+    if(hold &&
+      figures.contains(figure) &&
+      figures(figure).isInstanceOf[ChartFrame])
+      Highlow.add(figures(figure).asInstanceOf[ChartFrame]
+        .panel.peer.getChart.getPlot, values:_*)(new HighLowRenderer)
+    else
+      showChart(chart.highlowPanel(values:_*)(new HighLowRenderer))
+
+  }
 
   /** Show frame with 2-D-line plot.
    *
@@ -106,7 +145,17 @@ package object ui {
    *
    * @return frame
    */
-  def plot(values: Any*) = showChart(chart.plotPanel(values:_*))
+  def plot(values: Any*) = {
+
+    if(hold &&
+      figures.contains(figure) &&
+      figures(figure).isInstanceOf[ChartFrame])
+      Plot.add(figures(figure)
+        .asInstanceOf[ChartFrame].panel.peer.getChart.getPlot, values:_*)
+    else
+      showChart(chart.plotPanel(values:_*))
+
+  }
 
   /** Print chart.
    *
