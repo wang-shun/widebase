@@ -15,6 +15,8 @@ class PartitionMap {
 
   protected val map = LinkedHashMap[String, Table]()
 
+  def +=(pair: (String, Table)) = map += pair._1 -> pair._2
+
   /** Filters all tables of this partition which satisfy a predicate.
    *
    * @param predicate used to test elements.
@@ -60,8 +62,6 @@ class PartitionMap {
 
   }
 
-  def +=(pair: (String, Table)) = map += pair._1 -> pair._2
-
   /** Filters all tables of this partition which do not satisfy a predicate.
    *
    * @param predicate used to test elements.
@@ -75,6 +75,18 @@ class PartitionMap {
    * @param function apply to all tables
    */
   def foreach[U](function: ((String, Table)) =>  U) = map.foreach(function)
+
+  def length(part: Int) = {
+
+    var length = 0
+    val tables = this.tables.toBuffer
+
+    for(p <- 0 to part)
+      length += tables(p).records.length
+
+    length
+
+  }
 
   def size = map.size
 
