@@ -3,8 +3,7 @@ package widebase.ui.chart.plot
 import org.jfree.chart.axis.ValueAxis
 import org.jfree.data.general.Series
 import org.jfree.data.time.TimeSeriesWorkaround
-
-import widebase.ui.chart.data.xy.XYSeries
+import org.jfree.data.xy.XYSeriesWorkaround
 
 /** Plot properties.
  *
@@ -35,9 +34,9 @@ object PlotProperty {
           domainAxis.setLowerBound(
             series.asInstanceOf[TimeSeriesWorkaround]
               .getTimePeriod(fromRecord).getStart.getTime)
-        else
+        else if(series.isInstanceOf[XYSeriesWorkaround])
           domainAxis.setLowerBound(
-            series.asInstanceOf[XYSeries].getX(fromRecord).doubleValue)
+            series.asInstanceOf[XYSeriesWorkaround].getX(fromRecord).doubleValue)
 
       case "till" =>
 
@@ -46,9 +45,9 @@ object PlotProperty {
         if(series.isInstanceOf[TimeSeriesWorkaround])
           domainAxis.setUpperBound(series.asInstanceOf[TimeSeriesWorkaround]
             .getTimePeriod(tillRecord).getStart.getTime)
-        else
+        else if(series.isInstanceOf[XYSeriesWorkaround])
           domainAxis.setUpperBound(
-            series.asInstanceOf[XYSeries].getX(tillRecord).doubleValue)
+            series.asInstanceOf[XYSeriesWorkaround].getX(tillRecord).doubleValue)
 
       case _ => throw new Exception("Property not found: " + property)
 
