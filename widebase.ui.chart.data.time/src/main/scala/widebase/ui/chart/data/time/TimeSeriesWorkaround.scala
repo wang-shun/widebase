@@ -2,11 +2,11 @@ package org.jfree.data.time
 
 /** Workaround to make `getRawDataItem` rewritable.
  *
- * @param key of series
+ * @param name of series
  *
  * @author myst3r10n
  */
-abstract class TimeSeriesWorkaround(key: String) extends TimeSeries(key) {
+abstract class TimeSeriesWorkaround(name: String) extends TimeSeries(name) {
 
   override def getDataItem(index: Int): TimeSeriesDataItem = getRawDataItem(index)
 
