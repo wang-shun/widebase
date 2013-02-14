@@ -1,24 +1,33 @@
 package widebase.ui.chart.data.time
 
-import org.jfree.data.time. { Millisecond, TimeSeriesDataItem }
+import org.jfree.data.time. { Day, TimeSeriesDataItem }
 
 import scala.collection.mutable.ArrayBuffer
 
-import widebase.db.column. { TimestampColumn, TypedColumn }
+import widebase.db.column. { DateColumn, TypedColumn }
+import widebase.ui.chart.data.ValuePartitionFunction
 
 /** A partitioned table compatible `TimeSeries`.
  *
- * @param period series of event columns
+ * @param name of series
+ * @param period series of period columns
  * @param value series of value columns
- * @param key of series
+ * @param function call
  *
  * @author myst3r10n
  **/
-class TimestampSeriesParted(
-  protected val period: Array[TimestampColumn],
+class DatePartitionSeries(
+  name: String,
+  protected val period: Array[DateColumn],
   protected val value: Array[TypedColumn[Number]],
-  key: String)
-  extends TimeSeriesPartedLike(key) {
+  function: ValuePartitionFunction = null)
+  extends TimePartitionSeriesLike(name) {
+
+  def this(
+    name: String,
+    period: Array[DateColumn],
+    function: ValuePartitionFunction) =
+    this(name, period, null, function)
 
   protected val parts = ArrayBuffer[(Int, Int, Int)]()
 
@@ -55,9 +64,14 @@ class TimestampSeriesParted(
 
     val record = index - parts(part)._1
 
+    val periodValue = period(part)(record)
+
     new TimeSeriesDataItem(
-      new Millisecond(period(part)(record)),
-      value(part)(record))
+      new Day(
+        periodValue.getDayOfMonth,
+        periodValue.getMonthOfYear,
+        periodValue.getYear),
+      if(value == null) function(part, record) else value(part)(record))
 
   }
 }

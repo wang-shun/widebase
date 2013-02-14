@@ -1,24 +1,32 @@
-package widebase.ui.chart.data.time
+package widebase.ui.chart.data.time.ohlc
 
-import org.jfree.data.time. { Day, TimeSeriesDataItem }
+import org.jfree.data.ComparableObjectItem
+import org.jfree.data.time.Day
+import org.jfree.data.time.ohlc.OHLCItem
 
 import scala.collection.mutable.ArrayBuffer
 
-import widebase.db.column. { DateColumn, TypedColumn }
+import widebase.db.column. { DateColumn, DoubleColumn }
 
-/** A partitioned table compatible `TimeSeries`.
+/** A partitioned table compatible `OHLCSeries`.
  *
  * @param period series of period columns
- * @param value series of value columns
+ * @param open series of open columns
+ * @param high series of high columns
+ * @param low series of low columns
+ * @param close series of close columns
  * @param key of series
  *
  * @author myst3r10n
  **/
-class DateSeriesParted(
+class DatePartitionSeries(
   protected val period: Array[DateColumn],
-  protected val value: Array[TypedColumn[Number]],
+  protected val open: Array[DoubleColumn],
+  protected val high: Array[DoubleColumn],
+  protected val low: Array[DoubleColumn],
+  protected val close: Array[DoubleColumn],
   key: String)
-  extends TimeSeriesPartedLike(key) {
+  extends OHLCPartitionSeriesLike(key) {
 
   protected val parts = ArrayBuffer[(Int, Int, Int)]()
 
@@ -48,7 +56,7 @@ class DateSeriesParted(
 
   }
 
-  override def getRawDataItem(index: Int): TimeSeriesDataItem = {
+  override def getDataItem(index: Int): ComparableObjectItem = {
 
     val part = parts.indexWhere {
       case (min, max, record) => min <= index && index <= max }
@@ -57,12 +65,15 @@ class DateSeriesParted(
 
     val periodValue = period(part)(record)
 
-    new TimeSeriesDataItem(
+    new OHLCItem(
       new Day(
         periodValue.getDayOfMonth,
         periodValue.getMonthOfYear,
         periodValue.getYear),
-      value(part)(record))
+      open(part)(record),
+      high(part)(record),
+      low(part)(record),
+      close(part)(record))
 
   }
 }

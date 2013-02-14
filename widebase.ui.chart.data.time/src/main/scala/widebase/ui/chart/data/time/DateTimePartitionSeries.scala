@@ -1,32 +1,33 @@
-package widebase.ui.chart.data.time.ohlc
+package widebase.ui.chart.data.time
 
-import org.jfree.data.ComparableObjectItem
-import org.jfree.data.time.Millisecond
-import org.jfree.data.time.ohlc.OHLCItem
+import org.jfree.data.time. { Millisecond, TimeSeriesDataItem }
 
 import scala.collection.mutable.ArrayBuffer
 
-import widebase.db.column. { DateTimeColumn, DoubleColumn }
+import widebase.db.column. { DateTimeColumn, TypedColumn }
+import widebase.ui.chart.data.ValuePartitionFunction
 
-/** A partitioned table compatible `OHLCSeries`.
+/** A partitioned table compatible `TimeSeries`.
  *
+ * @param name of series
  * @param period series of period columns
- * @param open series of open columns
- * @param high series of high columns
- * @param low series of low columns
- * @param close series of close columns
- * @param key of series
+ * @param value series of value columns
+ * @param function call
  *
  * @author myst3r10n
  **/
-class DateTimeSeriesParted(
+class DateTimePartitionSeries(
+  name: String,
   protected val period: Array[DateTimeColumn],
-  protected val open: Array[DoubleColumn],
-  protected val high: Array[DoubleColumn],
-  protected val low: Array[DoubleColumn],
-  protected val close: Array[DoubleColumn],
-  key: String)
-  extends OHLCSeriesPartedLike(key) {
+  protected val value: Array[TypedColumn[Number]],
+  function: ValuePartitionFunction = null)
+  extends TimePartitionSeriesLike(name) {
+
+  def this(
+    name: String,
+    period: Array[DateTimeColumn],
+    function: ValuePartitionFunction) =
+    this(name, period, null, function)
 
   protected val parts = ArrayBuffer[(Int, Int, Int)]()
 
@@ -56,7 +57,7 @@ class DateTimeSeriesParted(
 
   }
 
-  override def getDataItem(index: Int): ComparableObjectItem = {
+  override def getRawDataItem(index: Int): TimeSeriesDataItem = {
 
     val part = parts.indexWhere {
       case (min, max, record) => min <= index && index <= max }
@@ -65,7 +66,7 @@ class DateTimeSeriesParted(
 
     val periodValue = period(part)(record)
 
-    new OHLCItem(
+    new TimeSeriesDataItem(
       new Millisecond(
         periodValue.getMillisOfSecond,
         periodValue.getSecondOfMinute,
@@ -74,10 +75,7 @@ class DateTimeSeriesParted(
         periodValue.getDayOfMonth,
         periodValue.getMonthOfYear,
         periodValue.getYear),
-      open(part)(record),
-      high(part)(record),
-      low(part)(record),
-      close(part)(record))
+      if(value == null) function(part, record) else value(part)(record))
 
   }
 }

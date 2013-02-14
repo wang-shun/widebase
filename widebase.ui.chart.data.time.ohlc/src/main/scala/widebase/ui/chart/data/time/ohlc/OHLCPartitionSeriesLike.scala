@@ -8,7 +8,7 @@ import org.jfree.data.time.ohlc.OHLCSeries
  *
  * @author myst3r10n
  **/
-abstract class OHLCSeriesPartedLike(key: String) extends OHLCSeries(key) {
+abstract class OHLCPartitionSeriesLike(key: String) extends OHLCSeries(key) {
 
   protected val records: Int
 

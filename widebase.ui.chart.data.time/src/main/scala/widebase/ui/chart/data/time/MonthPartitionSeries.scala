@@ -5,20 +5,29 @@ import org.jfree.data.time. { Month, TimeSeriesDataItem }
 import scala.collection.mutable.ArrayBuffer
 
 import widebase.db.column. { MonthColumn, TypedColumn }
+import widebase.ui.chart.data.ValuePartitionFunction
 
 /** A partitioned table compatible `TimeSeries`.
  *
+ * @param name of series
  * @param period series of period columns
  * @param value series of value columns
- * @param key of series
+ * @param function call
  *
  * @author myst3r10n
  **/
-class MonthSeriesParted(
+class MonthPartitionSeries(
+  name: String,
   protected val period: Array[MonthColumn],
   protected val value: Array[TypedColumn[Number]],
-  key: String)
-  extends TimeSeriesPartedLike(key) {
+  function: ValuePartitionFunction = null)
+  extends TimePartitionSeriesLike(name) {
+
+  def this(
+    name: String,
+    period: Array[MonthColumn],
+    function: ValuePartitionFunction) =
+    this(name, period, null, function)
 
   protected val parts = ArrayBuffer[(Int, Int, Int)]()
 
@@ -59,7 +68,7 @@ class MonthSeriesParted(
 
     new TimeSeriesDataItem(
       new Month(periodValue.getMonthOfYear, periodValue.getYear),
-      value(part)(record))
+      if(value == null) function(part, record) else value(part)(record))
 
   }
 }

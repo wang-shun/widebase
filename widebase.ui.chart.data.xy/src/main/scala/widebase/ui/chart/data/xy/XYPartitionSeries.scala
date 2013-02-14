@@ -5,20 +5,29 @@ import org.jfree.data.xy. { XYDataItem, XYSeriesWorkaround }
 import scala.collection.mutable.ArrayBuffer
 
 import widebase.db.column.TypedColumn
+import widebase.ui.chart.data.ValuePartitionFunction
 
 /** A partitioned table compatible `XYSeries`.
  *
+ * @param key of series
  * @param x columns
  * @param y columns
- * @param name of series
+ * @param function call
  *
  * @author myst3r10n
  **/
-class XYSeriesParted(
-  protected val x: Array[TypedColumn[Double]],
-  protected val y: Array[TypedColumn[Double]],
-  name: String)
-  extends XYSeriesWorkaround(name) {
+class XYPartitionSeries(
+  key: String,
+  protected val x: Array[TypedColumn[Number]],
+  protected val y: Array[TypedColumn[Number]],
+  function: ValuePartitionFunction = null)
+  extends XYSeriesWorkaround(key) {
+
+  def this(
+    key: String,
+    x: Array[TypedColumn[Number]],
+    function: ValuePartitionFunction) =
+    this(key, x, null, function)
 
   protected val parts = ArrayBuffer[(Int, Int, Int)]()
 

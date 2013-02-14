@@ -1,12 +1,12 @@
 package widebase.ui.chart.data.time.ohlc
 
 import org.jfree.data.ComparableObjectItem
-import org.jfree.data.time.Month
+import org.jfree.data.time.Millisecond
 import org.jfree.data.time.ohlc.OHLCItem
 
 import scala.collection.mutable.ArrayBuffer
 
-import widebase.db.column. { DoubleColumn, MonthColumn }
+import widebase.db.column. { DoubleColumn, TimestampColumn }
 
 /** A partitioned table compatible `OHLCSeries`.
  *
@@ -19,14 +19,14 @@ import widebase.db.column. { DoubleColumn, MonthColumn }
  *
  * @author myst3r10n
  **/
-class MonthSeriesParted(
-  protected val period: Array[MonthColumn],
+class TimestampPartitionSeries(
+  protected val period: Array[TimestampColumn],
   protected val open: Array[DoubleColumn],
   protected val high: Array[DoubleColumn],
   protected val low: Array[DoubleColumn],
   protected val close: Array[DoubleColumn],
   key: String)
-  extends OHLCSeriesPartedLike(key) {
+  extends OHLCPartitionSeriesLike(key) {
 
   protected val parts = ArrayBuffer[(Int, Int, Int)]()
 
@@ -63,10 +63,8 @@ class MonthSeriesParted(
 
     val record = index - parts(part)._1
 
-    val periodValue = period(part)(record)
-
     new OHLCItem(
-      new Month(periodValue.getMonthOfYear, periodValue.getYear),
+      new Millisecond(period(part)(record)),
       open(part)(record),
       high(part)(record),
       low(part)(record),
