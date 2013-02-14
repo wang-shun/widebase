@@ -3,7 +3,7 @@ package widebase.ui.chart.plot
 import org.jfree.chart.axis. { DateAxis, NumberAxis }
 import org.jfree.chart.plot.XYPlot
 import org.jfree.chart.renderer.xy. { AbstractXYItemRenderer, HighLowRenderer }
-import org.jfree.data.time.ohlc.OHLCSeriesCollection
+import org.jfree.data.time.ohlc. { OHLCItem, OHLCSeriesCollection }
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.control.Breaks. { break, breakable }
@@ -22,14 +22,14 @@ import widebase.db.column. {
 
 import widebase.ui.chart.data.time.ohlc. {
 
+  DatePartitionSeries,
   DateSeries,
-  DateSeriesParted,
+  DateTimePartitionSeries,
   DateTimeSeries,
-  DateTimeSeriesParted,
+  MonthPartitionSeries,
   MonthSeries,
-  MonthSeriesParted,
-  TimestampSeries,
-  TimestampSeriesParted
+  TimestampPartitionSeries,
+  TimestampSeries
 
 }
 
@@ -39,9 +39,30 @@ import widebase.ui.chart.data.time.ohlc. {
  */
 object Highlow {
 
+  /** Add plot.
+   *
+   * @param values of data, properties and format
+   * @param renderer of chart
+   *
+   * @return plot
+   */
+  def add(plot: org.jfree.chart.plot.Plot, values: Any*)
+    (implicit renderer: AbstractXYItemRenderer = new HighLowRenderer) = {
+
+    val overlay = this(values:_*)
+    val current = plot.asInstanceOf[XYPlot]
+
+    current.setDataset(current.getDatasetCount, overlay.getDataset)
+    current.setRenderer(current.getRendererCount, overlay.getRenderer)
+
+    current
+
+  }
+
   /** Perform highlow.
    *
    * @param values of data, properties and format
+   * @param renderer of chart
    *
    * @return highlow plot
    */
@@ -63,7 +84,7 @@ object Highlow {
 
       // Init any time series or if not found a xy series
       val series =
-        // Init time series
+        // Init time series (columns...)
         if(values(i).isInstanceOf[MonthColumn])
           new widebase.ui.chart.data.time.ohlc.MonthSeries(
             values(i).asInstanceOf[MonthColumn],
@@ -96,9 +117,9 @@ object Highlow {
             values(i + 3).asInstanceOf[DoubleColumn],
             values(i + 4).asInstanceOf[DoubleColumn],
             "")
-        // Init time series (partitioned table)
+        // Init time series (partitioned columns)
         else if(values(i).isInstanceOf[Array[MonthColumn]])
-          new MonthSeriesParted(
+          new MonthPartitionSeries(
             values(i).asInstanceOf[Array[MonthColumn]],
             values(i + 1).asInstanceOf[Array[DoubleColumn]],
             values(i + 2).asInstanceOf[Array[DoubleColumn]],
@@ -106,7 +127,7 @@ object Highlow {
             values(i + 4).asInstanceOf[Array[DoubleColumn]],
             "")
         else if(values(i).isInstanceOf[Array[DateColumn]])
-          new DateSeriesParted(
+          new DatePartitionSeries(
             values(i).asInstanceOf[Array[DateColumn]],
             values(i + 1).asInstanceOf[Array[DoubleColumn]],
             values(i + 2).asInstanceOf[Array[DoubleColumn]],
@@ -114,7 +135,7 @@ object Highlow {
             values(i + 4).asInstanceOf[Array[DoubleColumn]],
             "")
         else if(values(i).isInstanceOf[Array[DateTimeColumn]])
-          new DateTimeSeriesParted(
+          new DateTimePartitionSeries(
             values(i).asInstanceOf[Array[DateTimeColumn]],
             values(i + 1).asInstanceOf[Array[DoubleColumn]],
             values(i + 2).asInstanceOf[Array[DoubleColumn]],
@@ -122,14 +143,14 @@ object Highlow {
             values(i + 4).asInstanceOf[Array[DoubleColumn]],
             "")
         else if(values(i).isInstanceOf[Array[TimestampColumn]])
-          new TimestampSeriesParted(
+          new TimestampPartitionSeries(
             values(i).asInstanceOf[Array[TimestampColumn]],
             values(i + 1).asInstanceOf[Array[DoubleColumn]],
             values(i + 2).asInstanceOf[Array[DoubleColumn]],
             values(i + 3).asInstanceOf[Array[DoubleColumn]],
             values(i + 4).asInstanceOf[Array[DoubleColumn]],
             "")
-        // Init time series (Octave compatibility)
+        // Init time series (columns..., Octave compatibility)
         else if(values(i + 4).isInstanceOf[MonthColumn])
           new widebase.ui.chart.data.time.ohlc.MonthSeries(
             values(i + 4).asInstanceOf[MonthColumn],
@@ -162,9 +183,9 @@ object Highlow {
             values(i + 1).asInstanceOf[DoubleColumn],
             values(i + 2).asInstanceOf[DoubleColumn],
             "")
-        // Init time series (partitioned table and Octave compatibility)
+        // Init time series (partitioned columns..., Octave compatibility)
         else if(values(i + 4).isInstanceOf[Array[MonthColumn]])
-          new MonthSeriesParted(
+          new MonthPartitionSeries(
             values(i + 4).asInstanceOf[Array[MonthColumn]],
             values(i + 3).asInstanceOf[Array[DoubleColumn]],
             values(i).asInstanceOf[Array[DoubleColumn]],
@@ -172,7 +193,7 @@ object Highlow {
             values(i + 2).asInstanceOf[Array[DoubleColumn]],
             "")
         else if(values(i + 4).isInstanceOf[Array[DateColumn]])
-          new DateSeriesParted(
+          new DatePartitionSeries(
             values(i + 4).asInstanceOf[Array[DateColumn]],
             values(i + 3).asInstanceOf[Array[DoubleColumn]],
             values(i).asInstanceOf[Array[DoubleColumn]],
@@ -180,7 +201,7 @@ object Highlow {
             values(i + 2).asInstanceOf[Array[DoubleColumn]],
             "")
         else if(values(i + 4).isInstanceOf[Array[DateTimeColumn]])
-          new DateTimeSeriesParted(
+          new DateTimePartitionSeries(
             values(i + 4).asInstanceOf[Array[DateTimeColumn]],
             values(i + 3).asInstanceOf[Array[DoubleColumn]],
             values(i).asInstanceOf[Array[DoubleColumn]],
@@ -188,14 +209,13 @@ object Highlow {
             values(i + 2).asInstanceOf[Array[DoubleColumn]],
             "")
         else
-          new TimestampSeriesParted(
+          new TimestampPartitionSeries(
             values(i + 4).asInstanceOf[Array[TimestampColumn]],
             values(i + 3).asInstanceOf[Array[DoubleColumn]],
             values(i).asInstanceOf[Array[DoubleColumn]],
             values(i + 1).asInstanceOf[Array[DoubleColumn]],
             values(i + 2).asInstanceOf[Array[DoubleColumn]],
             "")
-
 
       i += 5
 
@@ -276,6 +296,41 @@ object Highlow {
       collection.addSeries(series)
 
     }
+
+    var maxY = Double.MinValue
+    var minY = Double.MaxValue
+
+    for(i <- 0 to collection.getSeriesCount - 1) {
+
+      val series = collection.getSeries(i)
+
+      val _tillRecord =
+          if(tillRecord(i) == -1 || series.getItemCount < tillRecord(i))
+          series.getItemCount - 1
+        else
+          tillRecord(i)
+
+      val _fromRecord =
+      if(fromRecord(i) == -1)
+        0
+      else
+        fromRecord(i)
+
+      for(i <- _fromRecord to _tillRecord) {
+
+        val values = series.getDataItem(i).asInstanceOf[OHLCItem]
+
+        if(maxY < values.getHighValue)
+          maxY = values.getHighValue
+
+        if(minY > values.getLowValue)
+          minY = values.getLowValue
+
+      }
+    }
+
+    rangeAxis.setUpperBound(maxY)
+    rangeAxis.setLowerBound(minY)
 
     new XYPlot(collection, domainAxis, rangeAxis, renderer)
 
