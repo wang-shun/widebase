@@ -157,7 +157,7 @@ object Average extends Logger with Loggable {
 
   }
 
-  val useCandle = true // Enable candlestick renderer
+  val useCandle = false // Enable candlestick renderer
 
   val millis = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S")
     .parse("2012-01-23 12:34:56.789").getTime
