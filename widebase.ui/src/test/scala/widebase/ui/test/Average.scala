@@ -359,7 +359,7 @@ object Average extends Logger with Loggable {
 
         var value = 0.0
 
-        for(r <- record - period to record)
+        for(r <- record - period + 1 to record)
           value += table.close(r)
 
         value / period
