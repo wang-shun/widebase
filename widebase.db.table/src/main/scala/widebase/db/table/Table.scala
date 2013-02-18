@@ -153,9 +153,6 @@ class Table {
 
       var i = 0
 
-      // Performance purposes
-      val thisColumns = columns.toBuffer
-
       for(r <- 0 to length - 1)
         if(predicate(Record(labels, records(r).toArray)))
           i += 1
@@ -171,9 +168,6 @@ class Table {
      * @return true if exists, else false
      */
     def exists(predicate: Record => Boolean): Boolean = {
-
-      // Performance purposes
-      val thisColumns = columns.toBuffer
 
       for(r <- 0 to length - 1)
         if(predicate(Record(labels, records(r).toArray)))
@@ -191,9 +185,6 @@ class Table {
      */
     def find(predicate: Record => Boolean): Option[Iterable[_]] = {
 
-      // Performance purposes
-      val thisColumns = columns.toBuffer
-
       for(r <- 0 to length - 1)
         if(predicate(Record(labels, records(r).toArray)))
           return Some(records(r))
@@ -202,16 +193,28 @@ class Table {
 
     }
 
+    // COMMENTED BECAUSE MAYBE DEPRECATED.
+    // REMOVE THIS FUNCTION ONLY IF IT'S SAFE AND BENCHMARK IS MADE!
+    /** Applies a function to all records of this table.
+     *
+     * @param function apply to all records
+     *
+     * @note Due performance lack not use by bulk operations.
+     **//*
+    def foreach[U](function: Iterable[Any] => U) =
+      for(r <- 0 to length - 1)
+        function(for(column <- columns)
+          yield(column(r)))
+*/
     /** Applies a function to all records of this table.
      *
      * @param function apply to all records
      *
      * @note Due performance lack not use by bulk operations.
      **/
-    def foreach[U](function: Iterable[Any] => U) =
+    def foreach[U](function: Record => U) =
       for(r <- 0 to length - 1)
-        function(for(column <- columns)
-          yield(column(r)))
+        function(Record(labels, records(r).toArray))
 
     /** Tests whether a predicate holds for all records of this table.
      *
@@ -220,8 +223,6 @@ class Table {
      * @return `true` if predicate holds for all records, else `false`
      */
     def forall(predicate: Record => Boolean): Boolean = {
-
-      val thisColumns = columns.toBuffer
 
       for(r <- 0 to length - 1)
         if(!predicate(Record(labels, records(r).toArray)))
