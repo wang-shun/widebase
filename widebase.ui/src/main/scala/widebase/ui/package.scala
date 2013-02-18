@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage
 
 import moreswing.swing.i18n.LocaleManager
 
+import org.jfree.chart.annotations.AbstractXYAnnotation
 import org.jfree.chart.axis.TickUnitSource
 import org.jfree.chart.plot.XYPlot
 import org.jfree.chart.renderer.xy. { CandlestickRenderer, HighLowRenderer }
@@ -13,6 +14,7 @@ import scala.swing. { Component, Dimension, Point, Publisher }
 import scala.swing.event.WindowClosing
 
 import widebase.ui.chart. { ChartFrame, ChartPanel }
+import widebase.ui.chart.annotations. { Ellipse, Line, Rectangle }
 import widebase.ui.chart.data. { ValueFunction, ValuePartitionFunction }
 import widebase.ui.chart.plot. { Highlow, Plot }
 import widebase.ui.table. { TableFrame, TablePanel }
@@ -77,6 +79,41 @@ package object ui {
 
   }
 
+  /** Draw annotation.
+   *
+   * @param values of coordinates, properties and format
+   *
+   * @return annotation
+   */
+  def annotation(values: Any*) = {
+
+    var annotation: AbstractXYAnnotation = null
+
+    if(figures.contains(figure)) {
+
+      var frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+
+      if(frame.panel.peer.getChart.getPlot.isInstanceOf[XYPlot]) {
+
+        val plot = frame.panel.peer.getChart.getPlot.asInstanceOf[XYPlot]
+
+        values.head match {
+
+          case "ellipse" => annotation = Ellipse(values.drop(1):_*)
+          case "line" => annotation = Line(values.drop(1):_*)
+          case "rectangle" => annotation = Rectangle(values.drop(1):_*)
+
+        }
+
+        plot.addAnnotation(annotation)
+
+      }
+    }
+
+    annotation
+
+  }
+
   /** Show candlestick chart.
    *
    * @param values of data, properties and format
@@ -85,13 +122,19 @@ package object ui {
    */
   def candle(values: Any*) = {
 
+    var frame: ChartFrame with FigureFrame = null
+
     if(hold &&
       figures.contains(figure) &&
-      figures(figure).isInstanceOf[ChartFrame])
-      Highlow.add(figures(figure).asInstanceOf[ChartFrame]
-        .panel.peer.getChart.getPlot, values:_*)(new CandlestickRenderer)
-    else
+      figures(figure).isInstanceOf[ChartFrame]) {
+
+      frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+      Highlow.add(frame.panel.peer.getChart.getPlot, values:_*)(new CandlestickRenderer)
+
+    } else
       showChart(chart.highlowPanel(values:_*)(new CandlestickRenderer))
+
+    frame
 
   }
 
@@ -127,13 +170,19 @@ package object ui {
    */
   def highlow(values: Any*) = {
 
+    var frame: ChartFrame with FigureFrame = null
+
     if(hold &&
       figures.contains(figure) &&
-      figures(figure).isInstanceOf[ChartFrame])
-      Highlow.add(figures(figure).asInstanceOf[ChartFrame]
-        .panel.peer.getChart.getPlot, values:_*)(new HighLowRenderer)
-    else
+      figures(figure).isInstanceOf[ChartFrame]) {
+
+      frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+      Highlow.add(frame.panel.peer.getChart.getPlot, values:_*)(new HighLowRenderer)
+
+    } else
       showChart(chart.highlowPanel(values:_*)(new HighLowRenderer))
+
+    frame
 
   }
 
@@ -147,13 +196,19 @@ package object ui {
    */
   def plot(values: Any*) = {
 
+    var frame: ChartFrame with FigureFrame = null
+
     if(hold &&
       figures.contains(figure) &&
-      figures(figure).isInstanceOf[ChartFrame])
-      Plot.add(figures(figure)
-        .asInstanceOf[ChartFrame].panel.peer.getChart.getPlot, values:_*)
-    else
-      showChart(chart.plotPanel(values:_*))
+      figures(figure).isInstanceOf[ChartFrame]) {
+
+      frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+      Plot.add(frame.panel.peer.getChart.getPlot, values:_*)
+
+    } else
+      frame = showChart(chart.plotPanel(values:_*))
+
+    frame
 
   }
 
