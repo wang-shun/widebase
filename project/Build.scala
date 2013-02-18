@@ -59,6 +59,7 @@ object WidebaseBuild extends Build {
       widebaseStreamSocketRq,
       widebaseUi,
       widebaseUiChart,
+      widebaseUiChartAnnotations,
       widebaseUiChartData,
       widebaseUiChartDataTime,
       widebaseUiChartDataTimeOHLC,
@@ -242,6 +243,7 @@ object WidebaseBuild extends Build {
     .dependsOn(
       widebaseDsl % "test",
       widebaseUiChart,
+      widebaseUiChartAnnotations,
       widebaseUiTable)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
@@ -254,6 +256,12 @@ object WidebaseBuild extends Build {
       widebaseUiChartPlot)
     .settings(libraryDependencies ++= lib.morechart ++ lib.moreswing)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+
+  /** UI Chart Annotations */
+  lazy val widebaseUiChartAnnotations = Project(
+    "widebase-ui-chart-annotations",
+    file("widebase.ui.chart.annotations"))
+    .settings(libraryDependencies ++= lib.jfreechart ++ lib.jodaTime)
 
   /** UI Chart Data */
   lazy val widebaseUiChartData = Project(
