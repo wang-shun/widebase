@@ -2,6 +2,8 @@ package widebase
 
 import java.awt.image.BufferedImage
 
+import javax.swing.SwingUtilities
+
 import moreswing.swing.i18n.LocaleManager
 
 import org.jfree.chart.annotations.AbstractXYAnnotation
@@ -105,8 +107,15 @@ package object ui {
 
         }
 
-        plot.addAnnotation(annotation)
+        // Prevents throw of ConcurrentModificationException
+        SwingUtilities.invokeLater(new Runnable {
 
+          def run {
+
+            plot.getRenderer(0).addAnnotation(annotation)
+
+          }
+        } )
       }
     }
 
