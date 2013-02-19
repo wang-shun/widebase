@@ -24,10 +24,13 @@ class ChartPanel(chart: JFreeChart) extends Component with Publisher {
       setZoomInFactor(0.9)
       setZoomOutFactor(1.1)
 
-      override def paintComponent(g: java.awt.Graphics) {
+      // Prevent stretching
+      setMinimumDrawWidth(0)
+      setMinimumDrawHeight(0)
+      setMaximumDrawWidth(Int.MaxValue)
+      setMaximumDrawHeight(Int.MaxValue)
 
-        setMaximumDrawWidth(getWidth)
-        setMaximumDrawHeight(getHeight)
+      override def paintComponent(g: java.awt.Graphics) {
 
         super.paintComponent(g)
 
