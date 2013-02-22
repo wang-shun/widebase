@@ -2,10 +2,12 @@ package widebase.ui.chart
 
 import event. {
 
+  ChartMouseDragShiftable,
+  ChartMouseWheelZoomable,
+  ChartMouseZoomable,
   ChartZoomIn,
   ChartZoomInX,
   ChartZoomInY,
-  ChartZoomMouse,
   ChartZoomOut,
   ChartZoomOutX,
   ChartZoomOutY
@@ -43,7 +45,7 @@ class ChartToolBar(
   add((new Button {
 
     icon = new ImageIcon(getClass.getResource("/icon/zoom-in.png"))
-    tooltip = LocaleManager.text("Zoom_in")
+    tooltip = LocaleManager.text("Chart_zoom_in")
 
     listenTo(this)
     reactions += {
@@ -56,7 +58,7 @@ class ChartToolBar(
   add((new Button {
 
     icon = new ImageIcon(getClass.getResource("/icon/zoom-out.png"))
-    tooltip = LocaleManager.text("Zoom_out")
+    tooltip = LocaleManager.text("Chart_zoom_out")
 
     listenTo(this)
     reactions += {
@@ -66,12 +68,40 @@ class ChartToolBar(
     }
   } ).peer)
 
+  add((new ToggleButton {
+
+    icon = new ImageIcon(getClass.getResource("/icon/transform-move.png"))
+    tooltip = LocaleManager.text("Chart_mouse_drag_shiftable")
+
+    listenTo(this)
+    reactions += {
+
+      case ButtonClicked(_) => ChartToolBar.this.publish(ChartMouseDragShiftable(selected))
+
+    }
+  } ).peer)
+
+  addSeparator
+
+  add((new ToggleButton {
+
+    icon = new ImageIcon(getClass.getResource("/icon/zoom-mouse.png"))
+    tooltip = LocaleManager.text("Chart_mouse_zoomable")
+
+    listenTo(this)
+    reactions += {
+
+      case ButtonClicked(_) => ChartToolBar.this.publish(ChartMouseZoomable(selected))
+
+    }
+  } ).peer)
+
   addSeparator
 
   add((new Button {
 
     icon = new ImageIcon(getClass.getResource("/icon/zoom-in-x.png"))
-    tooltip = LocaleManager.text("Zoom_in_x")
+    tooltip = LocaleManager.text("Chart_zoom_in_x")
 
     listenTo(this)
     reactions += {
@@ -84,7 +114,7 @@ class ChartToolBar(
   add((new Button {
 
     icon = new ImageIcon(getClass.getResource("/icon/zoom-out-x.png"))
-    tooltip = LocaleManager.text("Zoom_out_x")
+    tooltip = LocaleManager.text("Chart_zoom_out_x")
 
     listenTo(this)
     reactions += {
@@ -99,7 +129,7 @@ class ChartToolBar(
   add((new Button {
 
     icon = new ImageIcon(getClass.getResource("/icon/zoom-in-y.png"))
-    tooltip = LocaleManager.text("Zoom_in_y")
+    tooltip = LocaleManager.text("Chart_zoom_in_y")
 
     listenTo(this)
     reactions += {
@@ -112,27 +142,12 @@ class ChartToolBar(
   add((new Button {
 
     icon = new ImageIcon(getClass.getResource("/icon/zoom-out-y.png"))
-    tooltip = LocaleManager.text("Zoom_out_y")
+    tooltip = LocaleManager.text("Chart_zoom_out_y")
 
     listenTo(this)
     reactions += {
 
       case ButtonClicked(_) => ChartToolBar.this.publish(ChartZoomOutY)
-
-    }
-  } ).peer)
-
-  addSeparator
-
-  add((new ToggleButton {
-
-    icon = new ImageIcon(getClass.getResource("/icon/zoom-mouse.png"))
-    tooltip = LocaleManager.text("Zoom_mouse")
-
-    listenTo(this)
-    reactions += {
-
-      case ButtonClicked(_) => ChartToolBar.this.publish(ChartZoomMouse(selected))
 
     }
   } ).peer)
