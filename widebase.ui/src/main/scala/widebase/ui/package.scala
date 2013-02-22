@@ -1,15 +1,19 @@
 package widebase
 
+import java.awt.geom.Point2D
 import java.awt.image.BufferedImage
+import java.text. { DecimalFormat, FieldPosition }
 
 import javax.swing.SwingUtilities
 
 import moreswing.swing.i18n.LocaleManager
 
 import org.jfree.chart.annotations.AbstractXYAnnotation
-import org.jfree.chart.axis.TickUnitSource
+import org.jfree.chart.axis. { NumberAxis, TickUnitSource }
 import org.jfree.chart.plot.XYPlot
 import org.jfree.chart.renderer.xy. { CandlestickRenderer, HighLowRenderer }
+
+import org.joda.time.LocalDateTime
 
 import scala.collection.mutable.HashMap
 import scala.swing. { Component, Dimension, Point, Publisher }
@@ -155,6 +159,64 @@ package object ui {
 
   }
 
+  /** Date formatted axis.
+   *
+   * @param values of axis and format
+   *
+   * @return frame
+   */
+  def datetick(values: String*) = {
+
+    var frame: ChartFrame with FigureFrame = null
+
+    if(figures.contains(figure)) {
+
+      var axis = "x"
+      var pattern = ""
+
+      for(value <- values) {
+
+        value match {
+
+          case "x" =>
+          case "y" => axis = "y"
+          case _ => pattern = value
+          
+
+        }
+      }
+
+      frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+
+      if(frame.panel.peer.getChart.getPlot.isInstanceOf[XYPlot]) {
+
+        val plot = frame.panel.peer.getChart.getPlot.asInstanceOf[XYPlot]
+
+        for(i <- 0 to plot.getDomainAxisCount - 1) {
+          plot.getDomainAxis(i).asInstanceOf[NumberAxis]
+            .setNumberFormatOverride(new DecimalFormat {
+
+              override def format(
+                number: Double,
+                toAppendTo: StringBuffer,
+                pos: FieldPosition): StringBuffer = {
+
+                new StringBuffer(new LocalDateTime(number.toLong).toString(pattern))
+
+              }
+            } )
+
+          if(frame.panel.peer.shiftable.contains(plot))
+            frame.panel.peer.shiftable(plot) = new Point2D.Double(1000.0, 0.1)
+
+        }
+      }
+    }
+
+    frame
+
+  }
+
   /** Wraps a function that is called everytime a new value is plotted.
    *
    * @param function itself
@@ -281,6 +343,7 @@ package object ui {
     if(figures.contains(figure)) {
 
       frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+
       val plot = frame.panel.peer.getChart.getPlot
 
       if(plot.isInstanceOf[XYPlot])
@@ -305,6 +368,7 @@ package object ui {
     if(figures.contains(figure)) {
 
       frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+
       val plot = frame.panel.peer.getChart.getPlot
 
       if(plot.isInstanceOf[XYPlot])
@@ -329,6 +393,7 @@ package object ui {
     if(figures.contains(figure)) {
 
       frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+
       val plot = frame.panel.peer.getChart.getPlot
 
       if(plot.isInstanceOf[XYPlot])
@@ -353,6 +418,7 @@ package object ui {
     if(figures.contains(figure)) {
 
       frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+
       val plot = frame.panel.peer.getChart.getPlot
 
       if(plot.isInstanceOf[XYPlot])
