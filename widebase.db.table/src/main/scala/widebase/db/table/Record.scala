@@ -24,5 +24,23 @@ case class Record(labels: TypedColumn[_], values: Array[Any]) {
     values(labels.indexOf(label))
 
   }
+
+  override def toString = {
+
+    var printable = ""
+    val lineSeparator = System.getProperty("line.separator")
+
+    for(i <- 0 to values.size - 1) {
+
+      printable += values(i)
+
+      if(i + 1 < values.size)
+        printable += ", "
+
+    }
+
+    printable
+
+  }
 }
 
