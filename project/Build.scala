@@ -57,6 +57,7 @@ object WidebaseBuild extends Build {
       widebaseStreamSocket,
       widebaseStreamSocketCq,
       widebaseStreamSocketRq,
+      widebaseTestkit,
       widebaseUi,
       widebaseUiChart,
       widebaseUiChartAnnotations,
@@ -234,6 +235,16 @@ object WidebaseBuild extends Build {
       widebaseDsl % "test",
       widebaseStreamHandlerRq,
       widebaseStreamSocket)
+    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+
+  /** Testkit */
+  lazy val widebaseTestkit = Project(
+    "widebase-testkit",
+    file("widebase.testkit"))
+    .dependsOn(
+      widebaseDsl % "test",
+      widebaseStreamSocketCq,
+      widebaseStreamSocketRq)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** UI */
