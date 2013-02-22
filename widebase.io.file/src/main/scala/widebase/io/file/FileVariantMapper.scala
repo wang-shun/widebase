@@ -6,6 +6,7 @@ import java.sql.Timestamp
 
 import org.joda.time. {
 
+  DateTimeZone,
   LocalDate,
   LocalDateTime,
   LocalTime,
@@ -147,7 +148,7 @@ class FileVariantMapper(
       yield(Seconds.seconds(value))
 
   /** Read [[org.joda.time.LocalDate]] from buffer. */
-  def readTime: LocalTime = new LocalTime(readInt)
+  def readTime: LocalTime = new LocalTime(readInt, DateTimeZone.UTC)
 
   /** Read array of [[org.joda.time.LocalDate]]s from buffer.
    *
@@ -155,7 +156,7 @@ class FileVariantMapper(
   */
   def readTime(length: Int): Array[LocalTime] =
     for(value <- readInt(length))
-      yield(new LocalTime(value))
+      yield(new LocalTime(value, DateTimeZone.UTC))
 
   /** Read [[org.joda.time.LocalDateTime]] from buffer. */
   def readDateTime : LocalDateTime = new LocalDateTime(readLong)

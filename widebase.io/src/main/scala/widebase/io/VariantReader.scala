@@ -6,6 +6,7 @@ import java.sql.Timestamp
 
 import org.joda.time. {
 
+  DateTimeZone,
   LocalDate,
   LocalDateTime,
   LocalTime,
@@ -84,7 +85,7 @@ class VariantReader(
       yield(Seconds.seconds(value))
 
   /** Read [[org.joda.time.LocalDate]] from buffer. */
-  def readTime: LocalTime = new LocalTime(readInt)
+  def readTime: LocalTime = new LocalTime(readInt, DateTimeZone.UTC)
 
   /** Read array of [[org.joda.time.LocalDate]]s from buffer.
    *
@@ -92,7 +93,7 @@ class VariantReader(
   */
   def readTime(length: Int): Array[LocalTime] =
     for(value <- readInt(length))
-      yield(new LocalTime(value))
+      yield(new LocalTime(value, DateTimeZone.UTC))
 
   /** Read [[org.joda.time.LocalDateTime]] from buffer
    *
