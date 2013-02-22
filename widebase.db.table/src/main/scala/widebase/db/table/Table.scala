@@ -140,8 +140,10 @@ class Table {
      * @note Due performance lack not use by bulk operations.
      */
     def apply(n: Int) =
-      for(column <- columns)
-        yield(column(n))
+      Record(
+        labels,
+        (for(column <- columns)
+          yield(column(n))).toArray)
 
     /** Counts the number of records in the table which satisfy a predicate..
      *
@@ -154,7 +156,7 @@ class Table {
       var i = 0
 
       for(r <- 0 to length - 1)
-        if(predicate(Record(labels, records(r).toArray)))
+        if(predicate(records(r)))
           i += 1
 
       i
@@ -170,7 +172,7 @@ class Table {
     def exists(predicate: Record => Boolean): Boolean = {
 
       for(r <- 0 to length - 1)
-        if(predicate(Record(labels, records(r).toArray)))
+        if(predicate(records(r)))
           return true
 
       false
@@ -186,8 +188,8 @@ class Table {
     def find(predicate: Record => Boolean): Option[Record] = {
 
       for(r <- 0 to length - 1)
-        if(predicate(Record(labels, records(r).toArray)))
-          return Some(Record(labels, records(r).toArray))
+        if(predicate(records(r)))
+          return Some(records(r))
 
       None
 
@@ -214,7 +216,7 @@ class Table {
      **/
     def foreach[U](function: Record => U) =
       for(r <- 0 to length - 1)
-        function(Record(labels, records(r).toArray))
+        function(records(r))
 
     /** Tests whether a predicate holds for all records of this table.
      *
@@ -225,7 +227,7 @@ class Table {
     def forall(predicate: Record => Boolean): Boolean = {
 
       for(r <- 0 to length - 1)
-        if(!predicate(Record(labels, records(r).toArray)))
+        if(!predicate(records(r)))
           return false
 
       true
@@ -258,7 +260,7 @@ class Table {
       val thisColumns = columns.toBuffer
 
       for(r <- from to length - 1)
-        if(!predicate(Record(labels, records(r).toArray)))
+        if(!predicate(records(r)))
           return r
 
       -1
@@ -297,7 +299,7 @@ class Table {
 
       while(r >= 0) {
 
-        if(!predicate(Record(labels, records(r).toArray)))
+        if(!predicate(records(r)))
           return r
 
         r -= 1
@@ -506,7 +508,7 @@ class Table {
     val filteredColumns = filteredTable.columns.toBuffer
 
     for(r <- 0 to records.length - 1)
-      if(predicate(Record(labels, records(r).toArray)))
+      if(predicate(records(r)))
         copy.record(r, thisColumns, filteredColumns)
 
     filteredTable
