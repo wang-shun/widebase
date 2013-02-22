@@ -35,18 +35,22 @@ object Line {
       // Resolve native properties
       property match {
 
-        case "Color" => color = Color.decode(values(i).asInstanceOf[String])
+        case "Color" =>
+          color = Color.decode(values(i).asInstanceOf[String])
+          i += 1
+
         case "-" =>
         case "--" => stroke = LineStyle.dash(lineWidth)
         case ":" => stroke = LineStyle.dot(lineWidth)
         case "-." => stroke = LineStyle.dashDot(lineWidth)
-        case "lineWidth" => lineWidth = values(i).asInstanceOf[Float]
+        case "lineWidth" =>
+
+          lineWidth = values(i).asInstanceOf[Float]
+          i += 1
+
         case _ =>
 
       }
-
-      i += 1
-
     }
 
     if(stroke == null)
