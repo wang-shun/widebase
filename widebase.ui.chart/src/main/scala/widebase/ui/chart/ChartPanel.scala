@@ -1,7 +1,5 @@
 package widebase.ui.chart
 
-import morechart.chart. { ShiftableChartPanel, ZoomableChartPanel }
-
 import org.jfree.chart.JFreeChart
 
 import scala.swing. { Component, Publisher }
