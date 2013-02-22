@@ -123,7 +123,7 @@ class FileVariantMapper(
   */
   def readDate(length: Int): Array[LocalDate] =
     for(value <- readInt(length))
-      yield(new LocalDate(value * 1000))
+      yield(new LocalDate(value.toLong * 1000))
 
   /** Read [[org.joda.time.Minutes]] from buffer. */
   def readMinute: Minutes = Minutes.minutes(readInt)
