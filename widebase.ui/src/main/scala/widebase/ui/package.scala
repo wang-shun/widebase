@@ -159,7 +159,7 @@ package object ui {
 
   }
 
-  /** Date formatted axis.
+  /** Date formatted numerical axis.
    *
    * @param values of axis and format
    *
