@@ -254,7 +254,7 @@ object WidebaseBuild extends Build {
     .dependsOn(
       widebaseUiChartEvent,
       widebaseUiChartPlot)
-    .settings(libraryDependencies ++= lib.morechart ++ lib.moreswing)
+    .settings(libraryDependencies ++= lib.moreswing)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** UI Chart Annotations */
