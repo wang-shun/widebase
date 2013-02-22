@@ -181,13 +181,13 @@ class Table {
      *
      * @param predicate used to test elements
      *
-     * @return option of table
+     * @return option of record
      */
-    def find(predicate: Record => Boolean): Option[Iterable[_]] = {
+    def find(predicate: Record => Boolean): Option[Record] = {
 
       for(r <- 0 to length - 1)
         if(predicate(Record(labels, records(r).toArray)))
-          return Some(records(r))
+          return Some(Record(labels, records(r).toArray))
 
       None
 
