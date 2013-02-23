@@ -71,8 +71,14 @@ object Datatype {
   /** Creates a [[widebase.db.column.TimeColumn]]. */
   def time = TimeColumn
 
-  /** Creates a [[widebase.db.column.DateTimeColumn]]. */
+  /** Creates a [[widebase.db.column.DateTimeColumn]].
+   *
+   * @deprecated(Use `datetime` instead, 0.3.4)
+   */
   def dateTime = DateTimeColumn
+
+  /** Creates a [[widebase.db.column.DateTimeColumn]]. */
+  def datetime = DateTimeColumn
 
   /** Creates a [[widebase.db.column.TimestampColumn]]. */
   def timestamp = TimestampColumn
