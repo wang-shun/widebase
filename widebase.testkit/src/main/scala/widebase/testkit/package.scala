@@ -88,44 +88,5 @@ package object testkit {
     TableBenchmark.main(args)
 
   }
-
-  def stream(implicit args: Array[String] = Array[String]()) {
-
-    println("")
-    println("// Socket")
-    println("")
-    Socket.main(args)
-
-  }
-
-  def streamCq(implicit args: Array[String] = Array[String]()) {
-
-    println("")
-    println("// Socket/CQ")
-    println("")
-    SocketCq.main(args)
-    println("")
-    println("// Cache (Socket/CQ)")
-    println("")
-    Cache.main(args)
-
-  }
-
-  def streamRq(implicit args: Array[String] = Array[String]()) {
-
-    println("")
-    println("// Socket/RQ")
-    println("")
-    SocketRq.main(args)
-    println("")
-    println("// Pub/Sub (Socket/RQ)")
-    println("")
-    PubSub.main(args)
-    println("")
-    println("// Selector (Socket/RQ)")
-    println("")
-    Selector.main(args)
-
-  }
 }
 
