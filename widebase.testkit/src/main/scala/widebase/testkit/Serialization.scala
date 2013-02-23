@@ -77,7 +77,7 @@ object Serialization extends Logger with Loggable {
       minute(),
       second(),
       time(),
-      dateTime(),
+      datetime(),
       timestamp(),
       symbol(),
       string())
@@ -95,7 +95,7 @@ object Serialization extends Logger with Loggable {
     var minuteCol = table("Minute").U
     var secondCol = table("Second").V
     var timeCol = table("Time").T
-    var dateTimeCol = table("DateTime").Z
+    var datetimeCol = table("DateTime").Z
     var timestampCol = table("Timestamp").P
     var symbolCol = table("Symbol").Y
     var stringCol = table("String").S
@@ -116,7 +116,7 @@ object Serialization extends Logger with Loggable {
       minuteCol += Minutes.minutes(12)
       secondCol += Seconds.seconds(34)
       timeCol += new LocalTime(millis)
-      dateTimeCol += new LocalDateTime(millis)
+      datetimeCol += new LocalDateTime(millis)
       timestampCol += new Timestamp(millis)
       symbolCol += 'Hello
       stringCol += "World!"
@@ -150,7 +150,7 @@ object Serialization extends Logger with Loggable {
     minuteCol = recovered("Minute").U
     secondCol = recovered("Second").V
     timeCol = recovered("Time").T
-    dateTimeCol = recovered("DateTime").Z
+    datetimeCol = recovered("DateTime").Z
     timestampCol = recovered("Timestamp").P
     symbolCol = recovered("Symbol").Y
     stringCol = recovered("String").S
@@ -171,7 +171,7 @@ object Serialization extends Logger with Loggable {
       assert(minuteCol(r) == Minutes.minutes(12), error("Value unexpected: " + minuteCol(r)))
       assert(secondCol(r) == Seconds.seconds(34), error("Value unexpected: " + secondCol(r)))
       assert(timeCol(r) == new LocalTime(millis), error("Value unexpected: " + timeCol(r)))
-      assert(dateTimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + dateTimeCol(r)))
+      assert(datetimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + datetimeCol(r)))
       assert(timestampCol(r) == new Timestamp(millis), error("Value unexpected: " + timestampCol(r)))
       assert(symbolCol(r) == 'Hello, error("Value unexpected: " + symbolCol(r)))
       assert(stringCol(r) == "World!", error("Value unexpected: " + stringCol(r)))

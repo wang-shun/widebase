@@ -103,7 +103,7 @@ object Column extends Logger with Loggable {
       minute(),
       second(),
       time(),
-      dateTime(),
+      datetime(),
       timestamp(),
       symbol(),
       string())
@@ -121,7 +121,7 @@ object Column extends Logger with Loggable {
     var minuteCol = table("Minute").U
     var secondCol = table("Second").V
     var timeCol = table("Time").T
-    var dateTimeCol = table("DateTime").Z
+    var datetimeCol = table("DateTime").Z
     var timestampCol = table("Timestamp").P
     var symbolCol = table("Symbol").Y
     var stringCol = table("String").S
@@ -142,7 +142,7 @@ object Column extends Logger with Loggable {
       minuteCol += Minutes.minutes(12)
       secondCol += Seconds.seconds(34)
       timeCol += new LocalTime(millis)
-      dateTimeCol += new LocalDateTime(millis)
+      datetimeCol += new LocalDateTime(millis)
       timestampCol += new Timestamp(millis)
       symbolCol += 'Hello
       stringCol += "World!"
@@ -176,7 +176,7 @@ object Column extends Logger with Loggable {
     minuteCol = loaded("Minute").U
     secondCol = loaded("Second").V
     timeCol = loaded("Time").T
-    dateTimeCol = loaded("DateTime").Z
+    datetimeCol = loaded("DateTime").Z
     timestampCol = loaded("Timestamp").P
     symbolCol = loaded("Symbol").Y
     stringCol = loaded("String").S
@@ -197,7 +197,7 @@ object Column extends Logger with Loggable {
       assert(minuteCol(r) == Minutes.minutes(12), error("Value unexpected: " + minuteCol(r)))
       assert(secondCol(r) == Seconds.seconds(34), error("Value unexpected: " + secondCol(r)))
       assert(timeCol(r) == new LocalTime(millis), error("Value unexpected: " + timeCol(r)))
-      assert(dateTimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + dateTimeCol(r)))
+      assert(datetimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + datetimeCol(r)))
       assert(timestampCol(r) == new Timestamp(millis), error("Value unexpected: " + timestampCol(r)))
       assert(symbolCol(r) == 'Hello, error("Value unexpected: " + symbolCol(r)))
       assert(stringCol(r) == "World!", error("Value unexpected: " + stringCol(r)))
@@ -244,7 +244,7 @@ object Column extends Logger with Loggable {
       minute(),
       second(),
       time(),
-      dateTime(),
+      datetime(),
       timestamp(),
       symbol(),
       string())
@@ -262,7 +262,7 @@ object Column extends Logger with Loggable {
     var minuteCol = table("Minute").U
     var secondCol = table("Second").V
     var timeCol = table("Time").T
-    var dateTimeCol = table("DateTime").Z
+    var datetimeCol = table("DateTime").Z
     var timestampCol = table("Timestamp").P
     var symbolCol = table("Symbol").Y
     var stringCol = table("String").S
@@ -283,7 +283,7 @@ object Column extends Logger with Loggable {
       minuteCol += Minutes.minutes(12)
       secondCol += Seconds.seconds(34)
       timeCol += new LocalTime(millis)
-      dateTimeCol += new LocalDateTime(millis)
+      datetimeCol += new LocalDateTime(millis)
       timestampCol += new Timestamp(millis)
       symbolCol += 'Hello
       stringCol += "World!"
@@ -317,7 +317,7 @@ object Column extends Logger with Loggable {
     minuteCol = loaded("Minute").U
     secondCol = loaded("Second").V
     timeCol = loaded("Time").T
-    dateTimeCol = loaded("DateTime").Z
+    datetimeCol = loaded("DateTime").Z
     timestampCol = loaded("Timestamp").P
     symbolCol = loaded("Symbol").Y
     stringCol = loaded("String").S
@@ -338,7 +338,7 @@ object Column extends Logger with Loggable {
       assert(minuteCol(r) == Minutes.minutes(12), error("Value unexpected: " + minuteCol(r)))
       assert(secondCol(r) == Seconds.seconds(34), error("Value unexpected: " + secondCol(r)))
       assert(timeCol(r) == new LocalTime(millis), error("Value unexpected: " + timeCol(r)))
-      assert(dateTimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + dateTimeCol(r)))
+      assert(datetimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + datetimeCol(r)))
       assert(timestampCol(r) == new Timestamp(millis), error("Value unexpected: " + timestampCol(r)))
       assert(symbolCol(r) == 'Hello, error("Value unexpected: " + symbolCol(r)))
       assert(stringCol(r) == "World!", error("Value unexpected: " + stringCol(r)))
@@ -368,7 +368,7 @@ object Column extends Logger with Loggable {
     minuteCol = mapped("Minute").U
     secondCol = mapped("Second").V
     timeCol = mapped("Time").T
-    dateTimeCol = mapped("DateTime").Z
+    datetimeCol = mapped("DateTime").Z
     timestampCol = mapped("Timestamp").P
     symbolCol = mapped("Symbol").Y
     stringCol = mapped("String").S
@@ -389,7 +389,7 @@ object Column extends Logger with Loggable {
       assert(minuteCol(r) == Minutes.minutes(12), error("Value unexpected: " + minuteCol(r)))
       assert(secondCol(r) == Seconds.seconds(34), error("Value unexpected: " + secondCol(r)))
       assert(timeCol(r) == new LocalTime(millis), error("Value unexpected: " + timeCol(r)))
-      assert(dateTimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + dateTimeCol(r)))
+      assert(datetimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + datetimeCol(r)))
       assert(timestampCol(r) == new Timestamp(millis), error("Value unexpected: " + timestampCol(r)))
       assert(symbolCol(r) == 'Hello, error("Value unexpected: " + symbolCol(r)))
       assert(stringCol(r) == "World!", error("Value unexpected: " + stringCol(r)))
@@ -441,7 +441,7 @@ object Column extends Logger with Loggable {
       minute(),
       second(),
       time(),
-      dateTime(),
+      datetime(),
       timestamp(),
       symbol(),
       string())
@@ -460,7 +460,7 @@ object Column extends Logger with Loggable {
     var minuteCol = table("Minute").U
     var secondCol = table("Second").V
     var timeCol = table("Time").T
-    var dateTimeCol = table("DateTime").Z
+    var datetimeCol = table("DateTime").Z
     var timestampCol = table("Timestamp").P
     var symbolCol = table("Symbol").Y
     var stringCol = table("String").S
@@ -486,7 +486,7 @@ object Column extends Logger with Loggable {
         minuteCol += Minutes.minutes(12)
         secondCol += Seconds.seconds(34)
         timeCol += new LocalTime(millis)
-        dateTimeCol += new LocalDateTime(millis)
+        datetimeCol += new LocalDateTime(millis)
         timestampCol += new Timestamp(millis)
         symbolCol += 'Hello
         stringCol += "World!"
@@ -533,7 +533,7 @@ object Column extends Logger with Loggable {
       minuteCol = table("Minute").U
       secondCol = table("Second").V
       timeCol = table("Time").T
-      dateTimeCol = table("DateTime").Z
+      datetimeCol = table("DateTime").Z
       timestampCol = table("Timestamp").P
       symbolCol = table("Symbol").Y
       stringCol = table("String").S
@@ -554,7 +554,7 @@ object Column extends Logger with Loggable {
         assert(minuteCol(r) == Minutes.minutes(12), error("Value unexpected: " + minuteCol(r)))
         assert(secondCol(r) == Seconds.seconds(34), error("Value unexpected: " + secondCol(r)))
         assert(timeCol(r) == new LocalTime(millis), error("Value unexpected: " + timeCol(r)))
-        assert(dateTimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + dateTimeCol(r)))
+        assert(datetimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + datetimeCol(r)))
         assert(timestampCol(r) == new Timestamp(millis), error("Value unexpected: " + timestampCol(r)))
         assert(symbolCol(r) == 'Hello, error("Value unexpected: " + symbolCol(r)))
         assert(stringCol(r) == "World!", error("Value unexpected: " + stringCol(r)))
@@ -596,7 +596,7 @@ object Column extends Logger with Loggable {
       minuteCol = table("Minute").U
       secondCol = table("Second").V
       timeCol = table("Time").T
-      dateTimeCol = table("DateTime").Z
+      datetimeCol = table("DateTime").Z
       timestampCol = table("Timestamp").P
       symbolCol = table("Symbol").Y
       stringCol = table("String").S
@@ -617,7 +617,7 @@ object Column extends Logger with Loggable {
         assert(minuteCol(r) == Minutes.minutes(12), error("Value unexpected: " + minuteCol(r)))
         assert(secondCol(r) == Seconds.seconds(34), error("Value unexpected: " + secondCol(r)))
         assert(timeCol(r) == new LocalTime(millis), error("Value unexpected: " + timeCol(r)))
-        assert(dateTimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + dateTimeCol(r)))
+        assert(datetimeCol(r) == new LocalDateTime(millis), error("Value unexpected: " + datetimeCol(r)))
         assert(timestampCol(r) == new Timestamp(millis), error("Value unexpected: " + timestampCol(r)))
         assert(symbolCol(r) == 'Hello, error("Value unexpected: " + symbolCol(r)))
         assert(stringCol(r) == "World!", error("Value unexpected: " + stringCol(r)))

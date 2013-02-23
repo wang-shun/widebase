@@ -87,7 +87,7 @@ object DslCheck extends Logger with Loggable {
       ", " +
       time().typeOf +
       ", " +
-      dateTime().typeOf +
+      datetime().typeOf +
       ", " +
       timestamp().typeOf +
       ", " +
@@ -141,7 +141,7 @@ object DslCheck extends Logger with Loggable {
       minute(Minutes.minutes(12), Minutes.minutes(34)),
       second(Seconds.seconds(23), Seconds.seconds(45)),
       time(new LocalTime(millis), (new LocalTime(millis)).plusHours(1)),
-      dateTime(new LocalDateTime(millis), (new LocalDateTime(millis)).plusYears(1)),
+      datetime(new LocalDateTime(millis), (new LocalDateTime(millis)).plusYears(1)),
       timestamp(new Timestamp(millis), new Timestamp(millis + 86400000)),
       symbol('Hello, 'World),
       string("Hoi", "Wält!"))
@@ -161,7 +161,7 @@ object DslCheck extends Logger with Loggable {
       val minutes: MinuteColumn = table("Minute")
       val seconds: SecondColumn = table("Second")
       val times: TimeColumn = table("Time")
-      val dateTimes: DateTimeColumn = table("DateTime")
+      val datetimes: DateTimeColumn = table("DateTime")
       val timestamps: TimestampColumn = table("Timestamp")
       val symbols: SymbolColumn = table("Symbol")
       val strings: StringColumn = table("String")
@@ -192,8 +192,8 @@ object DslCheck extends Logger with Loggable {
       assert(seconds.last == Seconds.seconds(45), error("Value unexpected: " + seconds.last))
       assert(times.head == new LocalTime(millis), error("Value unexpected: " + times.head))
       assert(times.last == (new LocalTime(millis)).plusHours(1), error("Value unexpected: " + times.last))
-      assert(dateTimes.head == new LocalDateTime(millis), error("Value unexpected: " + dateTimes.head))
-      assert(dateTimes.last == (new LocalDateTime(millis)).plusYears(1), error("Value unexpected: " + dateTimes.last))
+      assert(datetimes.head == new LocalDateTime(millis), error("Value unexpected: " + datetimes.head))
+      assert(datetimes.last == (new LocalDateTime(millis)).plusYears(1), error("Value unexpected: " + datetimes.last))
       assert(timestamps.head == new Timestamp(millis), error("Value unexpected: " + timestamps.head))
       assert(timestamps.last == new Timestamp(millis + 86400000), error("Value unexpected: " + timestamps.last))
       assert(symbols.head == 'Hello, error("Value unexpected: " + symbols.last))
@@ -218,7 +218,7 @@ object DslCheck extends Logger with Loggable {
       val minutes = table("Minute").U
       val seconds = table("Second").V
       val times = table("Time").T
-      val dateTimes = table("DateTime").Z
+      val datetimes = table("DateTime").Z
       val timestamps = table("Timestamp").P
       val symbols = table("Symbol").Y
       val strings = table("String").S
@@ -249,8 +249,8 @@ object DslCheck extends Logger with Loggable {
       assert(seconds.last == Seconds.seconds(45), error("Value unexpected: " + seconds.last))
       assert(times.head == new LocalTime(millis), error("Value unexpected: " + times.head))
       assert(times.last == (new LocalTime(millis)).plusHours(1), error("Value unexpected: " + times.last))
-      assert(dateTimes.head == new LocalDateTime(millis), error("Value unexpected: " + dateTimes.head))
-      assert(dateTimes.last == (new LocalDateTime(millis)).plusYears(1), error("Value unexpected: " + dateTimes.last))
+      assert(datetimes.head == new LocalDateTime(millis), error("Value unexpected: " + datetimes.head))
+      assert(datetimes.last == (new LocalDateTime(millis)).plusYears(1), error("Value unexpected: " + datetimes.last))
       assert(timestamps.head == new Timestamp(millis), error("Value unexpected: " + timestamps.head))
       assert(timestamps.last == new Timestamp(millis + 86400000), error("Value unexpected: " + timestamps.last))
       assert(symbols.head == 'Hello, error("Value unexpected: " + symbols.last))

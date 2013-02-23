@@ -76,7 +76,7 @@ object PubSub extends Logger with Loggable {
       "minute",
       "second",
       "time",
-      "dateTime",
+      "datetime",
       "timestamp",
       "symbol",
       "string"),
@@ -94,7 +94,7 @@ object PubSub extends Logger with Loggable {
     minute(),
     second(),
     time(),
-    dateTime(),
+    datetime(),
     timestamp(),
     symbol(),
     string())
@@ -356,7 +356,7 @@ object PubSub extends Logger with Loggable {
 
               case Datatype.DateTime =>
                 if(table.columns.toBuffer(i) == null)
-                  table(table.labels(i)) = dateTime()
+                  table(table.labels(i)) = datetime()
 
                 table.columns.toBuffer(i).Z += new LocalDateTime(value.toLong)
 

@@ -44,7 +44,7 @@ object ParallelFilter extends Logger with Loggable {
   case class LogTable(
     table: Table = Table(
       string("time", "user", "value"),
-      dateTime(),
+      datetime(),
       string(),
       int()))
     extends TemplateTable[Log] {

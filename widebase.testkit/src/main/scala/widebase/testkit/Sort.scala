@@ -64,7 +64,7 @@ object Sort extends Logger with Loggable {
         "askVolume",
         "bidVolume",
         "instrument"),
-      dateTime(),
+      datetime(),
       double(),
       double(),
       double(),

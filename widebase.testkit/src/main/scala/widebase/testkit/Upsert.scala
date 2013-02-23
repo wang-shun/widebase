@@ -87,7 +87,7 @@ object Upsert extends Logger with Loggable {
       minute(),
       second(),
       time(),
-      dateTime(),
+      datetime(),
       timestamp(),
       symbol(),
       string())
