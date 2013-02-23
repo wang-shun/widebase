@@ -31,6 +31,7 @@ import widebase.stream.codec. {
   DoneMessage,
   ForbiddenMessage,
   LoginGrantedMessage,
+  LoginFailedMessage,
   LoginRequiredMessage,
   UnauthorizedMessage
 }
@@ -100,6 +101,7 @@ class ConsumerHandler(listener: RecordListener)
       case message: DoneMessage => Channels.fireMessageReceived(ctx, message)
       case message: ForbiddenMessage => Channels.fireMessageReceived(ctx, message)
       case message: LoginGrantedMessage => Channels.fireMessageReceived(ctx, message)
+      case message: LoginFailedMessage => Channels.fireMessageReceived(ctx, message)
       case message: LoginRequiredMessage => Channels.fireMessageReceived(ctx, message)
       case message: EventMessage => reader! message
       case message: RollbackMessage => reader ! message
