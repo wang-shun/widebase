@@ -10,7 +10,14 @@ object StreamCq extends Logger with Loggable {
 
   def main(args: Array[String]) {
 
-    streamCq(args)
+    println("")
+    println("// Socket/CQ")
+    println("")
+    SocketCq.main(args)
+    println("")
+    println("// Cache (Socket/CQ)")
+    println("")
+    Cache.main(args)
 
   }
 }

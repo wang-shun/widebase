@@ -10,7 +10,18 @@ object StreamRq extends Logger with Loggable {
 
   def main(args: Array[String]) {
 
-    streamRq(args)
+    println("")
+    println("// Socket/RQ")
+    println("")
+    SocketRq.main(args)
+    println("")
+    println("// Pub/Sub (Socket/RQ)")
+    println("")
+    PubSub.main(args)
+    println("")
+    println("// Selector (Socket/RQ)")
+    println("")
+    Selector.main(args)
 
   }
 }

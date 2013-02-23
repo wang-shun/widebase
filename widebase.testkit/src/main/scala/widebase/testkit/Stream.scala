@@ -10,7 +10,10 @@ object Stream extends Logger with Loggable {
 
   def main(args: Array[String]) {
 
-    stream(args)
+    println("")
+    println("// Socket")
+    println("")
+    Socket.main(args)
 
   }
 }
