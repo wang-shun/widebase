@@ -109,8 +109,6 @@ object DslCheck extends Logger with Loggable {
       "2012-06-27T22:31:59.123".Z
     ))
 
-    println("")
-
     val table = Table(
       string(
         "Bool",

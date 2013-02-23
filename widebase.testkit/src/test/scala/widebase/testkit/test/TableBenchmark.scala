@@ -24,9 +24,7 @@ object TableBenchmark extends Logger with Loggable {
 
     val records = 25000
 
-    println("")
     bulkTableReadIterateWrite(records)
-
     println("")
     userTableReadIterateWrite(records)
 

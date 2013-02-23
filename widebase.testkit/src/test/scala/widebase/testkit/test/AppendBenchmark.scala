@@ -29,7 +29,6 @@ object AppendBenchmark extends Logger with Loggable {
 
     val records = 1000000
 
-    println("")
     tableInsert(records)
 
   }
