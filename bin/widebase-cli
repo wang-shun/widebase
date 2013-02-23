@@ -12,9 +12,6 @@ java \
   -Dwidebase.home=$WIDEBASE_HOME \
   -Dwidebase.log=$WIDEBASE_HOME/var/log \
   -Dlog4j.configuration=$WIDEBASE_HOME/etc/widebase-cli-log4j.xml \
-  -Djava.security.auth.login.config=$WIDEBASE_HOME/etc/jaas.conf \
-  -Djava.security.manager \
-  -Djava.security.policy=$WIDEBASE_PLANT_HOME/etc/java.policy \
   "Sonatype OSS at https://oss.sonatype.org/content/groups/public" \
   "Typesafe Repository at http://repo.typesafe.com/typesafe/releases/" \
   "com.github.widebase%%widebase-dsl%0.3.4-SNAPSHOT" \
