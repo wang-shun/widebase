@@ -45,12 +45,12 @@ object Filter extends Logger with Loggable {
     started = System.currentTimeMillis
     for(i <- 0 to records - 1)
       symbolCol += symbols(i % symbols.size)
-    info("Column filled " + records + " records in " +
+    println("Column filled " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     started = System.currentTimeMillis
     val filteredCol = symbolCol.filter(value => value == "A")
-    info("Column filtered " + records + " records in " +
+    println("Column filtered " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     filteredCol.foreach(value =>
@@ -76,7 +76,7 @@ object Filter extends Logger with Loggable {
       priceCol += i + 1
 
     }
-    info("Table filled " + records + " records in " +
+    println("Table filled " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     val days = Array(
@@ -89,7 +89,7 @@ object Filter extends Logger with Loggable {
     started = System.currentTimeMillis
     val filteredTable = table.filter(record =>
       days.contains(record("date").asInstanceOf[LocalDate].getDayOfWeek))
-    info("Table filtered " + records + " records in " +
+    println("Table filtered " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     filteredTable.records.foreach(record =>
@@ -164,7 +164,7 @@ object Filter extends Logger with Loggable {
       table.price += i + 1
 
     }
-    info("Temaplte filled " + records + " records in " +
+    println("Temaplte filled " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     val days = Array(
@@ -177,7 +177,7 @@ object Filter extends Logger with Loggable {
     started = System.currentTimeMillis
     val filteredTemplate = table.filter(data =>
       days.contains(data.date.getDayOfWeek))
-    info("Template filtered " + records + " records in " +
+    println("Template filtered " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     filteredTemplate.foreach(record =>

@@ -148,7 +148,7 @@ object ParallelFilter extends Logger with Loggable {
 
         started = System.currentTimeMillis
         save.dir("parallelFilter", table.peer)('daily)
-        info("Table saved " + records + " records in " +
+        println("Table saved " + records + " records in " +
           diff(started, System.currentTimeMillis))
 
         table.peer.columns.foreach(column => column.clear)
@@ -166,7 +166,7 @@ object ParallelFilter extends Logger with Loggable {
 
     started = System.currentTimeMillis
     val mapped = map.dates("parallelFilter", from.toLocalDate, till.toLocalDate).tables
-    info("Tables mapped in " + diff(started, System.currentTimeMillis))
+    println("Tables mapped in " + diff(started, System.currentTimeMillis))
 
     val filteredTable = new LogTable
     started = System.currentTimeMillis
@@ -175,7 +175,7 @@ object ParallelFilter extends Logger with Loggable {
       filteredTable ++= LogTable(table).filter(record => record.user == "Alice")
 
     }
-    info("Single filtered " + filteredTable.records.length + " records in " +
+    println("Single filtered " + filteredTable.records.length + " records in " +
       diff(started, System.currentTimeMillis))
 
     filteredTable.foreach(record =>
@@ -194,11 +194,11 @@ object ParallelFilter extends Logger with Loggable {
 
     started = System.currentTimeMillis
     val mapped = map.dates("parallelFilter", from.toLocalDate, till.toLocalDate)
-    info("Tables mapped in " + diff(started, System.currentTimeMillis))
+    println("Tables mapped in " + diff(started, System.currentTimeMillis))
 
     started = System.currentTimeMillis
     val filteredTable = LogTable(mapped.filter(record => record("user") == "Alice"))
-    info("Parallel filtered " + filteredTable.records.length + " records in " +
+    println("Parallel filtered " + filteredTable.records.length + " records in " +
       diff(started, System.currentTimeMillis))
 
     filteredTable.foreach(record =>
