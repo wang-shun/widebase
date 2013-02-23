@@ -18,6 +18,9 @@ import widebase.stream.socket.cq
 // Init Stream/RQ
 import widebase.stream.socket.rq
 
+// Init Testkit
+import widebase.testkit
+
 // Init UI
 import widebase.ui._
 
