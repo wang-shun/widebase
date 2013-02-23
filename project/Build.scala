@@ -242,7 +242,7 @@ object WidebaseBuild extends Build {
     "widebase-testkit",
     file("widebase.testkit"))
     .dependsOn(
-      widebaseDsl % "test",
+      widebaseDsl,
       widebaseStreamSocketCq,
       widebaseStreamSocketRq)
     .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)

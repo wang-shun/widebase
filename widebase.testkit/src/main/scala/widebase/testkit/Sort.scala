@@ -1,4 +1,4 @@
-package widebase.testkit.test
+package widebase.testkit
 
 import net.liftweb.common. { Loggable, Logger }
 

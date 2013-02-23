@@ -1,4 +1,4 @@
-package widebase.testkit.test
+package widebase.testkit
 
 import java.io. { File, RandomAccessFile }
 import java.sql.Timestamp
@@ -195,7 +195,7 @@ object Bulk extends Logger with Loggable {
 
     writer.close
 
-    println("VariantWriter written " + amount + " records in " +
+    println("VariantWriter written " + (amount * length) + " records in " +
       diff(started, System.currentTimeMillis))
 
   }
@@ -314,7 +314,7 @@ object Bulk extends Logger with Loggable {
 
     reader.close
 
-    println("VariantReader read " + amount + " records in " +
+    println("VariantReader read " + (amount * length) + " records in " +
       diff(started, System.currentTimeMillis))
 
   }
@@ -429,7 +429,7 @@ object Bulk extends Logger with Loggable {
 
     writer.close
 
-    println("FileVariantWriter written " + amount + " records in " +
+    println("FileVariantWriter written " + (amount * length) + " records in " +
       diff(started, System.currentTimeMillis))
 
   }
@@ -544,7 +544,7 @@ object Bulk extends Logger with Loggable {
 
     reader.close
 
-    println("FileVariantReader read " + amount + " records in " +
+    println("FileVariantReader read " + (amount * length) + " records in " +
       diff(started, System.currentTimeMillis))
 
   }
@@ -656,7 +656,7 @@ object Bulk extends Logger with Loggable {
 
     writer.close
 
-    println("FileVariantMapper written " + amount + " records in " +
+    println("FileVariantMapper written " + (amount * length) + " records in " +
       diff(started, System.currentTimeMillis))
 
   }
@@ -771,7 +771,7 @@ object Bulk extends Logger with Loggable {
 
     reader.close
 
-    println("FileVariantMapper read " + amount + " records in " +
+    println("FileVariantMapper read " + (amount * length) + " records in " +
       diff(started, System.currentTimeMillis))
 
   }

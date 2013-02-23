@@ -1,4 +1,4 @@
-package widebase.testkit.test
+package widebase.testkit
 
 import net.liftweb.common. { Loggable, Logger }
 
@@ -10,9 +10,7 @@ object StreamCq extends Logger with Loggable {
 
   def main(args: Array[String]) {
 
-    SocketCq.main(args)
-    println("")
-    Cache.main(args)
+    streamCq(args)
 
   }
 }

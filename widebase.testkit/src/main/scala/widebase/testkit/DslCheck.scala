@@ -1,4 +1,4 @@
-package widebase.testkit.test
+package widebase.testkit
 
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
