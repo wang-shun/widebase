@@ -62,7 +62,7 @@ object Edit extends Logger with Loggable {
     val minute: Minutes,
     val second: Seconds,
     val time: LocalTime,
-    val dateTime: LocalDateTime,
+    val datetime: LocalDateTime,
     val timestamp: Timestamp,
     val symbol: Symbol,
     val string: String)
@@ -85,11 +85,11 @@ object Edit extends Logger with Loggable {
           "minute",
           "second",
           "time",
-          "dateTime",
+          "datetime",
           "timestamp",
           "symbol",
           "string"),
-        dateTime(),
+        datetime(),
         bool(),
         byte(),
         char(),
@@ -103,7 +103,7 @@ object Edit extends Logger with Loggable {
         minute(),
         second(),
         time(),
-        dateTime(),
+        datetime(),
         timestamp(),
         symbol(),
         string()))
@@ -123,7 +123,7 @@ object Edit extends Logger with Loggable {
     val minute = table("minute").U
     val second = table("second").V
     val time = table("time").T
-    val dateTime = table("dateTime").Z
+    val datetime = table("datetime").Z
     val timestamp = table("timestamp").P
     val symbol = table("symbol").Y
     val string = table("string").S
@@ -144,7 +144,7 @@ object Edit extends Logger with Loggable {
       minute += data.minute
       second += data.second
       time += data.time
-      dateTime += data.dateTime
+      datetime += data.datetime
       timestamp += data.timestamp
       symbol += data.symbol
       string += data.string
@@ -168,7 +168,7 @@ object Edit extends Logger with Loggable {
       minute: Minutes,
       second: Seconds,
       time: LocalTime,
-      dateTime: LocalDateTime,
+      datetime: LocalDateTime,
       timestamp: Timestamp,
       symbol: Symbol,
       string: String): DataTable =
@@ -187,7 +187,7 @@ object Edit extends Logger with Loggable {
         minute,
         second,
         time,
-        dateTime,
+        datetime,
         timestamp,
         symbol,
         string)
@@ -216,7 +216,7 @@ object Edit extends Logger with Loggable {
       minute(index),
       second(index),
       time(index),
-      dateTime(index),
+      datetime(index),
       timestamp(index),
       symbol(index),
       string(index))
@@ -294,7 +294,7 @@ object Edit extends Logger with Loggable {
         table.minute += Minutes.minutes(12)
         table.second += Seconds.seconds(34)
         table.time += new LocalTime(millis)
-        table.dateTime += new LocalDateTime(millis)
+        table.datetime += new LocalDateTime(millis)
         table.timestamp += new Timestamp(millis)
         table.symbol += 'Hello
         table.string += "World!"

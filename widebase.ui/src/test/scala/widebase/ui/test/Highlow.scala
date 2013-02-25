@@ -46,7 +46,7 @@ object Highlow extends Logger with Loggable {
   case class DataTable(
     table: Table = Table(
       string("time", "open", "high", "low", "close"),
-      dateTime(),
+      datetime(),
       double(),
       double(),
       double(),

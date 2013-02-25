@@ -39,7 +39,7 @@ object Time extends Logger with Loggable {
   case class Data(val time: LocalDateTime, val value: Double)
 
   case class DataTable(
-    table: Table = Table(string("time", "value"), dateTime(), double()))
+    table: Table = Table(string("time", "value"), datetime(), double()))
     extends TemplateTable[Data] {
 
     val time = table("time").Z
