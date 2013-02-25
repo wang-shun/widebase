@@ -3,11 +3,11 @@ package widebase.ui
 import java.awt.geom.Point2D
 
 import org.jfree.chart.JFreeChart
-import org.jfree.chart.plot.Plot
+import org.jfree.chart.plot. { FastScatterPlot, Plot }
 import org.jfree.chart.renderer.xy. { AbstractXYItemRenderer, HighLowRenderer }
 import org.jfree.data.time.TimeSeriesCollection
 
-import widebase.ui.chart.plot.Highlow
+import widebase.ui.chart.plot. { Highlow, Scatter }
 
 /** Charting.
  *
@@ -65,6 +65,16 @@ package object chart {
       // Set zoom factor for xy based series
       else
         peer.shiftable += peer.getChart.getXYPlot -> new Point2D.Double(1.0, 0.1)
+
+    }
+
+  def scatterPanel(values: Any*) =
+    new ChartPanel(default.chart(Scatter(values:_*))) {
+
+      // Set zoom factor for time based series
+      peer.shiftable +=
+        peer.getChart.getPlot.asInstanceOf[FastScatterPlot] ->
+        new Point2D.Double(1.0, 0.1)
 
     }
 }
