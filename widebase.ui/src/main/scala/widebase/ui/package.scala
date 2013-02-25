@@ -22,7 +22,7 @@ import scala.swing.event.WindowClosing
 import widebase.ui.chart. { ChartFrame, ChartPanel }
 import widebase.ui.chart.annotations. { Ellipse, Line, Rectangle }
 import widebase.ui.chart.data. { ValueFunction, ValuePartitionFunction }
-import widebase.ui.chart.plot. { Highlow, Plot }
+import widebase.ui.chart.plot. { Highlow, Plot, Scatter }
 import widebase.ui.table. { TableFrame, TablePanel }
 
 /** User interface.
@@ -42,6 +42,9 @@ package object ui {
 
   /** Hold figure. */
   var hold = false
+
+  /** Second y-axis. */
+  var yyaxis = false
 
   /** Set anti alias of chart.
    *
@@ -274,7 +277,11 @@ package object ui {
       figures(figure).isInstanceOf[ChartFrame]) {
 
       frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
-      Plot.add(frame.panel.peer.getChart.getPlot, values:_*)
+
+      if(yyaxis)
+        Plot.addYY(frame.panel.peer.getChart.getPlot, values:_*)
+      else
+        Plot.add(frame.panel.peer.getChart.getPlot, values:_*)
 
     } else
       frame = showChart(chart.plotPanel(values:_*))
@@ -300,6 +307,15 @@ package object ui {
     image
 
   }
+
+  /** Show scatter chart.
+   *
+   * @param values of data, properties and format
+   *
+   * @return frame
+   */
+  def scatter(values: Any*) =
+    showChart(chart.scatterPanel(values:_*))
 
   /** Set title of chart.
    *
