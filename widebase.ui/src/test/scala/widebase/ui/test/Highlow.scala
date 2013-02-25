@@ -107,7 +107,7 @@ object Highlow extends Logger with Loggable {
 
   }
 
-  val useCandle = true // Enable candlestick renderer
+  val useCandle = false // Enable candlestick renderer
 
   val millis = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S")
     .parse("2012-01-23 12:34:56.789").getTime
@@ -121,7 +121,7 @@ object Highlow extends Logger with Loggable {
 
     var from = LocalDateTime.parse("2013-01-01 00:00:00.000", formatter)
     val till = LocalDateTime.parse("2013-02-01 00:00:00.000", formatter)
-/*
+
     saveTable("plotHighlow", fillTable(from, till))
     println("")
     saveDirTable("dirPlotHighlow", fillTable(from, till))
@@ -135,7 +135,7 @@ object Highlow extends Logger with Loggable {
     plotPartedDirTable("dirPlotHighlow", from.toLocalDate, till.toLocalDate)
 
     figure += 1
-*/
+
     plotMixedTable(
       "plotHighlow",
       "dirPlotHighlow",
