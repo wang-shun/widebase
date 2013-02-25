@@ -20,6 +20,8 @@ import org.jfree.chart.plot. {
 
   CombinedDomainXYPlot,
   CombinedRangeXYPlot,
+  FastScatterPlot,
+  Plot,
   XYPlot
 
 }
@@ -38,7 +40,7 @@ import scala.collection.mutable. { Buffer, Map }
 trait ShiftableChartPanel extends org.jfree.chart.ChartPanel {
 
   /** Shiftable plots and it's interval. */
-  var shiftable = Map[XYPlot, Point2D.Double]()
+  var shiftable = Map[Plot, Point2D.Double]()
 
   /** Shiftable by mouse drag. */
   var mouseDragShiftable = false
@@ -60,12 +62,12 @@ trait ShiftableChartPanel extends org.jfree.chart.ChartPanel {
              !isRangeZoomable &&
              shiftable.size > 0) {
 
-            var plot: XYPlot = null
+            var plot: Plot = null
  
             if(getChartRenderingInfo.getPlotInfo.getSubplotCount == 0 &&
                getChartRenderingInfo.getPlotInfo.getDataArea.contains(event.getPoint)) {
 
-              plot = getChart.getXYPlot
+              plot = getChart.getPlot
               shift.dataArea = getChartRenderingInfo.getPlotInfo.getDataArea
  
             } else {
@@ -151,25 +153,60 @@ trait ShiftableChartPanel extends org.jfree.chart.ChartPanel {
         // Shift domain.
         if(shiftable(shift.plot).x >= 0.0 &&
            shift.point.x != event.getX)
-          for(i <- 0 to shift.plot.getDomainAxisCount - 1)
-          shifting(shift.dataArea,
-                   shift.plot.getDomainAxis(i),
-                   shift.plot.getDomainAxisEdge(i),
-                     if(i == 0) shiftable(shift.plot).x else 0,
-                   shift.point.x,
-                   event.getPoint.getX)
+          if(shift.plot.isInstanceOf[FastScatterPlot]) {
+
+            val plot = shift.plot.asInstanceOf[FastScatterPlot]
+
+            shifting(shift.dataArea,
+                     plot.getDomainAxis,
+                     RectangleEdge.BOTTOM,
+                     shiftable(plot).x,
+                     shift.point.x,
+                     event.getPoint.getX)
+
+          } else if(shift.plot.isInstanceOf[XYPlot]) {
+
+            val plot = shift.plot.asInstanceOf[XYPlot]
+
+            for(i <- 0 to plot.getDomainAxisCount - 1)
+              shifting(shift.dataArea,
+                       plot.getDomainAxis(i),
+                       plot.getDomainAxisEdge(i),
+                       if(i == 0) shiftable(plot).x else 0,
+                       shift.point.x,
+                       event.getPoint.getX)
+
+          } else
+            throw new Exception("Plot unsupported")
 
         // Shift range.
         if(shiftable(shift.plot).y >= 0.0 &&
            shift.point.y != event.getY)
+          if(shift.plot.isInstanceOf[FastScatterPlot]) {
 
-          for(i <- 0 to shift.plot.getRangeAxisCount - 1)
+            val plot = shift.plot.asInstanceOf[FastScatterPlot]
+
             shifting(shift.dataArea,
-                     shift.plot.getRangeAxis(i),
-                     shift.plot.getRangeAxisEdge(i),
-                     if(i == 0) shiftable(shift.plot).y else 0,
+                     plot.getRangeAxis,
+                     RectangleEdge.LEFT,
+                     shiftable(shift.plot).y,
                      shift.point.y,
                      event.getPoint.getY)
+
+          } else if(shift.plot.isInstanceOf[XYPlot]) {
+
+            val plot = shift.plot.asInstanceOf[XYPlot]
+
+            for(i <- 0 to plot.getRangeAxisCount - 1)
+              shifting(shift.dataArea,
+                       plot.getRangeAxis(i),
+                       plot.getRangeAxisEdge(i),
+                       if(i == 0) shiftable(plot).y else 0,
+                       shift.point.y,
+                       event.getPoint.getY)
+
+          } else
+            throw new Exception("Plot unsupported")
 
         shift.point = new Point2D.Double(event.getPoint.getX, event.getPoint.getY)
 
@@ -186,54 +223,44 @@ trait ShiftableChartPanel extends org.jfree.chart.ChartPanel {
 
       if(mouseWheelShiftable) {
 
-        var plot: XYPlot = null
-        var dataArea: Rectangle2D = null
+        var plot = getChart.getPlot
+        var dataArea = getChartRenderingInfo.getPlotInfo.getDataArea
 
-        if(getChartRenderingInfo.getPlotInfo.getSubplotCount == 0 &&
-           getChartRenderingInfo.getPlotInfo.getDataArea.contains(event.getPoint)) {
+        object Break extends Throwable
 
-          plot = getChart.getXYPlot
-          dataArea = getChartRenderingInfo.getPlotInfo.getDataArea
+        try {
 
-        } else {
+          for(i <- 0 to getChartRenderingInfo.getPlotInfo.getSubplotCount - 1)
+            if(getChartRenderingInfo.getPlotInfo
+              .getSubplotInfo(i).getDataArea.contains(event.getPoint)) {
 
-          object Break extends Throwable
+              plot =
+                if(getChart.getPlot.isInstanceOf[CombinedDomainXYPlot])
+                  JavaConversions.asScalaBuffer(getChart.getPlot
+                    .asInstanceOf[CombinedDomainXYPlot].getSubplots)
+                    .asInstanceOf[Buffer[XYPlot]](i)
+                else if(getChart.getPlot.isInstanceOf[CombinedRangeXYPlot])
+                  JavaConversions.asScalaBuffer(getChart.getPlot
+                    .asInstanceOf[CombinedRangeXYPlot].getSubplots)
+                    .asInstanceOf[Buffer[XYPlot]](i)
+                else
+                  null
 
-          try {
+              dataArea =
+                if(getChart.getPlot.isInstanceOf[CombinedDomainXYPlot])
+                  getChartRenderingInfo.getPlotInfo
+                    .getSubplotInfo(i).getDataArea
+                else if(getChart.getPlot.isInstanceOf[CombinedRangeXYPlot])
+                  getChartRenderingInfo.getPlotInfo
+                    .getSubplotInfo(i).getDataArea
+                else
+                  null
 
-            for(i <- 0 to getChartRenderingInfo.getPlotInfo.getSubplotCount - 1)
-              if(getChartRenderingInfo.getPlotInfo
-                .getSubplotInfo(i).getDataArea.contains(event.getPoint)) {
+              throw Break
 
-                plot =
-                  if(getChart.getPlot.isInstanceOf[CombinedDomainXYPlot])
-                    JavaConversions.asScalaBuffer(getChart.getPlot
-                      .asInstanceOf[CombinedDomainXYPlot].getSubplots)
-                      .asInstanceOf[Buffer[XYPlot]](i)
-                  else if(getChart.getPlot.isInstanceOf[CombinedRangeXYPlot])
-                    JavaConversions.asScalaBuffer(getChart.getPlot
-                      .asInstanceOf[CombinedRangeXYPlot].getSubplots)
-                      .asInstanceOf[Buffer[XYPlot]](i)
-                  else
-                    null
+            }
 
-                dataArea =
-                  if(getChart.getPlot.isInstanceOf[CombinedDomainXYPlot])
-                    getChartRenderingInfo.getPlotInfo
-                      .getSubplotInfo(i).getDataArea
-                  else if(getChart.getPlot.isInstanceOf[CombinedRangeXYPlot])
-                    getChartRenderingInfo.getPlotInfo
-                      .getSubplotInfo(i).getDataArea
-                  else
-                    null
-
-                throw Break
-
-              }
-
-          } catch { case Break => }
-
-        }
+        } catch { case Break => }
 
         // Shiftable.
         if(!isDomainZoomable && !isRangeZoomable && plot != null) {
@@ -245,16 +272,35 @@ trait ShiftableChartPanel extends org.jfree.chart.ChartPanel {
               else
                 shiftable(plot).x * event.getUnitsToScroll
 
-            for(i <- 0 to shift.plot.getDomainAxisCount - 1)
+            if(plot.isInstanceOf[FastScatterPlot]) {
+
+              val nativePlot = plot.asInstanceOf[FastScatterPlot]
+
               shifting(dataArea,
-                       plot.getDomainAxis(i),
-                       plot.getDomainAxisEdge(i),
+                       nativePlot.getDomainAxis,
+                       RectangleEdge.BOTTOM,
                        0.0,
                        event.getPoint.getX,
                        event.getPoint.getX + offset)
 
+            } else if(plot.isInstanceOf[XYPlot]) {
+
+              val nativePlot = plot.asInstanceOf[XYPlot]
+
+              for(i <- 0 to nativePlot.getDomainAxisCount - 1)
+                shifting(dataArea,
+                         nativePlot.getDomainAxis(i),
+                         nativePlot.getDomainAxisEdge(i),
+                         0.0,
+                         event.getPoint.getX,
+                         event.getPoint.getX + offset)
+
+            } else
+              throw new Exception("Plot unsupported")
+
           }
         }
+
       }
     }
   } )
@@ -306,7 +352,7 @@ trait ShiftableChartPanel extends org.jfree.chart.ChartPanel {
 
   private object shift {
 
-    var plot: XYPlot = null
+    var plot: Plot = null
     var dataArea: Rectangle2D = null
     var point: Point2D.Double = null
 
