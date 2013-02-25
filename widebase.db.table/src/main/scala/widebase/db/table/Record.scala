@@ -4,9 +4,13 @@ import widebase.db.column.TypedColumn
 
 /** A label accessible record.
  *
+ * @param index of record
+ * @param labels of record
+ * @param values of record
+ *
  * @author myst3r10n
  */
-case class Record(labels: TypedColumn[_], values: Array[Any]) {
+case class Record(val index: Int, labels: TypedColumn[_], values: Array[Any]) {
 
   /** Select a value by its label.
    *
