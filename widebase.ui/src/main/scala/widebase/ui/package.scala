@@ -145,7 +145,11 @@ package object ui {
       figures(figure).isInstanceOf[ChartFrame]) {
 
       frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
-      Highlow.add(frame.panel.peer.getChart.getPlot, values:_*)(new CandlestickRenderer)
+
+      if(yyaxis)
+        Highlow.addYY(frame.panel.peer.getChart.getPlot, values:_*)(new CandlestickRenderer)
+      else
+        Highlow.add(frame.panel.peer.getChart.getPlot, values:_*)(new CandlestickRenderer)
 
     } else
       showChart(chart.highlowPanel(values:_*)(new CandlestickRenderer))
@@ -251,7 +255,11 @@ package object ui {
       figures(figure).isInstanceOf[ChartFrame]) {
 
       frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
-      Highlow.add(frame.panel.peer.getChart.getPlot, values:_*)(new HighLowRenderer)
+
+      if(yyaxis)
+        Highlow.addYY(frame.panel.peer.getChart.getPlot, values:_*)(new HighLowRenderer)
+      else
+        Highlow.add(frame.panel.peer.getChart.getPlot, values:_*)(new HighLowRenderer)
 
     } else
       showChart(chart.highlowPanel(values:_*)(new HighLowRenderer))

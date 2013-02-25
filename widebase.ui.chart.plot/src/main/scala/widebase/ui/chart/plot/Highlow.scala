@@ -59,6 +59,27 @@ object Highlow {
 
   }
 
+  /** Add plot with second Y axis.
+   *
+   * @param values of data, properties and format
+   *
+   * @return plot
+   */
+  def addYY(plot: org.jfree.chart.plot.Plot, values: Any*)
+    (implicit renderer: AbstractXYItemRenderer = new HighLowRenderer) = {
+
+    val overlay = this(values:_*)
+    val current = plot.asInstanceOf[XYPlot]
+
+    current.setRangeAxis(1, overlay.getRangeAxis)
+    current.setDataset(current.getDatasetCount, overlay.getDataset)
+    current.mapDatasetToRangeAxis(1, 1);
+    current.setRenderer(current.getRendererCount, overlay.getRenderer)
+
+    current
+
+  }
+
   /** Perform highlow.
    *
    * @param values of data, properties and format

@@ -107,7 +107,7 @@ object Highlow extends Logger with Loggable {
 
   }
 
-  val useCandle = false // Enable candlestick renderer
+  val useCandle = true // Enable candlestick renderer
 
   val millis = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S")
     .parse("2012-01-23 12:34:56.789").getTime
@@ -121,7 +121,7 @@ object Highlow extends Logger with Loggable {
 
     var from = LocalDateTime.parse("2013-01-01 00:00:00.000", formatter)
     val till = LocalDateTime.parse("2013-02-01 00:00:00.000", formatter)
-
+/*
     saveTable("plotHighlow", fillTable(from, till))
     println("")
     saveDirTable("dirPlotHighlow", fillTable(from, till))
@@ -135,7 +135,7 @@ object Highlow extends Logger with Loggable {
     plotPartedDirTable("dirPlotHighlow", from.toLocalDate, till.toLocalDate)
 
     figure += 1
-
+*/
     plotMixedTable(
       "plotHighlow",
       "dirPlotHighlow",
@@ -325,7 +325,8 @@ object Highlow extends Logger with Loggable {
     val dirTable = DataTable(map(dirName))
     val parts = map.dates(partedName, from, till)
 
-    if(useCandle)
+    if(useCandle) {
+
       candle(
         table.high,
         table.low,
@@ -338,14 +339,24 @@ object Highlow extends Logger with Loggable {
         dirTable.close,
         dirTable.open,
         dirTable.time,
-        ";Directory Table;",
+        ";Directory Table;")
+
+      hold = true
+      yyaxis = true
+
+      candle(
         parts.tables("high").dia,
         parts.tables("low").dia,
         parts.tables("close").dia,
         parts.tables("open").dia,
         parts.tables("time").Zia,
         ";Partitioned Table;")
-    else
+
+      yyaxis = false
+      hold = false
+
+    } else {
+
       highlow(
         table.high,
         table.low,
@@ -358,7 +369,12 @@ object Highlow extends Logger with Loggable {
         dirTable.close,
         dirTable.open,
         dirTable.time,
-        ";Directory Table;",
+        ";Directory Table;")
+
+      hold = true
+      yyaxis = true
+
+      highlow(
         parts.tables("high").dia,
         parts.tables("low").dia,
         parts.tables("close").dia,
@@ -366,6 +382,10 @@ object Highlow extends Logger with Loggable {
         parts.tables("time").Zia,
         ";Partitioned Table;")
 
+      yyaxis = false
+      hold = false
+
+    }
   }
 }
 
