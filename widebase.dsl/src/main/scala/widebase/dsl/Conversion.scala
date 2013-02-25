@@ -30,6 +30,14 @@ import widebase.db.column. {
  */
 object Conversion {
 
+  /** Implicitly converts a [[scala.Any]] into [[widebase.dsl.AnyConversion]].
+   *
+   * @param value to convert
+   *
+   * @return a conversion purposed object
+   */
+  implicit def asAnyConversion(value: Any) = new AnyConversion(value)
+
   /** Implicitly converts a [[scala.Int]] into [[widebase.dsl.IntConversion]].
    *
    * @param column to convert
