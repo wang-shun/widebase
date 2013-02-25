@@ -48,7 +48,7 @@ object Average extends Logger with Loggable {
   case class DataTable(
     table: Table = Table(
       string("time", "open", "high", "low", "close"),
-      dateTime(),
+      datetime(),
       double(),
       double(),
       double(),
@@ -112,7 +112,7 @@ object Average extends Logger with Loggable {
   case class Average(val time: LocalDateTime, val value: Double)
 
   case class AverageTable(
-    table: Table = Table(string("time", "value"), dateTime(), double()))
+    table: Table = Table(string("time", "value"), datetime(), double()))
     extends TemplateTable[Average] {
 
     val time = table("time").Z
