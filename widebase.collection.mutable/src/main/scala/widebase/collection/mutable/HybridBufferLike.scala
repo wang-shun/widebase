@@ -11,6 +11,8 @@ import widebase.io.file.FileVariantMapper
  */
 trait HybridBufferLike[A] {
 
+  self =>
+
   /** Mapper of file. */
   protected val mappers: ArrayBuffer[FileVariantMapper]
 
@@ -476,6 +478,53 @@ trait HybridBufferLike[A] {
     }
 
     -1
+
+  }
+
+  /** Finds the largest element.
+   *
+   * @return the largest element of this hybrid buffer.
+   */
+  def max[B >: A](implicit cmp: Ordering[B]): A = {
+
+    if (isEmpty)
+      throw new UnsupportedOperationException("empty.max")
+
+    reduceLeft((x, y) => if (cmp.gteq(x, y)) x else y)
+
+  }
+
+  /** Finds the smallest element.
+   *
+   * @return the smallest element of this hybrid buffer.
+   */
+  def min[B >: A](implicit cmp: Ordering[B]): A = {
+
+    if (isEmpty)
+      throw new UnsupportedOperationException("empty.min")
+
+    reduceLeft((x, y) => if (cmp.lteq(x, y)) x else y)
+
+  }
+
+  def reduceLeft[B >: A](op: (B, A) => B): B = {
+
+    if(isEmpty)
+      throw new UnsupportedOperationException("empty.reduceLeft")
+
+    var first = true
+    var acc: B = 0.asInstanceOf[B]
+
+    for(x <- self)
+      if(first) {
+
+        acc = x
+        first = false
+
+      } else
+        acc = op(acc, x)
+
+    acc
 
   }
 
