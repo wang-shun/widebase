@@ -141,6 +141,7 @@ class Table {
      */
     def apply(n: Int) =
       Record(
+        n,
         labels,
         (for(column <- columns)
           yield(column(n))).toArray)
