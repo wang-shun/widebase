@@ -243,8 +243,15 @@ object Time extends Logger with Loggable {
 
     plot(
       table.time, table.value, "from", 0, "till", 24, ";Table File;",
-      dirTable.time, dirTable.value, ";Directory Table;",
-      parts.tables("time").Zia, parts.tables("value").dia, ";Partitioned Table;")
+      dirTable.time, dirTable.value, ";Directory Table;")
+
+    hold = true
+    yyaxis = true
+
+    plot(parts.tables("time").Zia, parts.tables("value").dia, ";Partitioned Table;")
+
+    yyaxis = false
+    hold = false
 
   }
 }

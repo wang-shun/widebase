@@ -198,9 +198,15 @@ object XY extends Logger with Loggable {
     val table = DataTable(load(name))
     val dirTable = DataTable(map(dirName))
 
-    plot(
-      table.x, table.y, "from", 0, "till", 24, ";Table File;",
-      dirTable.x, dirTable.y, ";Directory Table;")
+    plot(table.x, table.y, "from", 0, "till", 24, ";Table File;")
+
+    hold = true
+    yyaxis = true
+
+    plot(dirTable.x, dirTable.y, ";Directory Table;")
+
+    yyaxis = false
+    hold = false
 
   }
 }
