@@ -3,7 +3,7 @@ import Keys._
 
 /** Build Widebase by sbt.
  *
- * APIs:
+ * Top APIs:
  *
  * * widebase.collectoin.mutable
  * * widebase.db
@@ -13,9 +13,10 @@ import Keys._
  * * widebase.stream.socket.rq
  * * widebase.ui
  * * widebase.ui.chart
+ * * widebase.ui.ide
  * * widebase.ui.table
  *
- * Apps:
+ * Top Apps:
  *
  * * widebase.notify
  * * widebase.plant
@@ -68,6 +69,10 @@ object WidebaseBuild extends Build {
       widebaseUiChartEvent,
       widebaseUiChartPlot,
       widebaseUiChartUtil,
+      widebaseUiIde,
+      widebaseUiIdeEvent,
+      widebaseUiIdePrefs,
+      widebaseUiIdeWorksheet,
       widebaseUiTable,
       widebaseUiTableEvent,
       widebaseUtil)
@@ -325,6 +330,40 @@ object WidebaseBuild extends Build {
     "widebase-ui-chart-util",
     file("widebase.ui.chart.util"))
 
+  /** UI IDE */
+  lazy val widebaseUiIde = Project(
+    "widebase-ui-ide",
+    file("widebase.ui.ide"))
+    .dependsOn(
+      widebaseDsl,
+      widebaseStreamSocketCq,
+      widebaseStreamSocketRq,
+      widebaseTestkit,
+      widebaseUi,
+      widebaseUiIdeEvent,
+      widebaseUiIdePrefs,
+      widebaseUiIdeWorksheet)
+    .settings(libraryDependencies ++= lib.log)
+
+  /** UI IDE Event */
+  lazy val widebaseUiIdeEvent = Project(
+    "widebase-ui-ide-event",
+    file("widebase.ui.ide.event"))
+    .settings(libraryDependencies ++= lib.swing)
+
+  /** UI IDE Prefs */
+  lazy val widebaseUiIdePrefs = Project(
+    "widebase-ui-ide-prefs",
+    file("widebase.ui.ide.prefs"))
+    .settings(libraryDependencies ++= lib.moreswing)
+
+  /** UI IDE Worksheet */
+  lazy val widebaseUiIdeWorksheet = Project(
+    "widebase-ui-ide-worksheet",
+    file("widebase.ui.ide.worksheet"))
+    .dependsOn(widebaseUiIdeEvent)
+    .settings(libraryDependencies ++= lib.interpreterPane ++ lib.moreswing)
+
   /** UI Table */
   lazy val widebaseUiTable = Project(
     "widebase-ui-table",
@@ -347,7 +386,7 @@ object WidebaseBuild extends Build {
     file("widebase.util"))
     .dependsOn(widebaseIoFilter)
 
-  /** Log path */
+  /** Log path (maybe deprecated, see javaOptions) */
   System.setProperty(
     "widebase.log",
     System.getProperty("user.dir") + "/var/log")
@@ -367,6 +406,11 @@ object WidebaseBuild extends Build {
 	def buildSettings = Seq(
 		organization := "com.github.widebase",
 		version := "0.3.4-SNAPSHOT",
+    javaOptions ++= Seq(
+
+      /** Log path */
+      "-Dwidebase.log=" + System.getProperty("user.dir") + "/var/log"),
+    scalaVersion := "2.9.2",
     scalacOptions ++= Seq("-unchecked", "-deprecation"),
     resolvers ++= Seq(
       "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))
