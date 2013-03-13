@@ -352,7 +352,7 @@ package object ui {
    *
    * @return frame
    */
-  def uitable(values: Any*) = showTable(table.uitablePanel(values:_*))
+  def uitable(values: Any*) = showTable(table.tablePanel(values:_*))
 
   /** Set label of x-axis.
    *

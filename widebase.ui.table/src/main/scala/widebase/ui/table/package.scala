@@ -16,7 +16,7 @@ package object table {
    *
    * @return panel
    */
-  def uitablePanel(values: Any*) = {
+  def tablePanel(values: Any*) = {
 
     val table =
       if(values.head.isInstanceOf[Table])
