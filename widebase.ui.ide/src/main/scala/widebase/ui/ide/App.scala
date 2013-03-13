@@ -124,7 +124,7 @@ object App extends Logger with Loggable {
     val intpCfg = Interpreter.Config()
     EditPanel.interpreter = Interpreter(intpCfg)
 
-    val init = new File(System.getProperty("user.dir") + "/" + "sbin/init")
+    val init = new File(System.getProperty("user.dir") + "/" + "sbin/Init.scala")
 
     if(init.exists) {
 

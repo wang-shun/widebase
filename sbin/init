@@ -1,36 +1,7 @@
-def home = System.getProperty("widebase.home")
-
 // Log
-org.apache.log4j.xml.DOMConfigurator.configure(home +
-  "/etc/widebase-cli-log4j.xml")
+org.apache.log4j.xml.DOMConfigurator.configure(
+  System.getProperty("widebase.home") + "/etc/widebase-cli-log4j.xml")
 
-// Init API
-import widebase.db.table.Table
-
-// Init DSL
-import widebase.dsl.conversion._
-import widebase.dsl.datatype._
-import widebase.dsl.function._
-
-// Init Stream/CQ
-import widebase.stream.socket.cq
-
-// Init Stream/RQ
-import widebase.stream.socket.rq
-
-// Init Testkit
-import widebase.testkit
-
-// Init UI
-import widebase.ui._
-
-// Convenience purpose
-import org.joda.time.LocalDateTime
-import widebase.stream.handler.rq.RecordListener
-
-// Joda date and time tools
-import org.joda.time. { Days, Hours, Minutes, Months, Seconds, Weeks, Years }
-
-def now = LocalDateTime.now
-def today = now.toLocalDate
+// Init
+:load sbin/Init.scala
 
