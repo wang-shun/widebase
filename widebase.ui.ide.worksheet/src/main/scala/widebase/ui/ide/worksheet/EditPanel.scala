@@ -24,6 +24,8 @@ import javax.swing.filechooser.FileNameExtensionFilter
 
 import moreswing.swing.i18n.LFrame
 
+import scala.actors. { Actor, TIMEOUT }
+
 import scala.swing. {
 
   BorderPanel,
@@ -78,24 +80,17 @@ class EditPanel extends BorderPanel with Publisher {
     KeyEvent.VK_ENTER,
     InputEvent.SHIFT_MASK) -> { () =>
 
-    codePane.getSelectedTextOrCurrentLine.foreach(interpret)
+    EditPanel.actor ! codePane.getSelectedTextOrCurrentLine
 
   }
 
   codeCfg.keyMap += KeyStroke.getKeyStroke("F9") -> { () =>
 
-    Some(codePane.editor.getText).foreach(interpret)
+    EditPanel.actor ! Some(codePane.editor.getText)
 
   }
 
   val codePane = CodePane(codeCfg)
-
-  def interpret(code: String) {
-
-
-    EditPanel.interpreter.interpret(code)
-
-  }
 
   peer.add(toolBar, BorderLayout.NORTH)
 
@@ -143,8 +138,13 @@ class EditPanel extends BorderPanel with Publisher {
 
     case FileSaveAs => saveAs
 
-    case InterpretContent => Some(codePane.editor.getText).foreach(interpret)
-    case InterpretSelection => codePane.getSelectedTextOrCurrentLine.foreach(interpret)
+    case InterpretContent =>
+
+      EditPanel.actor ! Some(codePane.editor.getText)
+
+    case InterpretSelection =>
+
+      EditPanel.actor ! codePane.getSelectedTextOrCurrentLine
 
   }
 
@@ -245,7 +245,50 @@ class EditPanel extends BorderPanel with Publisher {
 
 object EditPanel {
 
-  var interpreter: Interpreter = null
+  object Abort
+
+  val intpCfg = Interpreter.Config()
+
+  val actor = new Actor {
+
+    protected var interpreter: Interpreter = null
+
+    def act {
+
+      interpreter = Interpreter(intpCfg)
+
+      loop {
+
+        reactWithin(0) {
+
+          case Abort => action(Abort)
+          case TIMEOUT => react { case msg => action(msg) }
+
+        }
+      }
+    }
+
+    def action(msg: Any) {
+
+      msg match {
+
+        case Abort =>
+          de.sciss.scalainterpreter.Interpreter.execs.values.foreach(_.shutdown)
+          de.sciss.scalainterpreter.Interpreter.execs.clear
+          exit
+
+        case code => code.asInstanceOf[Option[String]].foreach(interpret)
+
+      }
+    }
+
+    protected def interpret(code: String) {
+
+
+      interpreter.interpret(code)
+
+    }
+  }
 
   def load(file: File): String = {
 

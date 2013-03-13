@@ -19,6 +19,8 @@ import scala.swing. { BorderPanel, Dimension }
 import scala.util.control.Breaks. { break, breakable}
 import scala.xml. { NodeSeq, XML }
 
+import widebase.ui.ide.worksheet.EditPanel
+
 /** Main frame.
  * 
  * @author myst3r10n
@@ -40,17 +42,21 @@ class AppMainFrame extends LMainFrame with Logger {
 
   }
 
+  val log = LogPane().makeDefault()
+
   val splitPane = new JSplitPane(
     JSplitPane.VERTICAL_SPLIT,
     panel.peer,
-    LogPane().makeDefault().component)
+    log.component)
 
   peer.add(splitPane)
 
   listenTo(this, menuBar, toolBar, workbook)
   reactions += {
 
-    case Exit => dispose
+    case Exit =>
+      EditPanel.actor ! EditPanel.Abort
+      AppMainFrame.this.dispose
 
     case NewEdit =>
       if(workbook.selection.index == -1 ||

@@ -121,20 +121,10 @@ object App extends Logger with Loggable {
 
     }
 
-    val intpCfg = Interpreter.Config()
-    EditPanel.interpreter = Interpreter(intpCfg)
-
-    val init = new File(System.getProperty("user.dir") + "/" + "sbin/Init.scala")
-
-    if(init.exists) {
-
-      EditPanel.interpreter.interpret(EditPanel.load(init))
-
-    }
-
     // Main GUI liftoff!
     Swing.onEDT {
-      new AppMainFrame {
+
+      val frame = new AppMainFrame {
 
         iconImage = Toolkit.getDefaultToolkit.getImage(
           getClass.getResource("/icon/widebase-16x16.png"))
@@ -152,13 +142,21 @@ object App extends Logger with Loggable {
         visible = true
 
       }
+
+      EditPanel.intpCfg.out = Some(frame.log.writer)
+      EditPanel.actor.start
+
+      val init = new File(System.getProperty("user.dir") + "/" + "sbin/Init.scala")
+
+      if(init.exists)
+        EditPanel.actor ! Some(EditPanel.load(init))
+
     }
   }
 
   def shutdown {
 
-    de.sciss.scalainterpreter.Interpreter.execs.values.foreach(_.shutdown)
-    de.sciss.scalainterpreter.Interpreter.execs.clear
+    EditPanel.actor ! EditPanel.Abort
 
   }
 }
