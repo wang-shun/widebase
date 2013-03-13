@@ -6,6 +6,7 @@ object Dependency {
 
     val commonsCli = Seq("commons-cli" % "commons-cli" % "1.2")
     val eval = Seq("com.twitter" %% "util-eval" % "6.1.0")
+    val interpreterPane = Seq("de.sciss" %% "scalainterpreterpane" % "1.3.0")
     val jaas = Seq("org.apache.activemq" % "activemq-jaas" % "5.6.0")
     val jfreechart = Seq("org.jfree" % "jfreechart" % "1.0.14")
 
