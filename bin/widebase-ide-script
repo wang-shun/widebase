@@ -1,0 +1,13 @@
+#!/usr/bin/env scalas
+!#
+
+/***
+scalaVersion := "2.9.2"
+
+libraryDependencies ++= Seq(
+  "com.github.widebase" %% "widebase-ui-ide" % "0.3.4-SNAPSHOT"
+)
+*/
+
+widebase.ui.ide.App.main(args)
+
