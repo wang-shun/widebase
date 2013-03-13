@@ -43,7 +43,7 @@ object Line {
         case "--" => stroke = LineStyle.dash(lineWidth)
         case ":" => stroke = LineStyle.dot(lineWidth)
         case "-." => stroke = LineStyle.dashDot(lineWidth)
-        case "lineWidth" =>
+        case "LineWidth" =>
 
           lineWidth = values(i).asInstanceOf[Float]
           i += 1
