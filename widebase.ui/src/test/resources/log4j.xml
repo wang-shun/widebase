@@ -9,7 +9,7 @@
   </appender>
 
   <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="${widebase.log}/widebase-ui-chart-live.log"/>
+    <param name="file" value="${widebase.log}/widebase-ui.log"/>
     <param name="datePattern" value="yyyy-MM" />
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-p %c: %m%n" />
