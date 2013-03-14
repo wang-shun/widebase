@@ -64,7 +64,7 @@ class EditPanel extends BorderPanel with Publisher {
       KeyEvent.VK_1 + i,
       InputEvent.ALT_MASK) -> { () =>
 
-      EditPanel.this.publish(SelectPage(i))
+      EditPanel.this.publish(EditSelection(i))
 
     }
 
@@ -72,7 +72,7 @@ class EditPanel extends BorderPanel with Publisher {
     KeyEvent.VK_0,
     InputEvent.ALT_MASK) -> { () =>
 
-    EditPanel.this.publish(SelectPage(9))
+    EditPanel.this.publish(EditSelection(9))
 
   }
 
@@ -92,7 +92,7 @@ class EditPanel extends BorderPanel with Publisher {
 
   val codePane = CodePane(codeCfg)
 
-  peer.add(toolBar, BorderLayout.NORTH)
+  add(toolBar, BorderPanel.Position.North)
 
   add(
     new Component { override lazy val peer = codePane.component },
@@ -124,7 +124,7 @@ class EditPanel extends BorderPanel with Publisher {
           codePane.editor.setText(code)
           codePane.editor.setCaretPosition(0)
           currentFile = chooser.selectedFile
-          EditPanel.this.publish(RenameTab(currentFile.getName))
+          EditPanel.this.publish(EditRename(currentFile.getName))
 
         }
       }
@@ -198,7 +198,7 @@ class EditPanel extends BorderPanel with Publisher {
 
       writer.write(codePane.editor.getText)
       currentFile = file
-      EditPanel.this.publish(RenameTab(currentFile.getName))
+      EditPanel.this.publish(EditRename(currentFile.getName))
 
     } catch {
 

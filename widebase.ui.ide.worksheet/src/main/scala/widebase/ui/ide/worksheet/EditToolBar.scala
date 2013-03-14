@@ -1,141 +1,93 @@
 package widebase.ui.ide.worksheet
 
-import java.awt.Component
+import java.util.UUID
 
 import javax.swing.JToolBar
 import javax.swing. { ImageIcon, SwingConstants }
 
 import moreswing.swing.i18n.LocaleManager
 
-import scala.swing. { Button, Publisher }
-import scala.swing.event.ButtonClicked
+import scala.collection.mutable.LinkedHashMap
+import scala.swing. { Button, Publisher, Separator }
+import scala.swing.event. { ButtonClicked, Event }
 
-import widebase.ui.ide.event._
+import widebase.ui.toolkit.ToolBarLike
+import widebase.ui.toolkit.event.EventForwarding
 
 /** Tool bar of frame.
  *
- * @param name of tool bar
- * @param orientation of tool bar
- *
  * @author myst3r10n
  */
-class EditToolBar(
-  name: String,
-  orientation: Int)
-  extends JToolBar(name, orientation) with Publisher {
+class EditToolBar extends ToolBarLike {
 
-  def this() = this("", SwingConstants.HORIZONTAL)
-  def this(orientation: Int) = this("", orientation)
-  def this(name: String) = this(name, SwingConstants.HORIZONTAL)
+  import widebase.ui.ide.event._
 
-  setFloatable(false)
+  peer.setFloatable(false)
 
-  add((new Button {
+  protected val items = LinkedHashMap[String, Any](
+    "FileOpen" -> new Button with EventForwarding {
 
-    icon = new ImageIcon(getClass.getResource("/icon/document-open.png"))
-    tooltip = LocaleManager.text("File_open")
+      val publishEvent = FileOpen
+      icon = new ImageIcon(getClass.getResource("/icon/document-open.png"))
+      tooltip = LocaleManager.text("File_open")
 
-    listenTo(this)
-    reactions += {
+    },
+    "FileSave" -> new Button with EventForwarding {
 
-      case ButtonClicked(_) => EditToolBar.this.publish(FileOpen)
+      val publishEvent = FileSave
+      icon = new ImageIcon(getClass.getResource("/icon/document-save.png"))
+      tooltip = LocaleManager.text("File_save")
 
-    }
-  } ).peer)
+    },
+    "FileSaveAs" -> new Button with EventForwarding {
 
-  add((new Button {
+      val publishEvent = FileSaveAs
+      icon = new ImageIcon(getClass.getResource("/icon/document-save-as.png"))
+      tooltip = LocaleManager.text("File_save_as")
 
-    icon = new ImageIcon(getClass.getResource("/icon/document-save.png"))
-    tooltip = LocaleManager.text("File_save")
+    },
+    UUID.randomUUID.toString -> new Separator,
+    "EditCut" -> new Button with EventForwarding {
 
-    listenTo(this)
-    reactions += {
+      val publishEvent = EditCut
+      icon = new ImageIcon(getClass.getResource("/icon/edit-cut.png"))
+      tooltip = LocaleManager.text("File_save_as")
 
-      case ButtonClicked(_) => EditToolBar.this.publish(FileSave)
+    },
+    "EditCopy" -> new Button with EventForwarding {
 
-    }
-  } ).peer)
+      val publishEvent = EditCopy
+      icon = new ImageIcon(getClass.getResource("/icon/edit-copy.png"))
+      tooltip = LocaleManager.text("Edit_copy")
 
-  add((new Button {
+    },
+    "EditPaste" -> new Button with EventForwarding {
 
-    icon = new ImageIcon(getClass.getResource("/icon/document-save-as.png"))
-    tooltip = LocaleManager.text("File_save_as")
+      val publishEvent = EditPaste
+      icon = new ImageIcon(getClass.getResource("/icon/edit-paste.png"))
+      tooltip = LocaleManager.text("Edit_paste")
 
-    listenTo(this)
-    reactions += {
+    },
+    UUID.randomUUID.toString -> new Separator,
+    "InterpretContent" -> new Button with EventForwarding {
 
-      case ButtonClicked(_) => EditToolBar.this.publish(FileSaveAs)
+      val publishEvent = InterpretContent
+      icon = new ImageIcon(getClass.getResource("/icon/player_play.png"))
+      tooltip = LocaleManager.text("Interpret_content")
 
-    }
-  } ).peer)
+    },
+    "InterpretSelection" -> new Button with EventForwarding {
 
-  addSeparator
-
-  add((new Button {
-
-    icon = new ImageIcon(getClass.getResource("/icon/edit-cut.png"))
-    tooltip = LocaleManager.text("Edit_cut")
-
-    listenTo(this)
-    reactions += {
-
-      case ButtonClicked(_) => EditToolBar.this.publish(EditCut)
-
-    }
-  } ).peer)
-
-  add((new Button {
-
-    icon = new ImageIcon(getClass.getResource("/icon/edit-copy.png"))
-    tooltip = LocaleManager.text("Edit_copy")
-
-    listenTo(this)
-    reactions += {
-
-      case ButtonClicked(_) => EditToolBar.this.publish(EditCopy)
+      val publishEvent = InterpretSelection
+      icon = new ImageIcon(getClass.getResource("/icon/player_playselection.png"))
+      tooltip = LocaleManager.text("Interpret_selection")
 
     }
-  } ).peer)
+  )
 
-  add((new Button {
+  setup
 
-    icon = new ImageIcon(getClass.getResource("/icon/edit-paste.png"))
-    tooltip = LocaleManager.text("Edit_paste")
+  def buttons(name: String) = items(name).isInstanceOf[Button]
 
-    listenTo(this)
-    reactions += {
-
-      case ButtonClicked(_) => EditToolBar.this.publish(EditPaste)
-
-    }
-  } ).peer)
-
-  addSeparator
-
-  add((new Button {
-
-    icon = new ImageIcon(getClass.getResource("/icon/player_play.png"))
-    tooltip = LocaleManager.text("Interpret_content")
-
-    listenTo(this)
-    reactions += {
-
-      case ButtonClicked(_) => EditToolBar.this.publish(InterpretContent)
-
-    }
-  } ).peer)
-
-  add((new Button {
-
-    icon = new ImageIcon(getClass.getResource("/icon/player_playselection.png"))
-    tooltip = LocaleManager.text("Interpret_selection")
-
-    listenTo(this)
-    reactions += {
-
-      case ButtonClicked(_) => EditToolBar.this.publish(InterpretSelection)
-
-    }
-  } ).peer)
 }
 

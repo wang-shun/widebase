@@ -75,6 +75,10 @@ object WidebaseBuild extends Build {
       widebaseUiIdeWorksheet,
       widebaseUiTable,
       widebaseUiTableEvent,
+      widebaseUiToolkit,
+      widebaseUiToolkitEvent,
+      widebaseUiToolkitMenu,
+      widebaseUiToolkitWorksheet,
       widebaseUtil)
 
   /** Collection Mutable */
@@ -342,7 +346,10 @@ object WidebaseBuild extends Build {
       widebaseUi,
       widebaseUiIdeEvent,
       widebaseUiIdePrefs,
-      widebaseUiIdeWorksheet)
+      widebaseUiIdeWorksheet,
+      widebaseUiToolkit,
+      widebaseUiToolkitEvent,
+      widebaseUiToolkitMenu)
     .settings(libraryDependencies ++= lib.log)
 
   /** UI IDE Event */
@@ -361,7 +368,10 @@ object WidebaseBuild extends Build {
   lazy val widebaseUiIdeWorksheet = Project(
     "widebase-ui-ide-worksheet",
     file("widebase.ui.ide.worksheet"))
-    .dependsOn(widebaseUiIdeEvent)
+    .dependsOn(
+      widebaseUiIdeEvent,
+      widebaseUiToolkit,
+      widebaseUiToolkitWorksheet)
     .settings(libraryDependencies ++= lib.interpreterPane ++ lib.moreswing)
 
   /** UI Table */
@@ -379,6 +389,32 @@ object WidebaseBuild extends Build {
     "widebase-ui-table-event",
     file("widebase.ui.table.event"))
     .settings(libraryDependencies ++= lib.swing)
+
+  /** UI Toolkit */
+  lazy val widebaseUiToolkit = Project(
+    "widebase-ui-toolkit",
+    file("widebase.ui.toolkit"))
+    .dependsOn(widebaseUiToolkitEvent)
+    .settings(libraryDependencies ++= lib.log ++ lib.moreswing)
+
+  /** UI Toolkit Event */
+  lazy val widebaseUiToolkitEvent = Project(
+    "widebase-ui-toolkit-event",
+    file("widebase.ui.toolkit.event"))
+    .settings(libraryDependencies ++= lib.moreswing)
+
+  /** UI Toolkit Menu */
+  lazy val widebaseUiToolkitMenu = Project(
+    "widebase-ui-toolkit-menu",
+    file("widebase.ui.toolkit.menu"))
+    .dependsOn(widebaseUiToolkitEvent)
+    .settings(libraryDependencies ++= lib.moreswing)
+
+  /** UI Toolkit Worksheet */
+  lazy val widebaseUiToolkitWorksheet = Project(
+    "widebase-ui-toolkit-worksheet",
+    file("widebase.ui.toolkit.worksheet"))
+    .settings(libraryDependencies ++= lib.moreswing)
 
   /** Utilities */
   lazy val widebaseUtil = Project(
