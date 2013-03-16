@@ -164,7 +164,7 @@ object Capacity extends Logger with Loggable {
       stringCol += "World!"
 
     }
-    info("Table filled " + records + " records in " +
+    println("Table filled " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     modes.foreach { mode =>
@@ -173,7 +173,7 @@ object Capacity extends Logger with Loggable {
 
       started = System.currentTimeMillis
       save(name, table)
-      info("Table saved " + records + " records in " +
+      println("Table saved " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by " + mode + " bytes")
 
     }
@@ -188,7 +188,7 @@ object Capacity extends Logger with Loggable {
 
       started = System.currentTimeMillis
       loaded = load(name)
-      info("Table loaded " + records + " records in " +
+      println("Table loaded " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by " + mode + " bytes")
 
     }
@@ -237,7 +237,7 @@ object Capacity extends Logger with Loggable {
         assert(stringCol(r) == "World!", error("Value unexpected: " + stringCol(r)))
 
       }
-      info("Table iterated " + records + " records in " +
+      println("Table iterated " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by + " + mode + " bytes")
 
     }
@@ -324,7 +324,7 @@ object Capacity extends Logger with Loggable {
       stringCol += "World!"
 
     }
-    info("Dir table filled " + records + " records in " +
+    println("Dir table filled " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     modes.foreach { mode =>
@@ -333,7 +333,7 @@ object Capacity extends Logger with Loggable {
 
       started = System.currentTimeMillis
       save.dir(name, table)
-      info("Dir table saved " + records + " records in " +
+      println("Dir table saved " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by " + mode + " bytes")
 
     }
@@ -349,7 +349,7 @@ object Capacity extends Logger with Loggable {
 
       started = System.currentTimeMillis
       loaded = load.dir(name)
-      info("Dir table loaded " + records + " records in " +
+      println("Dir table loaded " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by " + mode + " bytes")
 
     }
@@ -398,7 +398,7 @@ object Capacity extends Logger with Loggable {
         assert(stringCol(r) == "World!", error("Value unexpected: " + stringCol(r)))
 
       }
-      info("Dir table loaded iterated " + records + " records in " +
+      println("Dir table loaded iterated " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by + " + mode + " bytes")
 
     }
@@ -413,7 +413,7 @@ object Capacity extends Logger with Loggable {
 
       started = System.currentTimeMillis
       mapped = map(name)
-      info("Dir table mapped " + records + " records in " +
+      println("Dir table mapped " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by " + mode + " bytes")
 
     }
@@ -462,7 +462,7 @@ object Capacity extends Logger with Loggable {
         assert(stringCol(r) == "World!", error("Value unexpected: " + stringCol(r)))
 
       }
-      info("Dir table mapped iterated " + records + " records in " +
+      println("Dir table mapped iterated " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by + " + mode + " bytes")
 
     }
@@ -564,12 +564,12 @@ object Capacity extends Logger with Loggable {
       partition = partition.plusDays(1)
 
     }
-    info("Parted dir table filled " + records + " records in " +
+    println("Parted dir table filled " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     started = System.currentTimeMillis
     save.dir(name, table)('daily)
-    info("Parted dir table saved " + records + " records in " +
+    println("Parted dir table saved " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     table.columns.foreach(column => column.clear)
@@ -585,7 +585,7 @@ object Capacity extends Logger with Loggable {
         name,
         new LocalDate(millis),
         new LocalDate(millis).plusDays(parts)).tables
-      info("Parted dir table loaded " + records + " records in " +
+      println("Parted dir table loaded " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by " + mode + " bytes")
 
     }
@@ -644,7 +644,7 @@ object Capacity extends Logger with Loggable {
         partition = partition.plusDays(1)
 
       }
-      info("Parted dir table loaded iterated " + records + " records in " +
+      println("Parted dir table loaded iterated " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by + " + mode + " bytes")
 
     }
@@ -662,7 +662,7 @@ object Capacity extends Logger with Loggable {
         name,
         new LocalDate(millis),
         new LocalDate(millis).plusDays(parts)).tables
-      info("Parted dir table mapped " + records + " records in " +
+      println("Parted dir table mapped " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by " + mode + " bytes")
 
     }
@@ -721,7 +721,7 @@ object Capacity extends Logger with Loggable {
         partition = partition.plusDays(1)
 
       }
-      info("Parted dir table mapped iterated " + records + " records in " +
+      println("Parted dir table mapped iterated " + records + " records in " +
         diff(started, System.currentTimeMillis) + " by + " + mode + " bytes")
 
     }

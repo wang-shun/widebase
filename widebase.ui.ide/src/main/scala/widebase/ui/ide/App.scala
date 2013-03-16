@@ -1,55 +1,35 @@
 package widebase.ui.ide
 
-import worksheet.EditPanel
-
 import java.awt.Toolkit
-import java.io.File
 
-import scala.swing.Dimension
+import scala.swing.Swing
 
-import widebase.ui.toolkit.AppLike
+import widebase.ui.toolkit.runtime.AppLike
 
-/** Application.
+/** App.
  * 
  * @author myst3r10n
  */
-object App extends AppLike {
+class App extends AppLike {
 
-  def startup {
+  import widebase.ui.toolkit.runtime
 
-    val frame = new AppFrame {
+  protected var frame0 = new Frame {
 
-      iconImage = Toolkit.getDefaultToolkit.getImage(
-        getClass.getResource("/icon/widebase-16x16.png"))
+    iconImage = Toolkit.getDefaultToolkit.getImage(
+      getClass.getResource("/icon/widebase-16x16.png"))
 
-      override def closeOperation {
-
-        shutdown
-        super.closeOperation
-
-      }
-
-      size = new Dimension(0, 0)
-      pack
-      splitPane.setDividerLocation(splitPane.getHeight - 125)
-      visible = true
-
-    }
-
-    EditPanel.intpCfg.out = Some(frame.logPane.writer)
-    EditPanel.actor.start
-
-    val init = new File(System.getProperty("user.dir") + "/" + "sbin/Init.scala")
-
-    if(init.exists)
-      EditPanel.actor ! Some(EditPanel.load(init))
+    pack
+    splitPane.setDividerLocation(splitPane.getHeight - 125)
+    visible = true
 
   }
 
-  def shutdown {
+  runtime.app += "ide" -> this
 
-    EditPanel.actor ! EditPanel.Abort
+  Swing.onEDT {}
 
-  }
+  override def frame = frame0
+
 }
 

@@ -94,14 +94,14 @@ object Upsert extends Logger with Loggable {
 
     started = System.currentTimeMillis
     save.dir("upsert", table)
-    info("Dir table saved " + records + " records in " +
+    println("Dir table saved " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     table.columns.foreach(column => column.clear)
 
     started = System.currentTimeMillis
     var mapped = map("upsert")
-    info("Dir table mapped " + records + " records in " +
+    println("Dir table mapped " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     started = System.currentTimeMillis
@@ -126,12 +126,12 @@ object Upsert extends Logger with Loggable {
           new Timestamp(millis),
           'Hello,
           "World!"))
-    info("Dir table upsert " + records + " records in " +
+    println("Dir table upsert " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     started = System.currentTimeMillis
     val remapped = map("upsert")
-    info("Dir table mapped " + records + " records in " +
+    println("Dir table mapped " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
     started = System.currentTimeMillis
@@ -156,7 +156,7 @@ object Upsert extends Logger with Loggable {
       assert(record("String") == "World!", error("Value unexpected: " + record("String")))
 
     }
-    info("Dir table iterated " + records + " records in " +
+    println("Dir table iterated " + records + " records in " +
       diff(started, System.currentTimeMillis))
 
   }

@@ -5,9 +5,14 @@
 scalaVersion := "2.9.2"
 
 libraryDependencies ++= Seq(
-  "com.github.widebase" %% "widebase-ui-ide" % "0.3.4-SNAPSHOT"
+  "com.github.widebase" %% "widebase-dsl" % "0.3.4-SNAPSHOT",
+  "com.github.widebase" %% "widebase-stream-socket-cq" % "0.3.4-SNAPSHOT",
+  "com.github.widebase" %% "widebase-stream-socket-rq" % "0.3.4-SNAPSHOT",
+  "com.github.widebase" %% "widebase-testkit" % "0.3.4-SNAPSHOT",
+  "com.github.widebase" %% "widebase-ui-ide" % "0.3.4-SNAPSHOT",
+  "com.github.widebase" %% "widebase-ui-ide-editor" % "0.3.4-SNAPSHOT"
 )
 */
 
-widebase.ui.ide.App.main(args)
+widebase.ui.ide.Main.main(args)
 
