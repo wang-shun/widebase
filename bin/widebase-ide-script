@@ -9,7 +9,7 @@ libraryDependencies ++= Seq(
   "com.github.widebase" %% "widebase-stream-socket-cq" % "0.3.4-SNAPSHOT",
   "com.github.widebase" %% "widebase-stream-socket-rq" % "0.3.4-SNAPSHOT",
   "com.github.widebase" %% "widebase-testkit" % "0.3.4-SNAPSHOT",
-  "com.github.widebase" %% "widebase-ui" % "0.3.4-SNAPSHOT"
+  "com.github.widebase" %% "widebase-ui" % "0.3.4-SNAPSHOT",
   "com.github.widebase" %% "widebase-ui-ide" % "0.3.4-SNAPSHOT",
   "com.github.widebase" %% "widebase-ui-ide-editor" % "0.3.4-SNAPSHOT"
 )
