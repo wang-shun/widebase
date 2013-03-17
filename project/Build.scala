@@ -71,6 +71,7 @@ object WidebaseBuild extends Build {
       widebaseUiChartEvent,
       widebaseUiChartPlot,
       widebaseUiChartUtil,
+      widebaseUiI18n,
       widebaseUiIde,
       widebaseUiIdeEditor,
       widebaseUiIdeEditorEvent,
@@ -270,6 +271,7 @@ object WidebaseBuild extends Build {
     widebaseDsl % "test",
     widebaseUiChart,
     widebaseUiChartAnnotations,
+    widebaseUiI18n,
     widebaseUiTable)
   .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
@@ -341,6 +343,11 @@ object WidebaseBuild extends Build {
     file("widebase.ui.chart.util"))
 
   /** UI IDE */
+  lazy val widebaseUiI18n = Project(
+    "widebase-ui-i18n",
+    file("widebase.ui.i18n"))
+
+  /** UI IDE */
   lazy val widebaseUiIde = Project(
     "widebase-ui-ide",
     file("widebase.ui.ide"))
@@ -350,6 +357,7 @@ object WidebaseBuild extends Build {
     widebaseStreamSocketRq % "test",
     widebaseTestkit % "test",
     widebaseUi % "test",
+    widebaseUiI18n,
     widebaseUiIdeEditor % "test",
     widebaseUiToolkit)
   .settings(libraryDependencies ++= lib.log)

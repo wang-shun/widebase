@@ -8,8 +8,6 @@ import moreswing.swing.i18n.LMainFrame
  */
 abstract class FrameLike extends LMainFrame {
 
-  title = "app.title"
-
   override def menuBar: MenuBar = {
 
     super.menuBar.asInstanceOf[MenuBar]
