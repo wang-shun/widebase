@@ -349,6 +349,7 @@ object WidebaseBuild extends Build {
     widebaseStreamSocketCq % "test",
     widebaseStreamSocketRq % "test",
     widebaseTestkit % "test",
+    widebaseUi % "test",
     widebaseUiIdeEditor % "test",
     widebaseUiToolkit)
   .settings(libraryDependencies ++= lib.log)
