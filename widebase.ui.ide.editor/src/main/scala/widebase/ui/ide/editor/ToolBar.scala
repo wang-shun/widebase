@@ -1,6 +1,6 @@
 package widebase.ui.ide.editor
 
-import event.EditRename
+import event.PageRename
 
 import java.io. {
 
@@ -25,15 +25,15 @@ import moreswing.swing.i18n.LocaleManager
 
 import scala.swing. { Button, Dialog, FileChooser, Separator }
 
-import widebase.ui.toolkit.Action
+import widebase.ui.workspace.Action
 
 /** Tool bar of frame.
  *
  * @author myst3r10n
  */
-class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
+class ToolBar(panel: EditPanel) extends widebase.ui.workspace.ToolBar {
 
-  import widebase.ui.toolkit.runtime
+  import widebase.ui.workspace.runtime
 
   peer.setFloatable(false)
 
@@ -51,7 +51,7 @@ class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
 
       def apply {
 
-        val result = chooser.showOpenDialog(edit)
+        val result = chooser.showOpenDialog(panel)
 
         if(result == FileChooser.Result.Approve) {
 
@@ -59,10 +59,10 @@ class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
 
           if(code != null) {
 
-            edit.codePane.editor.setText(code)
-            edit.codePane.editor.setCaretPosition(0)
-            edit.currentFile = chooser.selectedFile
-            edit.publish(EditRename)
+            panel.codePane.editor.setText(code)
+            panel.codePane.editor.setCaretPosition(0)
+            panel.currentFile = chooser.selectedFile
+            panel.publish(PageRename)
 
           }
         }
@@ -78,10 +78,10 @@ class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
 
       def apply {
 
-        if(edit.currentFile == null)
+        if(panel.currentFile == null)
           saveAs
         else
-          save(edit.currentFile)
+          save(panel.currentFile)
 
 
       }
@@ -112,7 +112,7 @@ class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
 
       def apply {
 
-        edit.codePane.editor.cut
+        panel.codePane.editor.cut
 
       }
     }
@@ -126,7 +126,7 @@ class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
 
       def apply {
 
-        edit.codePane.editor.copy
+        panel.codePane.editor.copy
 
       }
     }
@@ -140,7 +140,7 @@ class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
 
       def apply {
 
-        edit.codePane.editor.paste
+        panel.codePane.editor.paste
 
       }
     }
@@ -156,7 +156,7 @@ class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
 
       def apply {
 
-        runtime.queue.add(Some(edit.codePane.editor.getText))
+        runtime.queue.add(Some(panel.codePane.editor.getText))
 
       }
     }
@@ -170,7 +170,7 @@ class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
 
       def apply {
 
-        runtime.queue.add(edit.codePane.getSelectedTextOrCurrentLine)
+        runtime.queue.add(panel.codePane.getSelectedTextOrCurrentLine)
 
       }
     }
@@ -224,9 +224,9 @@ class ToolBar(edit: EditPanel) extends widebase.ui.toolkit.ToolBar {
       writer = new BufferedWriter(new OutputStreamWriter(
         new DataOutputStream(new FileOutputStream(file))))
 
-      writer.write(edit.codePane.editor.getText)
-      edit.currentFile = file
-      edit.publish(EditRename)
+      writer.write(panel.codePane.editor.getText)
+      panel.currentFile = file
+      panel.publish(PageRename)
 
     } catch {
 

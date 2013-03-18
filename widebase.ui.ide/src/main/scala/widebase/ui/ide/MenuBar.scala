@@ -12,7 +12,7 @@ import moreswing.swing.i18n.LocaleManager
 
 import scala.swing.Separator
 
-import widebase.ui.toolkit. {
+import widebase.ui.workspace. {
 
   Action,
   LocaleMenu,
@@ -27,19 +27,19 @@ import widebase.ui.toolkit. {
  * 
  * @author myst3r10n
  */
-class MenuBar(frame: Frame) extends widebase.ui.toolkit.MenuBar {
+class MenuBar(frame: Frame) extends widebase.ui.workspace.MenuBar {
 
-  import widebase.ui.toolkit.runtime
+  import widebase.ui.workspace.runtime
 
   this += "File" -> new Menu("File")
   this("File") += "New" -> new Menu("New")
 
-  this("File").sub("New") += "View" -> new MenuItem(
-    new Action("View") {
+  this("File").sub("New") += "Page" -> new MenuItem(
+    new Action("Page") {
 
       def apply {
 
-        frame.viewPane.add
+        frame.pagedPane.add
 
       }
 
@@ -62,6 +62,7 @@ class MenuBar(frame: Frame) extends widebase.ui.toolkit.MenuBar {
 
         frame.dispose
         runtime.shutdown
+
       }
     }
   )
@@ -93,20 +94,20 @@ class MenuBar(frame: Frame) extends widebase.ui.toolkit.MenuBar {
 
         try {
 
-          frame.viewPane.pages.foreach { page =>
+          frame.pagedPane.pages.foreach { page =>
 
             if(page.content.isInstanceOf[PreferenceManager]) {
 
-              frame.viewPane.selection.page = page
+              frame.pagedPane.selection.page = page
               throw Break
 
             }
           }
 
-          frame.viewPane.pages += new TabbedDesktopPane.Page(
+          frame.pagedPane.pages += new TabbedDesktopPane.Page(
             LocaleManager.text("Preferences"),
             new ImageIcon(getClass.getResource("/icon/preferences-system.png")),
-            new PreferenceManager { restore } )
+            new PreferenceManager)
 
         } catch { case Break => }
       }
@@ -172,7 +173,8 @@ class MenuBar(frame: Frame) extends widebase.ui.toolkit.MenuBar {
           frame.peer,
           "Widebase IDE",
           "About...",
-          JOptionPane.INFORMATION_MESSAGE)
+          JOptionPane.INFORMATION_MESSAGE,
+          new ImageIcon(getClass.getResource("/icon/widebase-logo-32x32.png")))
 
       }
     }

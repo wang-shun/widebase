@@ -6,9 +6,9 @@ import net.liftweb.common.Logger
 
 import scala.swing. { BorderPanel, Dimension }
 
-import widebase.ui.toolkit.FrameLike
-import widebase.ui.toolkit.event. { LocaleChanged, LookAndFeelChanged }
-import widebase.ui.toolkit.runtime.AppLike
+import widebase.ui.workspace.FrameLike
+import widebase.ui.workspace.event. { LocaleChanged, LookAndFeelChanged }
+import widebase.ui.workspace.runtime.AppLike
 
 /** Frame of app.
  * 
@@ -16,26 +16,26 @@ import widebase.ui.toolkit.runtime.AppLike
  */
 class Frame extends FrameLike with Logger {
 
-  import widebase.ui.toolkit.runtime
+  import widebase.ui.workspace.runtime
 
   title = "app.title"
   preferredSize = new Dimension(1024, 768)
 
   menuBar = new MenuBar(this)
   toolBar = new ToolBar(this)
-  viewPane = new ViewPane { restore("viewPane") }
+  pagedPane = new PagedPane
 
-  val panel = new scala.swing.BorderPanel {
+  val panel = new BorderPanel {
 
     add(toolBar, BorderPanel.Position.North)
-    add(viewPane, BorderPanel.Position.Center)
+    add(pagedPane, BorderPanel.Position.Center)
 
   }
 
   val splitPane = new JSplitPane(
     JSplitPane.VERTICAL_SPLIT,
     panel.peer,
-    widebase.ui.toolkit.runtime.logPane.component)
+    runtime.logPane.component)
 
   peer.add(splitPane)
 

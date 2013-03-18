@@ -1,6 +1,6 @@
 import java.io.File
 
-import widebase.ui.toolkit.runtime.ConfigLike
+import widebase.ui.workspace.runtime.ConfigLike
 
 new ConfigLike {
 
@@ -8,6 +8,8 @@ new ConfigLike {
 
   val plugins = Array[File](
     new File("plugin/widebase.ui.ide.cli/Launch.scala"),
+    new File("plugin/widebase.ui.ide.table/Launch.scala"),
+    new File("plugin/widebase.ui.ide.chart/Launch.scala"),
     new File("plugin/widebase.ui.ide.editor/Launch.scala"))
 
 }

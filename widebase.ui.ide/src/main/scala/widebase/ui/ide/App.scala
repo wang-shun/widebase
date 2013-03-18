@@ -4,7 +4,7 @@ import java.awt.Toolkit
 
 import scala.swing.Swing
 
-import widebase.ui.toolkit.runtime.AppLike
+import widebase.ui.workspace.runtime.AppLike
 
 /** App.
  * 
@@ -12,7 +12,7 @@ import widebase.ui.toolkit.runtime.AppLike
  */
 class App extends AppLike {
 
-  import widebase.ui.toolkit.runtime
+  import widebase.ui.workspace.runtime
 
   protected var frame0 = new Frame {
 
@@ -21,7 +21,6 @@ class App extends AppLike {
 
     pack
     splitPane.setDividerLocation(splitPane.getHeight - 125)
-    visible = true
 
   }
 

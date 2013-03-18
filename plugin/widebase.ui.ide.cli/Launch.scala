@@ -32,26 +32,13 @@ def today = now.toLocalDate
 
 {
 
-  object Plugin extends widebase.ui.toolkit.runtime.PluginLike {
+  object Plugin extends widebase.ui.workspace.runtime.PluginLike {
 
-    import widebase.ui.toolkit.runtime
+    import widebase.ui.workspace.runtime
 
     val label = "Widebase IDE CLI"
     val scope = "widebase.ui.ide.cli"
 
-    val option = None
-
-    def register {
-
-      runtime.plugin += "widebase.ui.ide.cli" -> this
-
-    }
-
-    def unregister {
-
-      runtime.plugin -= "widebase.ui.ide.cli"
-
-    }
   }
 
   Plugin.register

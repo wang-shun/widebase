@@ -81,35 +81,66 @@ class TableFrame(protected var panel0: TablePanel = null) extends LFrame {
     peer.add(toolBar, BorderLayout.NORTH)
     add(scrollPane, BorderPanel.Position.Center)
 
-  }
+    listenTo(toolBar)
 
-  listenTo(this, toolBar)
+    reactions += {
 
-  reactions += {
+      case TableAddRecord =>
 
-    case TableAddRecord =>
+        if(panel.model.isInstanceOf[TableModel])
+          panel.model.asInstanceOf[TableModel].addRow(blankRecord)
+        else
+          panel.model.asInstanceOf[TableModelParted].addRow(blankRecord)
 
-      if(panel.model.isInstanceOf[TableModel])
-        panel.model.asInstanceOf[TableModel].addRow(blankRecord)
-      else
-        panel.model.asInstanceOf[TableModelParted].addRow(blankRecord)
+      case TableInsertRecord =>
 
-    case TableInsertRecord =>
+        if(panel.model.isInstanceOf[TableModel]) {
 
-      if(panel.model.isInstanceOf[TableModel]) {
+          if(panel.peer.getSelectedRow != -1)
+            try {
 
-        if(panel.peer.getSelectedRow != -1)
+              panel.model.asInstanceOf[TableModel].insertRow(
+                panel.peer.getSelectedRow, blankRecord)
+
+            } catch {
+
+              case e: UnsupportedOperationException =>
+                JOptionPane.showMessageDialog(
+                  peer,
+                  LocaleManager.text("Mapped_table_not_support_insert_record"),
+                  LocaleManager.text("Exception"),
+                  JOptionPane.ERROR_MESSAGE);
+
+            }
+          else
+            JOptionPane.showMessageDialog(
+              peer,
+              LocaleManager.text("Table_not_selected"),
+              LocaleManager.text("Insert"),
+              JOptionPane.ERROR_MESSAGE);
+
+        } else
+          JOptionPane.showMessageDialog(
+            peer,
+            LocaleManager.text("Mapped_table_not_support_insert_record"),
+            LocaleManager.text("Exception"),
+            JOptionPane.ERROR_MESSAGE);
+
+      case TableRemoveRecord =>
+
+        if(panel.model.isInstanceOf[TableModel])
           try {
 
-            panel.model.asInstanceOf[TableModel].insertRow(
-              panel.peer.getSelectedRow, blankRecord)
+            for(i <- 0 to panel.peer.getSelectedRowCount - 1)
+              panel.model.asInstanceOf[DefaultTableModel]
+                .removeRow(panel.peer.getSelectedRow)
 
           } catch {
 
             case e: UnsupportedOperationException =>
               JOptionPane.showMessageDialog(
                 peer,
-                LocaleManager.text("Mapped_table_not_support_insert_record"),
+                LocaleManager.text("Mapped_table_not_support_removable_records"),
                 LocaleManager.text("Exception"),
                 JOptionPane.ERROR_MESSAGE);
 
@@ -117,43 +148,11 @@ class TableFrame(protected var panel0: TablePanel = null) extends LFrame {
         else
           JOptionPane.showMessageDialog(
             peer,
-            LocaleManager.text("Table_not_selected"),
-            LocaleManager.text("Insert"),
+            LocaleManager.text("Mapped_table_not_support_removable_records"),
+            LocaleManager.text("Exception"),
             JOptionPane.ERROR_MESSAGE);
 
-      } else
-        JOptionPane.showMessageDialog(
-          peer,
-          LocaleManager.text("Mapped_table_not_support_insert_record"),
-          LocaleManager.text("Exception"),
-          JOptionPane.ERROR_MESSAGE);
-
-    case TableRemoveRecord =>
-
-      if(panel.model.isInstanceOf[TableModel])
-        try {
-
-          for(i <- 0 to panel.peer.getSelectedRowCount - 1)
-            panel.model.asInstanceOf[DefaultTableModel]
-              .removeRow(panel.peer.getSelectedRow)
-
-        } catch {
-
-          case e: UnsupportedOperationException =>
-            JOptionPane.showMessageDialog(
-              peer,
-              LocaleManager.text("Mapped_table_not_support_removable_records"),
-              LocaleManager.text("Exception"),
-              JOptionPane.ERROR_MESSAGE);
-
-        }
-      else
-        JOptionPane.showMessageDialog(
-          peer,
-          LocaleManager.text("Mapped_table_not_support_removable_records"),
-          LocaleManager.text("Exception"),
-          JOptionPane.ERROR_MESSAGE);
-
+    }
   }
 
   /** Blank record build on head record.

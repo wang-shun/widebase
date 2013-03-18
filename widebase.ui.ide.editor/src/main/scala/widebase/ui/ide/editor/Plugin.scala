@@ -1,6 +1,6 @@
 package widebase.ui.ide.editor
 
-import event. { EditRename, EditSelection }
+import event.PageRename
 
 import java.awt.event. { InputEvent, KeyEvent }
 import java.util.UUID
@@ -12,27 +12,29 @@ import moreswing.swing.i18n.LocaleManager
 
 import scala.swing. { Button, ScrollPane, Separator }
 
-import widebase.ui.toolkit. {
+import widebase.ui.workspace. {
 
   Action,
   FrameLike,
   Menu,
   MenuItem,
-  PreferenceManager,
-  ViewPane
+  PagedPane,
+  PageMenu,
+  PreferenceManager
 
 }
 
-import widebase.ui.toolkit.runtime.PluginLike
+import widebase.ui.workspace.runtime.PluginLike
 
 class Plugin(frame: FrameLike) extends PluginLike {
 
-  import widebase.ui.toolkit.runtime
+  import widebase.ui.workspace. { runtime, util }
 
-  class EditNew(title0: String = "") extends Action(title0) {
+  class NewEdit(title0: String = "") extends Action(title0) {
 
     import scala.util.control.Breaks. { break, breakable }
-    import widebase.ui.toolkit
+
+    import widebase.ui.workspace
 
     mnemonic = KeyEvent.VK_N
     accelerator = Some(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK))
@@ -40,58 +42,28 @@ class Plugin(frame: FrameLike) extends PluginLike {
 
     def apply {
 
-      if(frame.viewPane.selection.index == -1 ||
-         !frame.viewPane.selection.page.content.isInstanceOf[ViewPane] ||
-         frame.viewPane.selection.page.content.isInstanceOf[PreferenceManager]) {
+      if(frame.pagedPane.selection.index == -1 ||
+         !frame.pagedPane.selection.page.content.isInstanceOf[PagedPane] ||
+         frame.pagedPane.selection.page.content.isInstanceOf[PreferenceManager])
+       frame.pagedPane.add(content = configure(new PagedPane))
+      else if(frame.pagedPane.selection.page.content.asInstanceOf[PagedPane].selection.index == -1)
+        configure(frame.pagedPane.selection.page.content.asInstanceOf[PagedPane])
 
-        val viewSubPane = new ViewPane {
+      val pane = frame.pagedPane.selection.page.content.asInstanceOf[PagedPane]
 
-          popupMenu.prepend(UUID.randomUUID.toString)
-          popupMenu.prepend("New" -> new Menu("New"))
-
-          popupMenu += UUID.randomUUID.toString -> new Separator
-
-          popupMenu += "Close" -> new MenuItem(new Action("Close") {
-
-              def apply = { pages.remove(mouseOverTab) }
-
-          } )
-
-          popupMenu += "Inactive_Only" -> new MenuItem(new Action("Inactive_Only") {
-
-              def apply = { pages.removeInactive }
-
-          } )
-
-        }
-
-        frame.viewPane.add(view = viewSubPane)
-
-      }
-
-      val viewSubPane = frame.viewPane.selection.page.content.asInstanceOf[ViewPane]
-
-      if(!viewSubPane.popupMenu.sub("New").item.contains("Edit"))
-        viewSubPane.popupMenu.sub("New").prepend(
-          "Edit" -> new MenuItem(new EditNew("Edit")) {
-
-            icon = new ImageIcon(getClass.getResource("/icon/tab-new.png"))
-
-          } )
-
+      var count = 0
       var found = true
-      var editCount = 0
 
       do {
 
+        count += 1
         found = true
-        editCount += 1
 
         breakable {
 
-          viewSubPane.pages.foreach { page =>
+          pane.pages.foreach { page =>
 
-            if(page.title == LocaleManager.text("Edit_?", editCount)) {
+            if(page.title == LocaleManager.text("Edit_?", count)) {
 
               found = false
               break
@@ -101,33 +73,120 @@ class Plugin(frame: FrameLike) extends PluginLike {
         }
       } while(!found)
 
-      val edit = new EditPanel
+      val panel = new EditPanel
+
+      util.bind(
+        panel,
+        KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK),
+        "Open",
+        { panel.toolBar.button("Open").action.apply } )
+
+      util.bind(
+        panel,
+        KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK),
+        "Save",
+        { panel.toolBar.button("Save").action.apply } )
+
+      util.bind(
+        panel,
+        KeyStroke.getKeyStroke("F9"),
+        "Content",
+        { panel.toolBar.button("Content").action.apply } )
+
+      util.bind(
+        panel,
+        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK),
+        "Selection",
+        { panel.toolBar.button("Selection").action.apply } )
 
       val page = new TabbedDesktopPane.Page(
-        LocaleManager.text("Edit_?", editCount),
+        LocaleManager.text("Edit_?", count),
         new ImageIcon(getClass.getResource("/icon/text-plain.png")),
-        edit)
+        panel)
 
-      edit.listenTo(edit)
+      panel.listenTo(panel)
 
-      edit.reactions += {
+      panel.reactions += {
 
-        case EditRename =>
-          viewSubPane.selection.page.title = edit.currentFile.getName
-
-        case event: EditSelection =>
-
-          if(event.index < viewSubPane.pages.size) {
-
-            viewSubPane.selection.index = event.index
-            viewSubPane.selection.page.content.asInstanceOf[EditPanel].codePane.editor.requestFocus
-
-          }
+        case PageRename => pane.selection.page.title = panel.currentFile.getName
 
       }
 
-      viewSubPane.pages += page
-      edit.codePane.editor.requestFocus
+      pane.pages += page
+      panel.codePane.editor.requestFocus
+
+    }
+
+    protected def configure(pane: PagedPane) = {
+
+      // Key bindings
+
+      for(i <- 0 to 8)
+        util.bind(
+          pane,
+          KeyStroke.getKeyStroke(KeyEvent.VK_1 + i, InputEvent.ALT_MASK),
+          "PageSelection" + i,
+          () => {
+
+            if(i < pane.pages.size) {
+
+              pane.selection.index = i
+              pane.selection.page.content.asInstanceOf[EditPanel]
+                .codePane.editor.requestFocus
+
+            }
+          }
+        )
+
+      util.bind(
+        pane,
+        KeyStroke.getKeyStroke(KeyEvent.VK_0, InputEvent.ALT_MASK),
+        "PageSelection9",
+        () => {
+
+          if(9 < pane.pages.size) {
+
+            pane.selection.index = 9
+            pane.selection.page.content.asInstanceOf[EditPanel]
+              .codePane.editor.requestFocus
+
+          }
+        }
+      )
+
+      // Popup menu
+
+      if(!pane.popupMenu.sub.contains("New")) {
+
+        pane.popupMenu.prepend(UUID.randomUUID.toString)
+        pane.popupMenu.prepend("New" -> new Menu("New"))
+
+      }
+
+      pane.popupMenu.sub("New").prepend(
+        "Edit" -> new MenuItem(new NewEdit("Edit")) {
+
+          icon = new ImageIcon(getClass.getResource("/icon/tab-new.png"))
+
+        } )
+
+      pane.popupMenu += UUID.randomUUID.toString -> new Separator
+
+      if(!pane.popupMenu.item.contains("Close"))
+        pane.popupMenu += "Close" -> new MenuItem(new Action("Close") {
+
+            def apply = { pane.pages.remove(pane.mouseOverTab) }
+
+        } )
+
+      if(!pane.popupMenu.item.contains("InactiveOnly"))
+        pane.popupMenu += "InactiveOnly" -> new MenuItem(new Action("Inactive_Only") {
+
+            def apply = { pane.pages.removeInactive }
+
+        } )
+
+      pane
 
     }
   }
@@ -135,21 +194,21 @@ class Plugin(frame: FrameLike) extends PluginLike {
   val label = "Widebase IDE Editor"
   val scope = "widebase.ui.ide.editor"
 
-  def option = Some(
+  override def option = Some(
     new TabbedDesktopPane.Page(
       LocaleManager.text("Editor"),
       new ImageIcon(getClass.getResource("/icon/configure.png")),
       new ScrollPane {
 
-        contents = new scala.swing.Label("Under construction...")
+        contents = new scala.swing.Label("N/A")
 
     } )
   )
 
-  def register {
+  override def register {
 
     frame.menuBar("File").sub("New").prepend(
-      "Edit" -> new MenuItem(new EditNew("Edit")) {
+      "Edit" -> new MenuItem(new NewEdit("Edit")) {
 
         icon = new ImageIcon(getClass.getResource("/icon/tab-new.png"))
 
@@ -157,28 +216,22 @@ class Plugin(frame: FrameLike) extends PluginLike {
     )
 
     frame.toolBar.prepend(
-      "Edit" -> new Button(new EditNew) {
+      "Edit" -> new Button(new NewEdit) {
 
         icon = new ImageIcon(getClass.getResource("/icon/tab-new.png"))
 
       }
     )
 
-    frame.viewPane.popupMenu.sub("New").prepend(
-      "Edit" -> new MenuItem(new EditNew("Edit")) {
+    frame.pagedPane.popupMenu.sub("New").prepend(
+      "Edit" -> new MenuItem(new NewEdit("Edit")) {
 
         icon = new ImageIcon(getClass.getResource("/icon/tab-new.png"))
 
       }
     )
 
-    runtime.plugin += "widebase.ui.ide.editor" -> this
-
-  }
-
-  def unregister {
-
-    runtime.plugin -= "widebase.ui.ide.editor"
+    super.register
 
   }
 }

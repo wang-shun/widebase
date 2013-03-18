@@ -14,9 +14,10 @@ import Keys._
  * * widebase.ui
  * * widebase.ui.chart
  * * widebase.ui.ide
+ * * widebase.ui.ide.chart
  * * widebase.ui.ide.editor
  * * widebase.ui.table
- * * widebase.ui.toolkit
+ * * widebase.ui.workspace
  *
  * Top Apps:
  *
@@ -73,13 +74,16 @@ object WidebaseBuild extends Build {
       widebaseUiChartUtil,
       widebaseUiI18n,
       widebaseUiIde,
+      widebaseUiIdeChart,
       widebaseUiIdeEditor,
       widebaseUiIdeEditorEvent,
+      widebaseUiIdeTable,
       widebaseUiTable,
       widebaseUiTableEvent,
-      widebaseUiToolkit,
-      widebaseUiToolkitEvent,
-      widebaseUiToolkitRuntime,
+      widebaseUiWorkspace,
+      widebaseUiWorkspaceEvent,
+      widebaseUiWorkspaceRuntime,
+      widebaseUiWorkspaceUtil,
       widebaseUtil)
 
   /** Collection Mutable */
@@ -358,24 +362,47 @@ object WidebaseBuild extends Build {
     widebaseTestkit % "test",
     widebaseUi % "test",
     widebaseUiI18n,
+    widebaseUiIdeChart % "test",
     widebaseUiIdeEditor % "test",
-    widebaseUiToolkit)
+    widebaseUiIdeTable % "test",
+    widebaseUiWorkspace)
   .settings(libraryDependencies ++= lib.log)
 
-  /** UI IDE Editor */
+  /** UI IDE Chart */
+  lazy val widebaseUiIdeChart = Project(
+    "widebase-ui-ide-chart",
+    file("widebase.ui.ide.chart"))
+  .dependsOn(
+    widebaseUi,
+    widebaseUiWorkspace,
+    widebaseUiWorkspaceRuntime,
+    widebaseUiWorkspaceUtil)
+
+  /** UI IDE Edit */
   lazy val widebaseUiIdeEditor = Project(
     "widebase-ui-ide-editor",
     file("widebase.ui.ide.editor"))
   .dependsOn(
     widebaseUiIdeEditorEvent,
-    widebaseUiToolkit,
-    widebaseUiToolkitRuntime)
+    widebaseUiWorkspace,
+    widebaseUiWorkspaceRuntime,
+    widebaseUiWorkspaceUtil)
 
-  /** UI IDE Editor */
+  /** UI IDE Editor Event */
   lazy val widebaseUiIdeEditorEvent = Project(
     "widebase-ui-ide-editor-event",
     file("widebase.ui.ide.editor.event"))
   .settings(libraryDependencies ++= lib.swing)
+
+  /** UI IDE Table */
+  lazy val widebaseUiIdeTable = Project(
+    "widebase-ui-ide-table",
+    file("widebase.ui.ide.table"))
+  .dependsOn(
+    widebaseUi,
+    widebaseUiWorkspace,
+    widebaseUiWorkspaceRuntime,
+    widebaseUiWorkspaceUtil)
 
   /** UI Table */
   lazy val widebaseUiTable = Project(
@@ -393,29 +420,35 @@ object WidebaseBuild extends Build {
     file("widebase.ui.table.event"))
   .settings(libraryDependencies ++= lib.swing)
 
-  /** UI Toolkit */
-  lazy val widebaseUiToolkit = Project(
-    "widebase-ui-toolkit",
-    file("widebase.ui.toolkit"))
+  /** UI Workspace */
+  lazy val widebaseUiWorkspace = Project(
+    "widebase-ui-workspace",
+    file("widebase.ui.workspace"))
   .dependsOn(
-    widebaseUiToolkitEvent,
-    widebaseUiToolkitRuntime)
+    widebaseUiWorkspaceEvent,
+    widebaseUiWorkspaceRuntime)
 
-  /** UI Toolkit Event */
-  lazy val widebaseUiToolkitEvent = Project(
-    "widebase-ui-toolkit-event",
-    file("widebase.ui.toolkit.event"))
+  /** UI Workspace Event */
+  lazy val widebaseUiWorkspaceEvent = Project(
+    "widebase-ui-workspace-event",
+    file("widebase.ui.workspace.event"))
   .settings(libraryDependencies ++= lib.moreswing)
 
-  /** UI Toolkit Runtime */
-  lazy val widebaseUiToolkitRuntime = Project(
-    "widebase-ui-toolkit-runtime",
-    file("widebase.ui.toolkit.runtime"))
+  /** UI Workspace Runtime */
+  lazy val widebaseUiWorkspaceRuntime = Project(
+    "widebase-ui-workspace-runtime",
+    file("widebase.ui.workspace.runtime"))
   .settings(libraryDependencies ++=
     lib.eval ++
     lib.interpreterPane ++
     lib.log ++
     lib.moreswing)
+
+  /** UI Workspace Util */
+  lazy val widebaseUiWorkspaceUtil = Project(
+    "widebase-ui-workspace-util",
+    file("widebase.ui.workspace.util"))
+  .settings(libraryDependencies ++= lib.swing)
 
   /** Utilities */
   lazy val widebaseUtil = Project(
