@@ -140,7 +140,7 @@ class Table {
      * @note Due performance lack not use by bulk operations.
      */
     def apply(n: Int) =
-      Record(
+      new Record(
         n,
         labels,
         (for(column <- columns)

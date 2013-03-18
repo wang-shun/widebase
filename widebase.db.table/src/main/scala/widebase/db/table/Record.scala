@@ -10,7 +10,7 @@ import widebase.db.column.TypedColumn
  *
  * @author myst3r10n
  */
-case class Record(val index: Int, labels: TypedColumn[_], values: Array[Any]) {
+class Record(val index: Int, labels: TypedColumn[_], values: Array[Any]) {
 
   /** Select a value by its label.
    *

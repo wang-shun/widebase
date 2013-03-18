@@ -143,7 +143,7 @@ class AuthHandler(
             evt.getChannel.write(new LoginFailedMessage)
               .addListener(ChannelFutureListener.CLOSE)
 
-          case e =>
+          case e: Throwable =>
             warn(e)
 
             evt.getChannel.write(new LoginFailedMessage)

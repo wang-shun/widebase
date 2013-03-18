@@ -76,6 +76,9 @@ trait ServerLike extends SocketLike {
       i = allChannels.iterator
 
     }
+
+    this
+
   }
 
   /** Bind a socket to address and port.

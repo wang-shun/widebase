@@ -92,7 +92,7 @@ class ServerHandler(
 
         try {
 
-          readLock++
+          readLock.increment
 
           if(cache.contains(message.name))
             evt.getChannel.write(new TableFoundMessage)
@@ -101,7 +101,7 @@ class ServerHandler(
 
         } finally {
 
-          readLock--
+          readLock.decrement
 
         }
 
@@ -115,7 +115,7 @@ class ServerHandler(
 
         try {
 
-          readLock++
+          readLock.increment
 
           if(cache.contains(message.name)) {
 
@@ -136,7 +136,7 @@ class ServerHandler(
           }
         } finally {
 
-          readLock--
+          readLock.decrement
 
         }
 

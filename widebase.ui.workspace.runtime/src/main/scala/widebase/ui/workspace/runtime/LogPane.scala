@@ -26,6 +26,8 @@ import java.io.{OutputStream, Writer}
 import java.awt.event.{ActionEvent, MouseEvent, MouseAdapter}
 import javax.swing.{JComponent, JPopupMenu, AbstractAction, JScrollPane, JTextArea, ScrollPaneConstants}
 
+import scala.language.implicitConversions
+
 object LogPane {
    object Settings {
       implicit def fromBuilder( b: SettingsBuilder ) : Settings = b.build

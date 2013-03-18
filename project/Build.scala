@@ -118,6 +118,7 @@ object WidebaseBuild extends Build {
     "widebase-db-table",
     file("widebase.db.table"))
   .dependsOn(widebaseIoColumn)
+  .settings(libraryDependencies ++= lib.actors)
 
   /** DSL */
   lazy val widebaseDsl = Project(
@@ -480,8 +481,8 @@ object WidebaseBuild extends Build {
 
       /** Log path */
       "-Dwidebase.log=" + System.getProperty("user.dir") + "/var/log"),
-    scalaVersion := "2.9.2",
-    scalacOptions ++= Seq("-unchecked", "-deprecation"),
+    scalaVersion := "2.10.1",
+    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     resolvers ++= Seq(
       "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))
 

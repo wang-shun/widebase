@@ -68,6 +68,8 @@ import widebase.io.table. {
  */
 class Database protected[db](val path: String, val segment: SegmentMap) {
 
+  import scala.language.implicitConversions
+
   /** Implicitly converts a segment key into segment path.
    *
    * @param key to convert

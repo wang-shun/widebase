@@ -12,18 +12,8 @@ class CountLock {
   /** Is true if no locks. */
   def available = counter == 0
 
-  /** Increment lock counter. */
-  def ++ = synchronized {
-
-    if(counter == Int.MaxValue)
-      throw new RuntimeException("counter > Int.MaxValue")
-
-    counter += 1
-
-  }
-
   /** Decrement lock counter. */
-  def -- = synchronized {
+  def decrement = synchronized {
 
     if(counter == 0)
       throw new RuntimeException("counter < 0")
@@ -32,6 +22,16 @@ class CountLock {
 
     if(counter == 0)
       notify
+
+  }
+
+  /** Increment lock counter. */
+  def increment = synchronized {
+
+    if(counter == Int.MaxValue)
+      throw new RuntimeException("counter > Int.MaxValue")
+
+    counter += 1
 
   }
 

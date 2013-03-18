@@ -411,7 +411,7 @@ object PubSub extends Logger with Loggable {
       }
     } catch {
 
-      case e => throw e
+      case e: Throwable => throw e
 
     } finally {
 

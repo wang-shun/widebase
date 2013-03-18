@@ -140,7 +140,7 @@ class ConsumerHandler(listener: RecordListener)
 
           } catch {
 
-            case e => e.printStackTrace
+            case e: Throwable => e.printStackTrace
 
           }
 
@@ -151,7 +151,7 @@ class ConsumerHandler(listener: RecordListener)
 
           } catch {
 
-            case e => e.printStackTrace
+            case e: Throwable => e.printStackTrace
 
           }
 
@@ -162,7 +162,7 @@ class ConsumerHandler(listener: RecordListener)
 
           } catch {
 
-            case e => e.printStackTrace
+            case e: Throwable => e.printStackTrace
 
           }
 
@@ -173,7 +173,7 @@ class ConsumerHandler(listener: RecordListener)
 
           } catch {
 
-            case e => e.printStackTrace
+            case e: Throwable => e.printStackTrace
 
           }
       }

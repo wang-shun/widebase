@@ -4,28 +4,29 @@ object Dependency {
 
   object lib {
 
+    val actors = Seq("org.scala-lang" % "scala-actors" % "2.10.1")
     val commonsCli = Seq("commons-cli" % "commons-cli" % "1.2")
-    val eval = Seq("com.twitter" %% "util-eval" % "6.1.0")
-    val interpreterPane = Seq("de.sciss" %% "scalainterpreterpane" % "1.3.0")
-    val jaas = Seq("org.apache.activemq" % "activemq-jaas" % "5.6.0")
+    val eval = Seq("com.twitter" %% "util-eval" % "6.2.0")
+    val interpreterPane = Seq("de.sciss" %% "scalainterpreterpane" % "1.4.0")
+    val jaas = Seq("org.apache.activemq" % "activemq-jaas" % "5.8.0")
     val jfreechart = Seq("org.jfree" % "jfreechart" % "1.0.14")
 
     val jodaTime = Seq(
-      "org.joda" % "joda-convert" % "1.2",
-      "joda-time" % "joda-time" % "2.1")
+      "org.joda" % "joda-convert" % "1.3.1",
+      "joda-time" % "joda-time" % "2.2")
 
     val log = Seq(
       "log4j" % "log4j" % "1.2.17",
-      "net.liftweb" %% "lift-common" % "2.5-M1",
-      "org.slf4j" % "slf4j-log4j12" % "1.7.1")
+      "net.liftweb" %% "lift-common" % "2.5-RC2",
+      "org.slf4j" % "slf4j-log4j12" % "1.7.3")
 
-    val moreswing = Seq("com.github.myst3r10n" %% "moreswing-swing" % "0.1.2")
-    val netty = Seq("io.netty" % "netty" % "3.5.7.Final")
+    val moreswing = Seq("com.github.myst3r10n" %% "moreswing-swing" % "0.1.3")
+    val netty = Seq("io.netty" % "netty" % "3.6.3.Final")
 
     val sbtLauncher = Seq(
-      "org.scala-tools.sbt" % "launcher-interface_2.9.1" % "0.11.2" % "provided")
+      "org.scala-sbt" % "launcher-interface" % "0.12.2" % "provided")
 
-    val swing = Seq("org.scala-lang" % "scala-swing" % "2.9.2")
+    val swing = Seq("org.scala-lang" % "scala-swing" % "2.10.1")
 
   }
 
@@ -33,8 +34,8 @@ object Dependency {
 
     val log = Seq(
       "log4j" % "log4j" % "1.2.17" % "test",
-      "net.liftweb" %% "lift-common" % "2.5-M1" % "test",
-      "org.slf4j" % "slf4j-log4j12" % "1.7.1" % "test")
+      "net.liftweb" %% "lift-common" % "2.5-RC2" % "test",
+      "org.slf4j" % "slf4j-log4j12" % "1.7.3" % "test")
 
   }
 }

@@ -29,7 +29,7 @@ object Cache extends Logger with Loggable {
 
       } catch {
 
-        case e =>
+        case e: Throwable =>
           e.printStackTrace
           sys.exit(1)
 
@@ -83,7 +83,7 @@ object Cache extends Logger with Loggable {
 */
     } catch {
 
-      case e => throw e
+      case e: Throwable => throw e
 
     } finally {
 

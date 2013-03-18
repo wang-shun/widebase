@@ -1,5 +1,7 @@
 package widebase.dsl
 
+import scala.language.implicitConversions
+
 import widebase.db.column. {
 
   BoolColumn,

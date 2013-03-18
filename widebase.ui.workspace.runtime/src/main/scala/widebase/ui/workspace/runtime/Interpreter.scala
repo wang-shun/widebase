@@ -29,6 +29,7 @@ import tools.nsc.interpreter.{Results, JLineCompletion, Completion, IMain}
 import java.util.concurrent.Executors
 
 import scala.collection.mutable.HashMap
+import scala.language.implicitConversions
 
 /**
  * The `Interpreter` wraps the underlying Scala interpreter functionality.
