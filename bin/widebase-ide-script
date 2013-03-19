@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
   "com.github.widebase" %% "widebase-workspace-ide-editor" % "0.3.4-SNAPSHOT",
   "com.github.widebase" %% "widebase-workspace-ide-table" % "0.3.4-SNAPSHOT"
 )
+
+logLevel := Level.Info
 */
 
 widebase.workspace.ide.Main.main(args)
