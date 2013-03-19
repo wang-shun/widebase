@@ -1,8 +1,9 @@
-#!/usr/bin/env scalas
-!#
-
 /***
-scalaVersion := "2.9.2"
+scalaVersion := "2.10.1"
+
+resolvers ++= Seq(
+  "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public",
+  "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases")
 
 libraryDependencies ++= Seq(
   "com.github.widebase" %% "widebase-dsl" % "0.3.4-SNAPSHOT",
@@ -10,10 +11,12 @@ libraryDependencies ++= Seq(
   "com.github.widebase" %% "widebase-stream-socket-rq" % "0.3.4-SNAPSHOT",
   "com.github.widebase" %% "widebase-testkit" % "0.3.4-SNAPSHOT",
   "com.github.widebase" %% "widebase-ui" % "0.3.4-SNAPSHOT",
-  "com.github.widebase" %% "widebase-ui-ide" % "0.3.4-SNAPSHOT",
-  "com.github.widebase" %% "widebase-ui-ide-editor" % "0.3.4-SNAPSHOT"
+  "com.github.widebase" %% "widebase-workspace-ide" % "0.3.4-SNAPSHOT",
+  "com.github.widebase" %% "widebase-workspace-ide-chart" % "0.3.4-SNAPSHOT",
+  "com.github.widebase" %% "widebase-workspace-ide-editor" % "0.3.4-SNAPSHOT",
+  "com.github.widebase" %% "widebase-workspace-ide-table" % "0.3.4-SNAPSHOT"
 )
 */
 
-widebase.ui.ide.Main.main(args)
+widebase.workspace.ide.Main.main(args)
 

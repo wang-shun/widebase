@@ -4,7 +4,7 @@ cd $(dirname $0)/..
 WIDEBASE_HOME=$PWD
 
 java \
-  -Xmx1000m \
+  -Xmx1024m \
   -XX:+UseFastAccessorMethods \
   -Dsbt.main.class=sbt.ConsoleMain \
   -Dsbt.boot.directory=$WIDEBASE_HOME/var/sbt/boot \
