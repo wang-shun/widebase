@@ -17,7 +17,10 @@ import Keys._
  * * widebase.workspace
  * * widebase.workspace.ide
  * * widebase.workspace.ide.chart
+ * * widebase.workspace.ide.cli
  * * widebase.workspace.ide.editor
+ * * widebase.workspace.ide.explorer
+ * * widebase.workspace.ide.table
  *
  * Top Apps:
  *
@@ -79,8 +82,10 @@ object WidebaseBuild extends Build {
       widebaseWorkspaceEvent,
       widebaseWorkspaceIde,
       widebaseWorkspaceIdeChart,
+      widebaseWorkspaceIdeCli,
       widebaseWorkspaceIdeEditor,
       widebaseWorkspaceIdeEditorEvent,
+      widebaseWorkspaceIdeExplorer,
       widebaseWorkspaceIdeTable,
       widebaseWorkspaceRuntime,
       widebaseWorkspaceUtil,
@@ -91,7 +96,7 @@ object WidebaseBuild extends Build {
     "widebase-collection-mutable",
     file("widebase.collection.mutable"))
   .dependsOn(widebaseIoFile)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Data */
   lazy val widebaseData = Project(
@@ -105,7 +110,7 @@ object WidebaseBuild extends Build {
     file("widebase.db"))
   .dependsOn(widebaseIoTable)
   .settings(libraryDependencies ++= testlib.log)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** DB Column */
   lazy val widebaseDbColumn = Project(
@@ -118,14 +123,14 @@ object WidebaseBuild extends Build {
     "widebase-db-table",
     file("widebase.db.table"))
   .dependsOn(widebaseIoColumn)
-  .settings(libraryDependencies ++= lib.actors)
+  .settings(libraryDependencies <+= lib.actors)
 
   /** DSL */
   lazy val widebaseDsl = Project(
     "widebase-dsl",
     file("widebase.dsl"))
   .dependsOn(widebaseIoCsv)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** I/O */
   lazy val widebaseIo = Project(
@@ -180,7 +185,7 @@ object WidebaseBuild extends Build {
   .settings(
     resolvers <+= sbtResolver,
     libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Plant */
   lazy val widebasePlant = Project(
@@ -190,7 +195,7 @@ object WidebaseBuild extends Build {
   .settings(
     resolvers <+= sbtResolver,
     libraryDependencies ++= lib.commonsCli ++ lib.sbtLauncher)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Stream Codec */
   lazy val widebaseStreamCodec = Project(
@@ -239,14 +244,14 @@ object WidebaseBuild extends Build {
     "widebase-stream-socket",
     file("widebase.stream.socket"))
   .dependsOn(widebaseStreamHandler)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Stream Socket CQ */
   lazy val widebaseStreamSocketCq = Project(
     "widebase-stream-socket-cq",
     file("widebase.stream.socket.cq"))
   .dependsOn(widebaseStreamHandlerCq, widebaseStreamSocket)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Stream Socket RQ */
   lazy val widebaseStreamSocketRq = Project(
@@ -256,7 +261,7 @@ object WidebaseBuild extends Build {
     widebaseDsl % "test",
     widebaseStreamHandlerRq,
     widebaseStreamSocket)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** Testkit */
   lazy val widebaseTestkit = Project(
@@ -266,7 +271,7 @@ object WidebaseBuild extends Build {
     widebaseDsl,
     widebaseStreamSocketCq,
     widebaseStreamSocketRq)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** UI */
   lazy val widebaseUi = Project(
@@ -278,17 +283,17 @@ object WidebaseBuild extends Build {
     widebaseUiChartAnnotations,
     widebaseUiI18n,
     widebaseUiTable)
-//  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** UI Chart */
   lazy val widebaseUiChart = Project(
     "widebase-ui-chart",
     file("widebase.ui.chart"))
-    .dependsOn(
-      widebaseUiChartEvent,
-      widebaseUiChartPlot)
-    .settings(libraryDependencies ++= lib.moreswing)
-//    .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  .dependsOn(
+    widebaseUiChartEvent,
+    widebaseUiChartPlot)
+  .settings(libraryDependencies ++= lib.moreswing)
+  .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** UI Chart Annotations */
   lazy val widebaseUiChartAnnotations = Project(
@@ -330,7 +335,7 @@ object WidebaseBuild extends Build {
   lazy val widebaseUiChartEvent = Project(
     "widebase-ui-chart-event",
     file("widebase.ui.chart.event"))
-  .settings(libraryDependencies ++= lib.swing)
+  .settings(libraryDependencies <+= lib.swing)
 
   /** UI Chart Plot */
   lazy val widebaseUiChartPlot = Project(
@@ -366,7 +371,7 @@ object WidebaseBuild extends Build {
   lazy val widebaseUiTableEvent = Project(
     "widebase-ui-table-event",
     file("widebase.ui.table.event"))
-  .settings(libraryDependencies ++= lib.swing)
+  .settings(libraryDependencies <+= lib.swing)
 
   /** Workspace */
   lazy val widebaseWorkspace = Project(
@@ -380,7 +385,7 @@ object WidebaseBuild extends Build {
   lazy val widebaseWorkspaceEvent = Project(
     "widebase-workspace-event",
     file("widebase.workspace.event"))
-  .settings(libraryDependencies ++= lib.swing)
+  .settings(libraryDependencies <+= lib.swing)
 
   /** Workspace IDE */
   lazy val widebaseWorkspaceIde = Project(
@@ -391,11 +396,13 @@ object WidebaseBuild extends Build {
     widebaseStreamSocketCq % "test",
     widebaseStreamSocketRq % "test",
     widebaseTestkit % "test",
-    widebaseWorkspace % "test",
+    widebaseUi % "test",
     widebaseUiI18n,
     widebaseWorkspace,
     widebaseWorkspaceIdeChart % "test",
+    widebaseWorkspaceIdeCli % "test",
     widebaseWorkspaceIdeEditor % "test",
+    widebaseWorkspaceIdeExplorer % "test",
     widebaseWorkspaceIdeTable % "test")
   .settings(libraryDependencies ++= lib.log)
 
@@ -408,6 +415,14 @@ object WidebaseBuild extends Build {
     widebaseWorkspace,
     widebaseWorkspaceRuntime,
     widebaseWorkspaceUtil)
+
+  /** Workspace IDE CLI */
+  lazy val widebaseWorkspaceIdeCli = Project(
+    "widebase-workspace-ide-cli",
+    file("widebase.workspace.ide.cli"))
+  .dependsOn(
+    widebaseWorkspace,
+    widebaseWorkspaceRuntime)
 
   /** Workspace IDE Edit */
   lazy val widebaseWorkspaceIdeEditor = Project(
@@ -423,7 +438,16 @@ object WidebaseBuild extends Build {
   lazy val widebaseWorkspaceIdeEditorEvent = Project(
     "widebase-workspace-ide-editor-event",
     file("widebase.workspace.ide.editor.event"))
-  .settings(libraryDependencies ++= lib.swing)
+  .settings(libraryDependencies <+= lib.swing)
+
+  /** Workspace IDE Explorer */
+  lazy val widebaseWorkspaceIdeExplorer = Project(
+    "widebase-workspace-ide-explorer",
+    file("widebase.workspace.ide.explorer"))
+  .dependsOn(
+    widebaseWorkspace,
+    widebaseWorkspaceIdeEditor,
+    widebaseWorkspaceRuntime)
 
   /** Workspace IDE Table */
   lazy val widebaseWorkspaceIdeTable = Project(
@@ -439,17 +463,15 @@ object WidebaseBuild extends Build {
   lazy val widebaseWorkspaceRuntime = Project(
     "widebase-workspace-runtime",
     file("widebase.workspace.runtime"))
-  .settings(libraryDependencies ++=
-    lib.eval ++
-    lib.interpreterPane ++
-    lib.log ++
-    lib.moreswing)
+  .dependsOn(widebaseWorkspaceUtil)
+  .settings(libraryDependencies ++= lib.eval ++ lib.interpreterPane ++ lib.log)
+  .settings(libraryDependencies ++= lib.moreswing)
 
   /** Workspace Util */
   lazy val widebaseWorkspaceUtil = Project(
     "widebase-workspace-util",
     file("widebase.workspace.util"))
-  .settings(libraryDependencies ++= lib.swing)
+  .settings(libraryDependencies <+= lib.swing)
 
   /** Utilities */
   lazy val widebaseUtil = Project(
@@ -457,21 +479,24 @@ object WidebaseBuild extends Build {
     file("widebase.util"))
     .dependsOn(widebaseIoFilter)
 
+  /** Home path */
+  System.setProperty("widebase.home", System.getProperty("user.dir"))
+
   /** Log path (maybe deprecated, see javaOptions) */
   System.setProperty(
     "widebase.log",
-    System.getProperty("user.dir") + "/var/log")
+    System.getProperty("widebase.home") + "/var/log")
 
   /** JAAS path */
   System.setProperty(
     "java.security.auth.login.config",
-    System.getProperty("user.dir") + "/etc/jaas.conf")
+    System.getProperty("widebase.home") + "/etc/jaas.conf")
 
   /** Security policy */
   System.setProperty("java.security.manager", "true")
   System.setProperty(
     "java.security.policy",
-    System.getProperty("user.dir") + "/etc/java.policy")
+    System.getProperty("widebase.home") + "/etc/java.policy")
 
   /** Build settings */
 	def buildSettings = Seq(
@@ -480,8 +505,11 @@ object WidebaseBuild extends Build {
     javaOptions ++= Seq(
 
       /** Log path */
-      "-Dwidebase.log=" + System.getProperty("user.dir") + "/var/log"),
+      "-Dwidebase.log=" + System.getProperty("widebase.home") + "/var/log"),
     scalaVersion := "2.10.1",
+    crossScalaVersions := Seq(
+      "2.10.1",
+      "2.9.2"),
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     resolvers ++= Seq(
       "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public"))
