@@ -94,36 +94,46 @@ package object ui {
    *
    * @return annotation
    */
-  def annotation(values: Any*) = {
+  def annotation(values: Any*): AbstractXYAnnotation =
+    if(figures.contains(figure))
+      annotation(
+        figures(figure).asInstanceOf[ChartFrame].panel,
+        values:_*)
+    else
+      null
+
+  /** Draw annotation.
+   *
+   * @param panel of chart
+   * @param values of coordinates, properties and format
+   *
+   * @return annotation
+   */
+  def annotation(panel: ChartPanel, values: Any*): AbstractXYAnnotation = {
 
     var annotation: AbstractXYAnnotation = null
 
-    if(figures.contains(figure)) {
+    if(panel.peer.getChart.getPlot.isInstanceOf[XYPlot]) {
 
-      var frame = figures(figure).asInstanceOf[ChartFrame with FigureFrame]
+      val plot = panel.peer.getChart.getPlot.asInstanceOf[XYPlot]
 
-      if(frame.panel.peer.getChart.getPlot.isInstanceOf[XYPlot]) {
+      values.head match {
 
-        val plot = frame.panel.peer.getChart.getPlot.asInstanceOf[XYPlot]
+        case "ellipse" => annotation = Ellipse(values.drop(1):_*)
+        case "line" => annotation = Line(values.drop(1):_*)
+        case "rectangle" => annotation = Rectangle(values.drop(1):_*)
 
-        values.head match {
+      }
 
-          case "ellipse" => annotation = Ellipse(values.drop(1):_*)
-          case "line" => annotation = Line(values.drop(1):_*)
-          case "rectangle" => annotation = Rectangle(values.drop(1):_*)
+      // Prevents throw of ConcurrentModificationException
+      SwingUtilities.invokeLater(new Runnable {
+
+        def run {
+
+          plot.getRenderer(0).addAnnotation(annotation)
 
         }
-
-        // Prevents throw of ConcurrentModificationException
-        SwingUtilities.invokeLater(new Runnable {
-
-          def run {
-
-            plot.getRenderer(0).addAnnotation(annotation)
-
-          }
-        } )
-      }
+      } )
     }
 
     annotation
@@ -476,7 +486,7 @@ package object ui {
 
         val figure = Int.box(widebase.ui.figure).toInt
 
-        title = LocaleManager.text("figure.title_?", figure)
+        title = LocaleManager.text("Figure_?", figure)
 
 //        location = new Point(0, 0)
         preferredSize = new Dimension(800, 600)
@@ -527,7 +537,7 @@ package object ui {
 
         val figure = Int.box(widebase.ui.figure).toInt
 
-        title = LocaleManager.text("figure.title_?", figure)
+        title = LocaleManager.text("Figure_?", figure)
 
 //        location = new Point(0, 0)
         preferredSize = new Dimension(800, 600)
