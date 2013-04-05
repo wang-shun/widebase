@@ -4,20 +4,22 @@ import moreswing.swing.TabbedDesktopPane
 
 abstract class PluginLike {
 
-  val label: String
-  val scope: String
+  val category: String
+  val homepage: String
+  val id: String
+  val name: String
 
   def option: Option[TabbedDesktopPane.Page] = None
 
   def register {
 
-    plugin += scope -> this
+    plugin += id -> this
 
   }
 
   def unregister {
 
-    plugin -= scope
+    plugin -= id
 
   }
 }
