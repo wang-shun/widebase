@@ -3,5 +3,6 @@ org.apache.log4j.xml.DOMConfigurator.configure(
   System.getProperty("widebase.home") + "/etc/widebase-cli-log4j.xml")
 
 // Init
-:load sbin/Init.scala
+:load sbin/Cli.scala
+:load sbin/Dbi.scala
 
