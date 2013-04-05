@@ -11,7 +11,17 @@ import javax.swing. { ImageIcon, JOptionPane, KeyStroke }
 import moreswing.swing.TabbedDesktopPane
 import moreswing.swing.i18n.LocaleManager
 
-import scala.swing. { BorderPanel, Button, ComboBox, ScrollPane, Separator }
+import scala.swing. {
+
+  BorderPanel,
+  Button,
+  ComboBox,
+  ScrollPane,
+  Separator,
+  TextField
+
+}
+
 import scala.swing.event.ButtonClicked
 
 import widebase.ui.chart. { ChartFrame, ChartPanel }
@@ -42,13 +52,15 @@ class Plugin(frame: FrameLike) extends PluginLike {
 
     def apply {
 
+      val field = new TextField(LocaleManager.text("Chart"))
       val charts = new ComboBox(Seq("candle", "highlow", "plot", "scatter"))
       val codePane = CodePane(CodePane.Config())
 
       val panel = new BorderPanel {
 
-        add(charts, BorderPanel.Position.North)
-        peer.add(codePane.component, BorderLayout.CENTER)
+        add(field, BorderPanel.Position.North)
+        add(charts, BorderPanel.Position.Center)
+        peer.add(codePane.component, BorderLayout.SOUTH)
 
       }
 
@@ -57,11 +69,28 @@ class Plugin(frame: FrameLike) extends PluginLike {
         panel.peer,
         "Chart",
         JOptionPane.OK_CANCEL_OPTION))
-        runtime.queue.add(Some("""
+        charts.selection.item match {
 
-          widebase.workspace.runtime.plugin("""" + scope + """").asInstanceOf[widebase.workspace.ide.chart.Plugin].NewChart(widebase.ui.chart.""" + charts.selection.item + """Panel(""" + codePane.editor.getText + """))
+          case "candle" =>
+            runtime.queue.add(Some("""
 
-        """))
+              widebase.workspace.runtime.plugin("""" + id + """")
+                .asInstanceOf[widebase.workspace.ide.chart.Plugin]
+                .NewChart(widebase.ui.chart.highlowPanel(
+                  """ + codePane.editor.getText + """)(new org.jfree.chart.renderer.xy.CandlestickRenderer), """ + field.text + """)
+
+            """))
+
+          case _ => // Other charts
+            runtime.queue.add(Some("""
+
+              widebase.workspace.runtime.plugin("""" + id + """")
+                .asInstanceOf[widebase.workspace.ide.chart.Plugin]
+                .NewChart(widebase.ui.chart.""" + charts.selection.item +
+                  """Panel(""" + codePane.editor.getText + """), """ + field.text + """)
+
+            """))
+        }
     }
   }
 
@@ -69,7 +98,7 @@ class Plugin(frame: FrameLike) extends PluginLike {
 
     import scala.util.control.Breaks. { break, breakable }
 
-    def apply(panel0: ChartPanel) {
+    def apply(panel0: ChartPanel, chartName: String) {
 
       if(frame.pagedPane.selection.index == -1 ||
          !frame.pagedPane.selection.page.content.isInstanceOf[PagedPane] ||
@@ -79,28 +108,6 @@ class Plugin(frame: FrameLike) extends PluginLike {
         configure(frame.pagedPane.selection.page.content.asInstanceOf[PagedPane])
 
       val pane = frame.pagedPane.selection.page.content.asInstanceOf[PagedPane]
-
-      var count = 0
-      var found = true
-
-      do {
-
-        count += 1
-        found = true
-
-        breakable {
-
-          pane.pages.foreach { page =>
-
-            if(page.title == LocaleManager.text("Chart_?", count)) {
-
-              found = false
-              break
-
-            }
-          }
-        }
-      } while(!found)
 
       val panel = {
 
@@ -115,7 +122,7 @@ class Plugin(frame: FrameLike) extends PluginLike {
       }
 
       pane.pages += new TabbedDesktopPane.Page(
-        LocaleManager.text("Chart_?", count),
+        chartName,
         new ImageIcon(getClass.getResource("/icon/kchart.png")),
         new ScrollPane { contents = panel } )
 
@@ -175,8 +182,10 @@ class Plugin(frame: FrameLike) extends PluginLike {
     }
   }
 
-  val label = "Widebase IDE Chart"
-  val scope = "widebase.workspace.ide.chart"
+  val category = Plugin.category
+  val homepage = Plugin.homepage
+  val id = Plugin.id
+  val name = Plugin.name
 
   override def option = None
 
@@ -209,5 +218,14 @@ class Plugin(frame: FrameLike) extends PluginLike {
     super.register
 
   }
+}
+
+object Plugin {
+
+  val category = "Core"
+  val homepage = "http://widebase.github.com/"
+  val id = classOf[Plugin].getPackage.getName
+  val name = "Widebase IDE Chart"
+
 }
 
