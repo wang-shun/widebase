@@ -2,6 +2,8 @@ package widebase.workspace
 
 import moreswing.swing.i18n.LMainFrame
 
+import scala.swing.BorderPanel
+
 /** A common trait to build application frames.
  * 
  * @author myst3r10n
@@ -14,13 +16,23 @@ abstract class FrameLike extends LMainFrame {
 
   }
 
+  protected var _panel: BorderPanel = null
+
+  def panel = _panel
+
+  def panel_=(p: BorderPanel) {
+
+    _panel = p
+
+  }
+
   protected var _preferences: PreferenceManager = null
 
   def preferences = _preferences
 
-  def preferences_=(t: PreferenceManager) {
+  def preferences_=(p: PreferenceManager) {
 
-    _preferences = t
+    _preferences = p
 
   }
 
