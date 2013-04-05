@@ -20,7 +20,7 @@ import java.io. {
 
 import java.util.concurrent.ArrayBlockingQueue
 
-import javax.swing.ImageIcon
+import javax.swing. { ImageIcon, JOptionPane }
 
 import net.liftweb.common. { Loggable, Logger }
 
@@ -77,37 +77,6 @@ package object runtime extends Logger with Loggable {
 
   }
 
-  def load(file: File): Option[String] = {
-
-    var reader: BufferedReader = null
-
-    try {
-
-      reader = new BufferedReader(new InputStreamReader(
-        new DataInputStream(new FileInputStream(file))))
-
-      var code = ""
-      var line = reader.readLine
-
-      while(line != null) {
-
-        if(!code.isEmpty)
-          code += System.getProperty("line.separator")
-        code += line
-        line = reader.readLine
-
-      }
-
-      Some(code)
-
-    } finally {
-
-      if(reader != null)
-        reader.close
-
-    }
-  }
-
   def launch(filename: String, image: ImageIcon = null) {
 
     val progress = new ProgressBar { max = 1 }
@@ -137,14 +106,7 @@ package object runtime extends Logger with Loggable {
       val eval = new Eval
       val config = eval[ConfigLike](file)
 
-      config.plugins.foreach { plugin =>
-
-        if(!plugin.exists)
-          throw new FileNotFoundException(plugin.getPath)
-
-        progress.max += 1
-
-      }
+      config.plugins.foreach(plugin => progress.max += 1)
 
       dialog.pack
       dialog.centerOnScreen
@@ -157,11 +119,16 @@ package object runtime extends Logger with Loggable {
 
       config.plugins.foreach { plugin =>
 
-        if(!interpreter.interpret(load(plugin).get).isInstanceOf[Interpreter.Success]) {
+        if(!interpreter.interpret("new " + plugin + ".Plugin(app.frame).register").isInstanceOf[Interpreter.Success]) {
 
-          runtime.plugin.values.foreach(_.unregister)
+          JOptionPane.showMessageDialog(
+            null,
+            logPane.component,
+            "Plugin failed",
+            JOptionPane.ERROR_MESSAGE)
+
           app.values.foreach(_.frame.dispose)
-          throw new Exception("Plugin failed: " + plugin.getPath)
+          throw new Exception("Plugin failed: " + plugin)
 
         }
 

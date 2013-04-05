@@ -21,8 +21,8 @@ import scala.swing.MainFrame
  */
 trait AppLike extends Logger with Loggable {
 
-  var laf = ""
-  var locale = ""
+  private var laf = ""
+  private var locale = ""
 
   // Treat locale arguments.
   if(locale.isEmpty)
@@ -32,9 +32,9 @@ trait AppLike extends Logger with Loggable {
 
   Locale.setDefault(new Locale(locale.split('_')(0), locale.split('_')(1)))
   LocaleManager.locale = new Locale(locale.split('_')(0), locale.split('_')(1))
-
+/* MAKES TROUBLE CURRENTLY!
   // Treat laf arguments.
-  val lafs3rd = Array[UIManager.LookAndFeelInfo](
+  private val lafs3rd = Array[UIManager.LookAndFeelInfo](
     new UIManager.LookAndFeelInfo(
       "EaSynth",
       "com.easynth.lookandfeel.EaSynthLookAndFeel"),
@@ -68,7 +68,7 @@ trait AppLike extends Logger with Loggable {
   } else
     AppLike.prefs.put("app.laf", laf)
 
-  val found = UIManager.getInstalledLookAndFeels.find(is =>
+  private val found = UIManager.getInstalledLookAndFeels.find(is =>
     is.getClassName == laf).orNull
 
   if(found == null) {
@@ -112,7 +112,7 @@ trait AppLike extends Logger with Loggable {
         JOptionPane.ERROR_MESSAGE)
 
   }
-
+*/
   def frame: LMainFrame
 
 }
