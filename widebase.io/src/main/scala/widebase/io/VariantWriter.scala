@@ -141,7 +141,7 @@ class VariantWriter(
   */
   def write(value: LocalDateTime) {
 
-    write(value.toDateTime.getMillis)
+    write(value.toDateTime(value.getChronology.getZone).getMillis)
 
   }
 
@@ -152,7 +152,7 @@ class VariantWriter(
   def write(values: Array[LocalDateTime]) {
   
     write(for(value <- values)
-      yield(value.toDateTime.getMillis))
+      yield(value.toDateTime(value.getChronology.getZone).getMillis))
 
   }
 
