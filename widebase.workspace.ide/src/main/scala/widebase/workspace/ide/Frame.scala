@@ -4,7 +4,15 @@ import javax.swing.JSplitPane
 
 import net.liftweb.common.Logger
 
-import scala.swing. { BorderPanel, Dimension }
+import scala.swing. {
+
+  BorderPanel,
+  Component,
+  Dimension,
+  Orientation,
+  SplitPane
+
+}
 
 import widebase.workspace.FrameLike
 import widebase.workspace.event. { LocaleChanged, LookAndFeelChanged }
@@ -25,19 +33,24 @@ class Frame extends FrameLike with Logger {
   toolBar = new ToolBar(this)
   pagedPane = new PagedPane
 
-  val panel = new BorderPanel {
+  val splitPane = new SplitPane(
+    Orientation.Horizontal,
+    pagedPane,
+    new Component {
+
+      override lazy val peer = runtime.logPane.component
+
+    }
+  )
+
+  panel = new BorderPanel {
 
     add(toolBar, BorderPanel.Position.North)
-    add(pagedPane, BorderPanel.Position.Center)
+    add(splitPane, BorderPanel.Position.Center)
 
   }
 
-  val splitPane = new JSplitPane(
-    JSplitPane.VERTICAL_SPLIT,
-    panel.peer,
-    runtime.logPane.component)
-
-  peer.add(splitPane)
+  contents = panel
 
   listenTo(this)
 

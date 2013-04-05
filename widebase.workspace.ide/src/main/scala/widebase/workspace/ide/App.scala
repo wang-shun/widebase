@@ -20,13 +20,11 @@ class App extends AppLike {
       getClass.getResource("/icon/widebase-16x16.png"))
 
     pack
-    splitPane.setDividerLocation(splitPane.getHeight - 125)
+    splitPane.peer.setDividerLocation(splitPane.size.height - 125)
 
   }
 
   runtime.app += "ide" -> this
-
-  Swing.onEDT {}
 
   override def frame = frame0
 

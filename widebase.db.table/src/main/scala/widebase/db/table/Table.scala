@@ -360,6 +360,14 @@ class Table {
 
   }
 
+  /** Prepend column to this table.
+   *
+   * @param pair the label and column to prepend
+   *
+   * @return the table itself
+   */
+  def ++=:(pair: (Any, TypedColumn[_])) = prepend(pair)
+
   /** Appends columns of another table to this table.
    *
    * @param table the table to append
@@ -436,6 +444,44 @@ class Table {
    */
   def columns = map.values
 
+  /** Filters all records of this table which satisfy a predicate.
+   *
+   * @param predicate used to test records.
+   *
+   * @note Is slower than `filter` by widebase.db.table.TemplateTable
+   *
+   * @return filtered table
+   */
+  def filter(predicate: Record => Boolean) = {
+
+    val filteredTable = copy.label
+
+    // Performance purposes
+    val thisColumns = columns.toBuffer
+    val filteredColumns = filteredTable.columns.toBuffer
+
+    for(r <- 0 to records.length - 1)
+      if(predicate(records(r)))
+        copy.record(r, thisColumns, filteredColumns)
+
+    filteredTable
+
+  }
+
+  /** Filters all records of this table which do not satisfy a predicate.
+   *
+   * @param predicate used to test records.
+   *
+   * @return filtered table
+   */
+  def filterNot(predicate: Record => Boolean) = filter(!predicate(_))
+
+  /** Applies a function to all columns of this table.
+   *
+   * @param function apply to all columns
+   */
+  def foreach[U](function: ((Any, TypedColumn[_])) =>  U) = map.foreach(function)
+
   /** Inserts new records at a given index into columns.
    *
    * @param n the index where new records are inserted
@@ -492,43 +538,34 @@ class Table {
     }
   }
 
-  /** Filters all records of this table which satisfy a predicate.
-   *
-   * @param predicate used to test records.
-   *
-   * @note Is slower than `filter` by widebase.db.table.TemplateTable
-   *
-   * @return filtered table
-   */
-  def filter(predicate: Record => Boolean) = {
+  def insert(n: Int, pair: (Any, TypedColumn[_])) = {
 
-    val filteredTable = copy.label
+    if(n == 0)
+      prepend(pair)
+    else if(n == columns.size)
+      this ++= pair
+    else {
 
-    // Performance purposes
-    val thisColumns = columns.toBuffer
-    val filteredColumns = filteredTable.columns.toBuffer
+      columns.foreach(column =>
+        if(column != null && column.length != pair._2.length)
+          throw RecordsMismatchException(map.values.head.length, pair._2.length))
 
-    for(r <- 0 to records.length - 1)
-      if(predicate(records(r)))
-        copy.record(r, thisColumns, filteredColumns)
+      val copy = map.toMap
+      map.clear
 
-    filteredTable
+      for(i <- 0 to n - 1)
+        map += copy.keys.toList(i) -> copy.values.toList(i)
+
+      map += pair._1 -> pair._2
+
+      for(i <- n to copy.size - 1)
+        map += copy.keys.toList(i) -> copy.values.toList(i)
+
+    }
+
+    this
 
   }
-
-  /** Filters all records of this table which do not satisfy a predicate.
-   *
-   * @param predicate used to test records.
-   *
-   * @return filtered table
-   */
-  def filterNot(predicate: Record => Boolean) = filter(!predicate(_))
-
-  /** Applies a function to all columns of this table.
-   *
-   * @param function apply to all columns
-   */
-  def foreach[U](function: ((Any, TypedColumn[_])) =>  U) = map.foreach(function)
 
   /** labels of columns.
    *
@@ -559,6 +596,27 @@ class Table {
         case label: String => new StringColumn ++= map.keys.toBuffer.asInstanceOf[Buffer[String]]
 
       }
+
+  /** Prepend column to this table.
+   *
+   * @param pair the label and column to prepend
+   *
+   * @return the table itself
+   */
+  def prepend(pair: (Any, TypedColumn[_])): this.type = {
+
+    columns.foreach(column =>
+      if(column != null && column.length != pair._2.length)
+        throw RecordsMismatchException(map.values.head.length, pair._2.length))
+
+    val copy = map.toMap
+    map.clear
+    map += pair._1 -> pair._2
+    map ++= copy
+
+    this
+
+  }
 
   def update(label: Any, column: TypedColumn[_]) {
 
