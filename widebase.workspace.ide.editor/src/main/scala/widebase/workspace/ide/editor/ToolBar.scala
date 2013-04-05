@@ -83,6 +83,7 @@ class ToolBar(panel: EditPanel) extends widebase.workspace.ToolBar {
         else
           save(panel.currentFile)
 
+        panel.codePane.editor.requestFocus
 
       }
     }

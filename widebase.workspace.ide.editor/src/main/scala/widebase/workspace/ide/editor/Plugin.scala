@@ -129,8 +129,10 @@ class Plugin(frame: FrameLike) extends PluginLike {
             if(i < pane.pages.size) {
 
               pane.selection.index = i
-              pane.selection.page.content.asInstanceOf[EditPanel]
-                .codePane.editor.requestFocus
+
+              if(pane.selection.page.content.isInstanceOf[EditPanel])
+                pane.selection.page.content.asInstanceOf[EditPanel]
+                  .codePane.editor.requestFocus
 
             }
           }
@@ -189,8 +191,10 @@ class Plugin(frame: FrameLike) extends PluginLike {
     }
   }
 
-  val label = "Widebase IDE Editor"
-  val scope = "widebase.workspace.ide.editor"
+  val category = Plugin.category
+  val homepage = Plugin.homepage
+  val id = Plugin.id
+  val name = Plugin.name
 
   override def option = Some(
     new TabbedDesktopPane.Page(
@@ -232,5 +236,14 @@ class Plugin(frame: FrameLike) extends PluginLike {
     super.register
 
   }
+}
+
+object Plugin {
+
+  val category = "Core"
+  val homepage = "http://widebase.github.com/"
+  val id = classOf[Plugin].getPackage.getName
+  val name = "Widebase IDE Editor"
+
 }
 
