@@ -41,15 +41,30 @@ class PreferenceManager extends PagedPane {
 
   runtime.plugin.values.foreach { plugin =>
 
-    pluginData = pluginData ++
-      Array[Array[Any]](Array(plugin.label, plugin.scope))
+    pluginData =
+      Array[Array[Any]](Array(
+        plugin.id,
+        plugin.name,
+        plugin.category,
+        plugin.homepage)) ++ pluginData
 
   }
 
   pages += new TabbedDesktopPane.Page(
     LocaleManager.text("Plugins"),
     new ImageIcon(getClass.getResource("/icon/preferences-plugin.png")),
-    new ScrollPane { contents = new Table(pluginData, Seq("Label", "Scope")) } )
+    new ScrollPane {
+
+      contents = new Table(
+        pluginData,
+        Seq(
+          "ID",
+          "Name",
+          "Category",
+          "Homepage"))
+      
+    }
+  )
 
   runtime.plugin.values.foreach { plugin =>
 
