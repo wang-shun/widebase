@@ -44,8 +44,8 @@ class Plugin(frame: FrameLike) extends PluginLike {
       if(tableName != null)
         runtime.queue.add(Some("""
 
-          widebase.workspace.runtime.plugin("""" + scope + """")
-            .asInstanceOf[widebase.workspace.ide.table.Plugin].NewTable(""" + tableName + """)
+          widebase.workspace.runtime.plugin("""" + id + """")
+            .asInstanceOf[widebase.workspace.ide.table.Plugin].NewTable(""" + tableName + """, """" + tableName + """")
 
         """))
     }
@@ -55,7 +55,7 @@ class Plugin(frame: FrameLike) extends PluginLike {
 
     import scala.util.control.Breaks. { break, breakable }
 
-    def apply(table: Table) {
+    def apply(table: Table, tableName: String) {
 
       if(frame.pagedPane.selection.index == -1 ||
          !frame.pagedPane.selection.page.content.isInstanceOf[PagedPane] ||
@@ -65,28 +65,6 @@ class Plugin(frame: FrameLike) extends PluginLike {
         configure(frame.pagedPane.selection.page.content.asInstanceOf[PagedPane])
 
       val pane = frame.pagedPane.selection.page.content.asInstanceOf[PagedPane]
-
-      var count = 0
-      var found = true
-
-      do {
-
-        count += 1
-        found = true
-
-        breakable {
-
-          pane.pages.foreach { page =>
-
-            if(page.title == LocaleManager.text("Table_?", count)) {
-
-              found = false
-              break
-
-            }
-          }
-        }
-      } while(!found)
 
       val panel = {
 
@@ -100,10 +78,11 @@ class Plugin(frame: FrameLike) extends PluginLike {
 
       }
 
-      pane.pages += new TabbedDesktopPane.Page(
-        LocaleManager.text("Table_?", count),
-        new ImageIcon(getClass.getResource("/icon/accessories-calculator.png")),
-        new ScrollPane { contents = panel } )
+      frame.pagedPane.selection.page.content.asInstanceOf[PagedPane].pages +=
+        new TabbedDesktopPane.Page(
+          tableName,
+          new ImageIcon(getClass.getResource("/icon/accessories-calculator.png")),
+          new ScrollPane { contents = panel } )
 
     }
 
@@ -161,8 +140,10 @@ class Plugin(frame: FrameLike) extends PluginLike {
     }
   }
 
-  val label = "Widebase IDE Table"
-  val scope = "widebase.workspace.ide.table"
+  val category = Plugin.category
+  val homepage = Plugin.homepage
+  val id = Plugin.id
+  val name = Plugin.name
 
   override def option = None
 
@@ -195,5 +176,14 @@ class Plugin(frame: FrameLike) extends PluginLike {
     super.register
 
   }
+}
+
+object Plugin {
+
+  val category = "Core"
+  val homepage = "http://widebase.github.com/"
+  val id = classOf[Plugin].getPackage.getName
+  val name = "Widebase IDE Table"
+
 }
 
