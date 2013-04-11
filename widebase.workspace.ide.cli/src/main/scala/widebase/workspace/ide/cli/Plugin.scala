@@ -2,10 +2,9 @@ package widebase.workspace.ide.cli
 
 import java.io.File
 
-import widebase.workspace.FrameLike
 import widebase.workspace.runtime.PluginLike
 
-class Plugin(frame: FrameLike) extends PluginLike {
+class Plugin extends PluginLike {
 
   import widebase.workspace.runtime
   import widebase.workspace.util

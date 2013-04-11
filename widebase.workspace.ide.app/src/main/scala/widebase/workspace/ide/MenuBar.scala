@@ -1,4 +1,4 @@
-package widebase.workspace.ide
+package widebase.workspace.ide.app
 
 import java.awt.Desktop
 import java.awt.event. { InputEvent, KeyEvent }

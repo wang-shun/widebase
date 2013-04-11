@@ -15,7 +15,6 @@ import scala.swing. { Button, ScrollPane, Separator }
 import widebase.workspace. {
 
   Action,
-  FrameLike,
   Menu,
   MenuItem,
   PagedPane,
@@ -26,7 +25,7 @@ import widebase.workspace. {
 
 import widebase.workspace.runtime.PluginLike
 
-class Plugin(frame: FrameLike) extends PluginLike {
+class Plugin extends PluginLike {
 
   import widebase.workspace. { runtime, util }
 
@@ -236,6 +235,9 @@ class Plugin(frame: FrameLike) extends PluginLike {
     super.register
 
   }
+
+  protected def frame = widebase.workspace.ide.app.plugin.frame
+
 }
 
 object Plugin {

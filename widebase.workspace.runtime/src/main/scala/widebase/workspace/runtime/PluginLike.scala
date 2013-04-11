@@ -2,7 +2,7 @@ package widebase.workspace.runtime
 
 import moreswing.swing.TabbedDesktopPane
 
-abstract class PluginLike {
+trait PluginLike{
 
   val category: String
   val homepage: String
@@ -16,6 +16,8 @@ abstract class PluginLike {
     plugin += id -> this
 
   }
+
+  def startup {}
 
   def unregister {
 

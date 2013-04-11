@@ -1,4 +1,4 @@
-package widebase.workspace.ide
+package widebase.workspace.ide.app
 
 import javax.swing.ImageIcon
 

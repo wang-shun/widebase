@@ -1,4 +1,6 @@
-package widebase.workspace.ide
+package widebase.workspace.ide.app
+
+import java.util.prefs.Preferences
 
 import javax.swing.JSplitPane
 
@@ -16,7 +18,6 @@ import scala.swing. {
 
 import widebase.workspace.FrameLike
 import widebase.workspace.event. { LocaleChanged, LookAndFeelChanged }
-import widebase.workspace.runtime.AppLike
 
 /** Frame of app.
  * 
@@ -25,6 +26,8 @@ import widebase.workspace.runtime.AppLike
 class Frame extends FrameLike with Logger {
 
   import widebase.workspace.runtime
+
+  val prefs = Preferences.userRoot
 
   title = "app.title"
   preferredSize = new Dimension(1024, 768)
@@ -56,11 +59,10 @@ class Frame extends FrameLike with Logger {
 
   reactions += {
 
-    case event: LocaleChanged =>
-      AppLike.prefs.put("app.locale", event.replaced)
+    case event: LocaleChanged => prefs.put("app.locale", event.replaced)
 
     case event: LookAndFeelChanged =>
-      AppLike.prefs.put("app.laf", event.replaced.getClassName)
+      prefs.put("app.laf", event.replaced.getClassName)
 
   }
 }

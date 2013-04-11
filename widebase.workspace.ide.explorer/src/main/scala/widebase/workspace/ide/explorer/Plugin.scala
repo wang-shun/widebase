@@ -11,11 +11,11 @@ import javax.swing.tree.DefaultMutableTreeNode
 
 import scala.swing. { BorderPanel, Component, Orientation, SplitPane }
 
-import widebase.workspace. { FrameLike, PagedPane, Tree }
+import widebase.workspace. { PagedPane, Tree }
 import widebase.workspace.ide.editor.EditPanel
 import widebase.workspace.runtime.PluginLike
 
-class Plugin(frame: FrameLike) extends PluginLike {
+class Plugin extends PluginLike {
 
   import widebase.workspace.runtime
   import widebase.workspace.util
@@ -113,6 +113,9 @@ class Plugin(frame: FrameLike) extends PluginLike {
     super.register
 
   }
+
+  protected def frame = widebase.workspace.ide.app.plugin.frame
+
 }
 
 object Plugin {

@@ -41,12 +41,12 @@ class PreferenceManager extends PagedPane {
 
   runtime.plugin.values.foreach { plugin =>
 
-    pluginData =
+    pluginData = pluginData ++
       Array[Array[Any]](Array(
         plugin.id,
         plugin.name,
         plugin.category,
-        plugin.homepage)) ++ pluginData
+        plugin.homepage))
 
   }
 
@@ -62,7 +62,7 @@ class PreferenceManager extends PagedPane {
           "Name",
           "Category",
           "Homepage"))
-      
+
     }
   )
 

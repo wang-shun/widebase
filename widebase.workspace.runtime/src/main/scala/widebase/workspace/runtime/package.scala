@@ -24,7 +24,7 @@ import javax.swing. { ImageIcon, JOptionPane }
 
 import net.liftweb.common. { Loggable, Logger }
 
-import scala.collection.mutable.Map
+import scala.collection.mutable.LinkedHashMap
 import scala.swing. { BorderPanel, Dialog, Label, ProgressBar }
 
 /** Runtime package.
@@ -35,8 +35,7 @@ package object runtime extends Logger with Loggable {
 
   import scala.util.control.Breaks. { break, breakable }
 
-  val app = Map[String, AppLike]()
-  val plugin = Map[String, PluginLike]()
+  val plugin = LinkedHashMap[String, PluginLike]()
 
   val queue = new ArrayBlockingQueue[Option[String]](1024)
 
@@ -106,20 +105,16 @@ package object runtime extends Logger with Loggable {
       val eval = new Eval
       val config = eval[ConfigLike](file)
 
-      config.plugins.foreach(plugin => progress.max += 1)
+      config.plugin.foreach(plugin => progress.max += 1)
 
       dialog.pack
       dialog.centerOnScreen
       dialog.visible = true
 
-      if(!interpreter.interpret(config.app).isInstanceOf[Interpreter.Success])
-        throw new Exception("App failed: " + file.getPath)
+      config.plugin.foreach { plugin =>
 
-      progress.value = 1
-
-      config.plugins.foreach { plugin =>
-
-        if(!interpreter.interpret("new " + plugin + ".Plugin(app.frame).register").isInstanceOf[Interpreter.Success]) {
+        if(!interpreter.interpret("(new " + plugin + ".Plugin).register")
+          .isInstanceOf[Interpreter.Success]) {
 
           JOptionPane.showMessageDialog(
             null,
@@ -127,7 +122,7 @@ package object runtime extends Logger with Loggable {
             "Plugin failed",
             JOptionPane.ERROR_MESSAGE)
 
-          app.values.foreach(_.frame.dispose)
+          runtime.plugin.values.foreach(_.unregister)
           throw new Exception("Plugin failed: " + plugin)
 
         }
@@ -136,15 +131,9 @@ package object runtime extends Logger with Loggable {
 
       }
 
-      if(!interpreter.interpret("app.frame.visible = true").isInstanceOf[Interpreter.Success]) {
-
-        runtime.plugin.values.foreach(_.unregister)
-        app.values.foreach(_.frame.dispose)
-        throw new Exception("Frame failed: visible")
-
-      }
-
       thread.start
+
+      runtime.plugin.values.foreach(_.startup)
 
     } finally {
 
@@ -155,6 +144,7 @@ package object runtime extends Logger with Loggable {
 
   def shutdown {
 
+    runtime.plugin.values.foreach(_.unregister)
     thread.interrupt
 
   }
