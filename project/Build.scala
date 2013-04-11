@@ -81,6 +81,7 @@ object WidebaseBuild extends Build {
       widebaseWorkspace,
       widebaseWorkspaceEvent,
       widebaseWorkspaceIde,
+      widebaseWorkspaceIdeApp,
       widebaseWorkspaceIdeChart,
       widebaseWorkspaceIdeCli,
       widebaseWorkspaceIdeEditor,
@@ -398,12 +399,20 @@ object WidebaseBuild extends Build {
     widebaseTestkit % "test",
     widebaseUi % "test",
     widebaseUiI18n,
-    widebaseWorkspace,
+    widebaseWorkspaceIdeApp % "test",
     widebaseWorkspaceIdeChart % "test",
     widebaseWorkspaceIdeCli % "test",
     widebaseWorkspaceIdeEditor % "test",
     widebaseWorkspaceIdeExplorer % "test",
-    widebaseWorkspaceIdeTable % "test")
+    widebaseWorkspaceIdeTable % "test",
+    widebaseWorkspaceRuntime)
+  .settings(libraryDependencies ++= lib.log)
+
+  /** Workspace IDE App */
+  lazy val widebaseWorkspaceIdeApp = Project(
+    "widebase-workspace-ide-app",
+    file("widebase.workspace.ide.app"))
+  .dependsOn(widebaseWorkspace)
   .settings(libraryDependencies ++= lib.log)
 
   /** Workspace IDE Chart */
@@ -413,6 +422,7 @@ object WidebaseBuild extends Build {
   .dependsOn(
     widebaseUiChart,
     widebaseWorkspace,
+    widebaseWorkspaceIdeApp,
     widebaseWorkspaceRuntime,
     widebaseWorkspaceUtil)
 
@@ -430,6 +440,7 @@ object WidebaseBuild extends Build {
     file("widebase.workspace.ide.editor"))
   .dependsOn(
     widebaseWorkspace,
+    widebaseWorkspaceIdeApp,
     widebaseWorkspaceIdeEditorEvent,
     widebaseWorkspaceRuntime,
     widebaseWorkspaceUtil)
@@ -456,6 +467,7 @@ object WidebaseBuild extends Build {
   .dependsOn(
     widebaseUiTable,
     widebaseWorkspace,
+    widebaseWorkspaceIdeApp,
     widebaseWorkspaceRuntime,
     widebaseWorkspaceUtil)
 
@@ -464,8 +476,12 @@ object WidebaseBuild extends Build {
     "widebase-workspace-runtime",
     file("widebase.workspace.runtime"))
   .dependsOn(widebaseWorkspaceUtil)
-  .settings(libraryDependencies ++= lib.eval ++ lib.interpreterPane ++ lib.log)
-  .settings(libraryDependencies ++= lib.moreswing)
+  .settings(libraryDependencies <+= lib.actors)
+  .settings(libraryDependencies ++=
+    lib.eval ++
+    lib.interpreterPane ++
+    lib.log ++
+    lib.moreswing)
 
   /** Workspace Util */
   lazy val widebaseWorkspaceUtil = Project(
