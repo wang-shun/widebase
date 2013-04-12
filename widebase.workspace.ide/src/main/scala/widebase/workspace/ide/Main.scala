@@ -19,7 +19,7 @@ object Main extends Logger with Loggable {
     try {
 
       runtime.launch(
-        System.getProperty("user.dir") + "/" + "etc/ide.scala",
+        System.getProperty("user.dir") + "/" + "etc/Ide.scala",
         new ImageIcon(getClass.getResource("/icon/widebase-logo-128x128.png")))
 
     } catch {
