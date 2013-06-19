@@ -17,7 +17,10 @@ libraryDependencies ++= Seq(
   "com.github.widebase" %% "widebase-workspace-ide-cli" % "0.3.4-SNAPSHOT",
   "com.github.widebase" %% "widebase-workspace-ide-editor" % "0.3.4-SNAPSHOT",
   "com.github.widebase" %% "widebase-workspace-ide-explorer" % "0.3.4-SNAPSHOT",
-  "com.github.widebase" %% "widebase-workspace-ide-table" % "0.3.4-SNAPSHOT"
+  "com.github.widebase" %% "widebase-workspace-ide-table" % "0.3.4-SNAPSHOT",
+  "org.bitbucket.t1ck" %% "t1ck-widebase-io-csv-swfx" % "0.1.2-SNAPSHOT",
+  "org.bitbucket.t1ck" %% "t1ck-math-fnrwarp" % "0.1.0-SNAPSHOT"/*,,
+  "com.github.myst3r10n" %% "astrocause-bayer" % "0.1.0-SNAPSHOT"*/
 )
 
 logLevel := Level.Info
