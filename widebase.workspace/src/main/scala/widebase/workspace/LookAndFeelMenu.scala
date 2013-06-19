@@ -7,6 +7,7 @@ import moreswing.swing.i18n. { LAction, LMenu, LocaleManager, LRadioMenuItem }
 import scala.swing. { ButtonGroup, RadioMenuItem }
 import scala.swing.event.ButtonClicked
 
+import widebase.ui.swing. { Action, Menu }
 import widebase.workspace.event.LookAndFeelChanged
 
 /** A menu with look and feel items.
