@@ -99,7 +99,7 @@ class VariantReader(
    *
    * @return Some([[org.joda.time.LocalDateTime]]) or [[scala.None]]
   */
-  def readDateTime : LocalDateTime = new LocalDateTime(readLong)
+  def readDateTime : LocalDateTime = new LocalDateTime(readLong, DateTimeZone.UTC)
 
   /** Read array of [[org.joda.time.LocalDateTime]]s from buffer.
    *
@@ -107,7 +107,7 @@ class VariantReader(
   */
   def readDateTime(length: Int): Array[LocalDateTime] =
     for(value <- readLong(length))
-      yield(new LocalDateTime(value))
+      yield(new LocalDateTime(value, DateTimeZone.UTC))
 
   /** Read [[org.joda.time.Timestamp]] from buffer. */
   def readTimestamp : Timestamp = {
