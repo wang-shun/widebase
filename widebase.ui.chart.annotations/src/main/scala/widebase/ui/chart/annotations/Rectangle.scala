@@ -13,39 +13,39 @@ object Rectangle {
 
   /** Perform rectangle.
    *
-   * @param values of coordinates, properties and format
+   * @param x position
+   * @param y position
+   * @param w weight
+   * @param h height
+   * @param properties of rectangle
    *
    * @return annotation
    */
-  def apply(values: Any*) = {
+  def apply(x: Any, y: Any, w: Any, h: Any, properties: Any*) = {
 
-    val x = asDouble(values(0))
-    val y = asDouble(values(1))
-    val w = asDouble(values(2))
-    val h = asDouble(values(3))
-
-    var i = 4
     var edgeColor = Color.BLACK
     var faceColor: Color = null
     var lineWidth = 1.0f
     var stroke: Stroke = null
 
-    while(i < values.length) {
+    var i = 0
 
-      val property = values(i).asInstanceOf[String]
+    while(i < properties.length) {
+
+      val property = properties(i).asInstanceOf[String]
 
       i += 1
 
       // Resolve native properties
       property match {
 
-        case "EdgeColor" => edgeColor = Color.decode(values(i).asInstanceOf[String])
-        case "FaceColor" => faceColor = Color.decode(values(i).asInstanceOf[String])
+        case "EdgeColor" => edgeColor = Color.decode(properties(i).asInstanceOf[String])
+        case "FaceColor" => faceColor = Color.decode(properties(i).asInstanceOf[String])
         case "-" =>
         case "--" => stroke = LineStyle.dash(lineWidth)
         case ":" => stroke = LineStyle.dot(lineWidth)
         case "-." => stroke = LineStyle.dashDot(lineWidth)
-        case "LineWidth" => lineWidth = values(i).asInstanceOf[Float]
+        case "LineWidth" => lineWidth = properties(i).asInstanceOf[Float]
         case _ =>
 
       }
@@ -58,7 +58,7 @@ object Rectangle {
       stroke = LineStyle.solid(lineWidth)
 
     new XYShapeAnnotation(
-      new Rectangle2D.Double(x, y, w, h),
+      new Rectangle2D.Double(asDouble(x), asDouble(y), asDouble(w), asDouble(h)),
       stroke,
       edgeColor,
       faceColor)

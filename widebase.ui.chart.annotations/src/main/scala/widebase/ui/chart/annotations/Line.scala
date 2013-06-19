@@ -12,23 +12,23 @@ object Line {
 
   /** Perform line.
    *
-   * @param values of coordinates, properties and format
+   * @param x position pair of X1 and X2
+   * @param y position pair of Y1 and Y2
+   * @param properties of line
    *
    * @return annotation
    */
-  def apply(values: Any*) = {
+  def apply(x: Pair[Any, Any], y: Pair[Any, Any], properties: Any*) = {
 
-    val x = values(0).asInstanceOf[Pair[Any, Any]]
-    val y = values(1).asInstanceOf[Pair[Any, Any]]
-
-    var i = 2
     var color = Color.BLACK
     var lineWidth = 1.0f
     var stroke: Stroke = null
 
-    while(i < values.length) {
+    var i = 0
 
-      val property = values(i).asInstanceOf[String]
+    while(i < properties.length) {
+
+      val property = properties(i).asInstanceOf[String]
 
       i += 1
 
@@ -36,7 +36,7 @@ object Line {
       property match {
 
         case "Color" =>
-          color = Color.decode(values(i).asInstanceOf[String])
+          color = Color.decode(properties(i).asInstanceOf[String])
           i += 1
 
         case "-" =>
@@ -45,7 +45,7 @@ object Line {
         case "-." => stroke = LineStyle.dashDot(lineWidth)
         case "LineWidth" =>
 
-          lineWidth = values(i).asInstanceOf[Float]
+          lineWidth = properties(i).asInstanceOf[Float]
           i += 1
 
         case _ =>

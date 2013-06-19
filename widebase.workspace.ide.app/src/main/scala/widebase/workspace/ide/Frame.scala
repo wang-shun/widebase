@@ -59,10 +59,17 @@ class Frame extends FrameLike with Logger {
 
   reactions += {
 
+    case scala.swing.event.WindowClosed(_) => runtime.shutdown
     case event: LocaleChanged => prefs.put("app.locale", event.replaced)
 
     case event: LookAndFeelChanged =>
       prefs.put("app.laf", event.replaced.getClassName)
+
+  }
+
+  override def closeOperation() {
+
+    dispose
 
   }
 }

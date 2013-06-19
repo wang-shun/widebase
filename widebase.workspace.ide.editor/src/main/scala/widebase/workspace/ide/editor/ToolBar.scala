@@ -25,7 +25,7 @@ import moreswing.swing.i18n.LocaleManager
 
 import scala.swing. { Button, Dialog, FileChooser, Separator }
 
-import widebase.workspace.Action
+import widebase.ui.swing.Action
 
 /** Tool bar of frame.
  *

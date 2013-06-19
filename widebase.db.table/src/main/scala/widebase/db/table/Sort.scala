@@ -72,18 +72,200 @@ object Sort {
         primary.typeOf match {
 
           case Datatype.Bool =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Boolean]
+                  .compareTo(value.asInstanceOf[Boolean]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Boolean]
+                  .compareTo(value.asInstanceOf[Boolean]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Byte =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Byte]
+                  .compareTo(value.asInstanceOf[Byte]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Byte]
+                  .compareTo(value.asInstanceOf[Byte]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Char =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Char]
+                  .compareTo(value.asInstanceOf[Char]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Char]
+                  .compareTo(value.asInstanceOf[Char]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Double =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Double]
+                  .compareTo(value.asInstanceOf[Double]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Double]
+                  .compareTo(value.asInstanceOf[Double]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Float =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Float]
+                  .compareTo(value.asInstanceOf[Float]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Float]
+                  .compareTo(value.asInstanceOf[Float]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Int =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Int]
+                  .compareTo(value.asInstanceOf[Int]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Int]
+                  .compareTo(value.asInstanceOf[Int]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Long =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Long]
+                  .compareTo(value.asInstanceOf[Long]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Long]
+                  .compareTo(value.asInstanceOf[Long]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Short =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Short]
+                  .compareTo(value.asInstanceOf[Short]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Short]
+                  .compareTo(value.asInstanceOf[Short]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Month =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[YearMonth]
+                  .compareTo(value.asInstanceOf[YearMonth]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[YearMonth]
+                  .compareTo(value.asInstanceOf[YearMonth]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Date =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[LocalDate]
+                  .compareTo(value.asInstanceOf[LocalDate]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[LocalDate]
+                  .compareTo(value.asInstanceOf[LocalDate]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Minute =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Minutes]
+                  .compareTo(value.asInstanceOf[Minutes]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Minutes]
+                  .compareTo(value.asInstanceOf[Minutes]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Second =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Seconds]
+                  .compareTo(value.asInstanceOf[Seconds]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Seconds]
+                  .compareTo(value.asInstanceOf[Seconds]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Time =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[LocalTime]
+                  .compareTo(value.asInstanceOf[LocalTime]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[LocalTime]
+                  .compareTo(value.asInstanceOf[LocalTime]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.DateTime =>
             direction match {
 
@@ -100,8 +282,49 @@ object Sort {
             }
 
           case Datatype.Timestamp =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Timestamp]
+                  .compareTo(value.asInstanceOf[Timestamp]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Timestamp]
+                  .compareTo(value.asInstanceOf[Timestamp]) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.Symbol =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[Symbol].toString
+                  .compareTo(value.asInstanceOf[Symbol].toString) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[Symbol].toString
+                  .compareTo(value.asInstanceOf[Symbol].toString) < 0)
+                  trigger = true
+
+            }
+
           case Datatype.String =>
+            direction match {
+
+              case SortDirection.Ascending =>
+                if(primary(j).asInstanceOf[String]
+                  .compareTo(value.asInstanceOf[String]) > 0)
+                  trigger = true
+
+              case SortDirection.Descending =>
+                if(primary(j).asInstanceOf[String]
+                  .compareTo(value.asInstanceOf[String]) < 0)
+                  trigger = true
+
+            }
 
         }
 
@@ -203,18 +426,200 @@ object Sort {
           primary.typeOf match {
 
             case Datatype.Bool =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Boolean]
+                    .compareTo(value.asInstanceOf[Boolean]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Boolean]
+                    .compareTo(value.asInstanceOf[Boolean]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Byte =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Byte]
+                    .compareTo(value.asInstanceOf[Byte]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Byte]
+                    .compareTo(value.asInstanceOf[Byte]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Char =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Char]
+                    .compareTo(value.asInstanceOf[Char]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Char]
+                    .compareTo(value.asInstanceOf[Char]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Double =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Double]
+                    .compareTo(value.asInstanceOf[Double]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Double]
+                    .compareTo(value.asInstanceOf[Double]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Float =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Float]
+                    .compareTo(value.asInstanceOf[Float]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Float]
+                    .compareTo(value.asInstanceOf[Float]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Int =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Int]
+                    .compareTo(value.asInstanceOf[Int]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Int]
+                    .compareTo(value.asInstanceOf[Int]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Long =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Long]
+                    .compareTo(value.asInstanceOf[Long]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Long]
+                    .compareTo(value.asInstanceOf[Long]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Short =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Short]
+                    .compareTo(value.asInstanceOf[Short]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Short]
+                    .compareTo(value.asInstanceOf[Short]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Month =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[YearMonth]
+                    .compareTo(value.asInstanceOf[YearMonth]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[YearMonth]
+                    .compareTo(value.asInstanceOf[YearMonth]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Date =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[LocalDate]
+                    .compareTo(value.asInstanceOf[LocalDate]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[LocalDate]
+                    .compareTo(value.asInstanceOf[LocalDate]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Minute =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Minutes]
+                    .compareTo(value.asInstanceOf[Minutes]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Minutes]
+                    .compareTo(value.asInstanceOf[Minutes]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Second =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Seconds]
+                    .compareTo(value.asInstanceOf[Seconds]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Seconds]
+                    .compareTo(value.asInstanceOf[Seconds]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Time =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[LocalTime]
+                    .compareTo(value.asInstanceOf[LocalTime]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[LocalTime]
+                    .compareTo(value.asInstanceOf[LocalTime]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.DateTime =>
               direction match {
 
@@ -231,8 +636,49 @@ object Sort {
               }
 
             case Datatype.Timestamp =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Timestamp]
+                    .compareTo(value.asInstanceOf[Timestamp]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Timestamp]
+                    .compareTo(value.asInstanceOf[Timestamp]) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.Symbol =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[Symbol].toString
+                    .compareTo(value.asInstanceOf[Symbol].toString) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[Symbol].toString
+                    .compareTo(value.asInstanceOf[Symbol].toString) > 0)
+                    trigger = true
+
+              }
+
             case Datatype.String =>
+              direction match {
+
+                case SortDirection.Ascending =>
+                  if(primary(j).asInstanceOf[String]
+                    .compareTo(value.asInstanceOf[String]) < 0)
+                    trigger = true
+
+                case SortDirection.Descending =>
+                  if(primary(j).asInstanceOf[String]
+                    .compareTo(value.asInstanceOf[String]) > 0)
+                    trigger = true
+
+              }
 
           }
 

@@ -8,7 +8,7 @@ import moreswing.swing.i18n.LocaleManager
 
 import scala.swing.Separator
 
-import widebase.workspace. { Action, Menu, MenuItem }
+import widebase.ui.swing. { Action, Menu, MenuItem }
 
 /** A central place of views.
  * 

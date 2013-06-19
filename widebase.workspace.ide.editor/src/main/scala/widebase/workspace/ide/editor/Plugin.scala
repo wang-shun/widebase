@@ -12,17 +12,8 @@ import moreswing.swing.i18n.LocaleManager
 
 import scala.swing. { Button, ScrollPane, Separator }
 
-import widebase.workspace. {
-
-  Action,
-  Menu,
-  MenuItem,
-  PagedPane,
-  PageMenu,
-  PreferenceManager
-
-}
-
+import widebase.ui.swing. { Action, Menu, MenuItem }
+import widebase.workspace. { PagedPane, PageMenu, PreferenceManager }
 import widebase.workspace.runtime.PluginLike
 
 class Plugin extends PluginLike {

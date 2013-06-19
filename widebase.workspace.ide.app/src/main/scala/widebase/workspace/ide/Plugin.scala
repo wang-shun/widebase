@@ -45,7 +45,9 @@ class Plugin extends PluginLike {
 
   override def unregister {
 
-    frame.dispose
+    if(frame.visible)
+      frame.dispose
+
     super.unregister
 
   }

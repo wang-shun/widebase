@@ -12,16 +12,8 @@ import moreswing.swing.i18n.LocaleManager
 
 import scala.swing.Separator
 
-import widebase.workspace. {
-
-  Action,
-  LocaleMenu,
-  LookAndFeelMenu,
-  Menu,
-  MenuItem,
-  PreferenceManager
-
-}
+import widebase.ui.swing. { Action, LocaleMenu, Menu, MenuItem }
+import widebase.workspace. { LookAndFeelMenu, PreferenceManager }
 
 /** Menu bar of app frame.
  * 
@@ -61,7 +53,6 @@ class MenuBar(frame: Frame) extends widebase.workspace.MenuBar {
       def apply {
 
         frame.dispose
-        runtime.shutdown
 
       }
     }

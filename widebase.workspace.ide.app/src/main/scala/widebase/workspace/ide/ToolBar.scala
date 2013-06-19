@@ -4,7 +4,7 @@ import javax.swing.ImageIcon
 
 import scala.swing.Button
 
-import widebase.workspace.Action
+import widebase.ui.swing.Action
 
 /** Tool bar of app frame.
  * 
