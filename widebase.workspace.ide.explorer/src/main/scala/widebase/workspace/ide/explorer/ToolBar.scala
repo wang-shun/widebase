@@ -10,7 +10,8 @@ import moreswing.swing.i18n.LocaleManager
 
 import scala.swing. { Button, Separator }
 
-import widebase.workspace. { Action, Tree }
+import widebase.ui.swing.Action
+import widebase.workspace.Tree
 
 /** Tool bar of tree.
  *
