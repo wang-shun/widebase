@@ -159,7 +159,7 @@ class FileVariantMapper(
       yield(new LocalTime(value, DateTimeZone.UTC))
 
   /** Read [[org.joda.time.LocalDateTime]] from buffer. */
-  def readDateTime : LocalDateTime = new LocalDateTime(readLong)
+  def readDateTime : LocalDateTime = new LocalDateTime(readLong, DateTimeZone.UTC)
 
   /** Read array of [[org.joda.time.LocalDateTime]]s from buffer.
    *
@@ -167,7 +167,7 @@ class FileVariantMapper(
   */
   def readDateTime(length: Int): Array[LocalDateTime] =
     for(value <- readLong(length))
-      yield(new LocalDateTime(value))
+      yield(new LocalDateTime(value, DateTimeZone.UTC))
 
   /** Read [[org.joda.time.Timestamp]] from buffer. */
   def readTimestamp : Timestamp = {
@@ -331,7 +331,7 @@ class FileVariantMapper(
   */
   def write(value: LocalDateTime) {
 
-    write(value.toDateTime.getMillis)
+    write(value.toDateTime(value.getChronology.getZone).getMillis)
 
   }
 
@@ -342,7 +342,7 @@ class FileVariantMapper(
   def write(values: Array[LocalDateTime]) {
   
     write(for(value <- values)
-      yield(value.toDateTime.getMillis))
+      yield(value.toDateTime(value.getChronology.getZone).getMillis))
 
   }
 
