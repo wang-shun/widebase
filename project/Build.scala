@@ -11,16 +11,17 @@ import Keys._
  * * widebase.stream.socket
  * * widebase.stream.socket.cq
  * * widebase.stream.socket.rq
- * * widebase.ui
+ * * widebase.testkit
+ * * widebase.toolbox.core
+ * * widebase.toolbox.finance
  * * widebase.ui.chart
- * * widebase.ui.table
+ * * widebase.ui.i18n
+ * * widebase.ui.swing
  * * widebase.workspace
  * * widebase.workspace.ide
- * * widebase.workspace.ide.chart
  * * widebase.workspace.ide.cli
  * * widebase.workspace.ide.editor
  * * widebase.workspace.ide.explorer
- * * widebase.workspace.ide.table
  *
  * Top Apps:
  *
@@ -65,29 +66,26 @@ object WidebaseBuild extends Build {
       widebaseStreamSocketCq,
       widebaseStreamSocketRq,
       widebaseTestkit,
-      widebaseUi,
-      widebaseUiChart,
+      widebaseToolboxCore,
+      widebaseToolboxFinance,
       widebaseUiChartAnnotations,
       widebaseUiChartData,
       widebaseUiChartDataTime,
       widebaseUiChartDataTimeOHLC,
       widebaseUiChartDataXY,
       widebaseUiChartEvent,
-      widebaseUiChartPlot,
       widebaseUiChartUtil,
       widebaseUiI18n,
-      widebaseUiTable,
-      widebaseUiTableEvent,
+      widebaseUiSwing,
+      widebaseUiSwingEvent,
       widebaseWorkspace,
       widebaseWorkspaceEvent,
       widebaseWorkspaceIde,
       widebaseWorkspaceIdeApp,
-      widebaseWorkspaceIdeChart,
       widebaseWorkspaceIdeCli,
       widebaseWorkspaceIdeEditor,
       widebaseWorkspaceIdeEditorEvent,
       widebaseWorkspaceIdeExplorer,
-      widebaseWorkspaceIdeTable,
       widebaseWorkspaceRuntime,
       widebaseWorkspaceUtil,
       widebaseUtil)
@@ -274,26 +272,30 @@ object WidebaseBuild extends Build {
     widebaseStreamSocketRq)
   .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
-  /** UI */
-  lazy val widebaseUi = Project(
-    "widebase-ui",
-    file("widebase.ui"))
+  /** Toolbox Core */
+  lazy val widebaseToolboxCore = Project(
+    "widebase-toolbox-core",
+    file("widebase.toolbox.core"))
   .dependsOn(
     widebaseDsl % "test",
-    widebaseUiChart,
     widebaseUiChartAnnotations,
+    widebaseUiChartDataTime,
+    widebaseUiChartDataXY,
+    widebaseUiChartUtil,
     widebaseUiI18n,
-    widebaseUiTable)
+    widebaseUiSwing)
+  .settings(libraryDependencies ++= lib.jfreechart)
   .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
-  /** UI Chart */
-  lazy val widebaseUiChart = Project(
-    "widebase-ui-chart",
-    file("widebase.ui.chart"))
+  /** Toolbox Finance */
+  lazy val widebaseToolboxFinance = Project(
+    "widebase-toolbox-finance",
+    file("widebase.toolbox.finance"))
   .dependsOn(
-    widebaseUiChartEvent,
-    widebaseUiChartPlot)
-  .settings(libraryDependencies ++= lib.moreswing)
+    widebaseDsl % "test",
+    widebaseToolboxCore,
+    widebaseUiChartDataTimeOHLC)
+  .settings(libraryDependencies ++= lib.jfreechart)
   .settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
 
   /** UI Chart Annotations */
@@ -338,47 +340,37 @@ object WidebaseBuild extends Build {
     file("widebase.ui.chart.event"))
   .settings(libraryDependencies <+= lib.swing)
 
-  /** UI Chart Plot */
-  lazy val widebaseUiChartPlot = Project(
-    "widebase-ui-chart-plot",
-    file("widebase.ui.chart.plot"))
-  .dependsOn(
-    widebaseUiChartDataTime,
-    widebaseUiChartDataTimeOHLC,
-    widebaseUiChartDataXY,
-    widebaseUiChartUtil)
-
   /** UI Chart Utilities */
   lazy val widebaseUiChartUtil = Project(
     "widebase-ui-chart-util",
     file("widebase.ui.chart.util"))
 
-  /** UI IDE */
+  /** UI i18n */
   lazy val widebaseUiI18n = Project(
     "widebase-ui-i18n",
     file("widebase.ui.i18n"))
 
-  /** UI Table */
-  lazy val widebaseUiTable = Project(
-    "widebase-ui-table",
-    file("widebase.ui.table"))
+  /** UI Swing */
+  lazy val widebaseUiSwing = Project(
+    "widebase-ui-swing",
+    file("widebase.ui.swing"))
     .dependsOn(
-      widebaseDsl % "test",
       widebaseDbTable,
-      widebaseUiTableEvent)
-    .settings(libraryDependencies ++= lib.moreswing)
+      widebaseUiSwingEvent)
+    .settings(libraryDependencies ++= lib.jodaTime ++ lib.moreswing)
 
-  /** UI Table Event */
-  lazy val widebaseUiTableEvent = Project(
-    "widebase-ui-table-event",
-    file("widebase.ui.table.event"))
-  .settings(libraryDependencies <+= lib.swing)
+  /** UI Swing Event */
+  lazy val widebaseUiSwingEvent = Project(
+    "widebase-ui-swing-event",
+    file("widebase.ui.swing.event"))
+    .settings(libraryDependencies <+= lib.swing)
 
   /** Workspace */
   lazy val widebaseWorkspace = Project(
     "widebase-workspace",
     file("widebase.workspace"))
   .dependsOn(
+    widebaseUiSwing,
     widebaseWorkspaceEvent,
     widebaseWorkspaceRuntime)
 
@@ -397,16 +389,17 @@ object WidebaseBuild extends Build {
     widebaseStreamSocketCq % "test",
     widebaseStreamSocketRq % "test",
     widebaseTestkit % "test",
-    widebaseUi % "test",
+    widebaseToolboxFinance % "test",
     widebaseUiI18n,
     widebaseWorkspaceIdeApp % "test",
-    widebaseWorkspaceIdeChart % "test",
     widebaseWorkspaceIdeCli % "test",
     widebaseWorkspaceIdeEditor % "test",
     widebaseWorkspaceIdeExplorer % "test",
-    widebaseWorkspaceIdeTable % "test",
     widebaseWorkspaceRuntime)
-  .settings(libraryDependencies ++= lib.log)
+  .settings(libraryDependencies ++= lib.log ++
+    Seq("org.bitbucket.t1ck" %% "t1ck-widebase-io-csv-swfx" % "0.1.2-SNAPSHOT" % "test") ++ /* REMOVE IT LATER */
+    Seq("org.bitbucket.t1ck" %% "t1ck-math-fnrwarp" % "0.1.0-SNAPSHOT") ++ /* REMOVE IT LATER */
+    Seq("com.jcraft" % "jsch" % "0.1.50" /* REMOVE IT LATER */))
 
   /** Workspace IDE App */
   lazy val widebaseWorkspaceIdeApp = Project(
@@ -414,17 +407,6 @@ object WidebaseBuild extends Build {
     file("widebase.workspace.ide.app"))
   .dependsOn(widebaseWorkspace)
   .settings(libraryDependencies ++= lib.log)
-
-  /** Workspace IDE Chart */
-  lazy val widebaseWorkspaceIdeChart = Project(
-    "widebase-workspace-ide-chart",
-    file("widebase.workspace.ide.chart"))
-  .dependsOn(
-    widebaseUiChart,
-    widebaseWorkspace,
-    widebaseWorkspaceIdeApp,
-    widebaseWorkspaceRuntime,
-    widebaseWorkspaceUtil)
 
   /** Workspace IDE CLI */
   lazy val widebaseWorkspaceIdeCli = Project(
@@ -459,17 +441,6 @@ object WidebaseBuild extends Build {
     widebaseWorkspace,
     widebaseWorkspaceIdeEditor,
     widebaseWorkspaceRuntime)
-
-  /** Workspace IDE Table */
-  lazy val widebaseWorkspaceIdeTable = Project(
-    "widebase-workspace-ide-table",
-    file("widebase.workspace.ide.table"))
-  .dependsOn(
-    widebaseUiTable,
-    widebaseWorkspace,
-    widebaseWorkspaceIdeApp,
-    widebaseWorkspaceRuntime,
-    widebaseWorkspaceUtil)
 
   /** Workspace Runtime */
   lazy val widebaseWorkspaceRuntime = Project(

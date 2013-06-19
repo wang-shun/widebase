@@ -17,8 +17,15 @@ import widebase.stream.socket.rq
 // Init Testkit
 import widebase.testkit
 
-// Init UI
-import widebase.ui._
+// Init Toolbox
+import java.awt.Color
+import widebase.toolbox.core.graph2d._
+import widebase.toolbox.core.graphics._
+import widebase.toolbox.core.scribe._
+import widebase.toolbox.core.specgraph._
+import widebase.toolbox.core.timeseries._
+import widebase.toolbox.core.uitools._
+import widebase.toolbox.finance._
 
 // Convenience purpose
 import org.joda.time.LocalDateTime

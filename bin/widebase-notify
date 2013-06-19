@@ -2,20 +2,20 @@
 
 # Use JAVA_HOME if set, otherwise look for java in PATH
 if [ -n "$JAVA_HOME" ]; then
-    JAVA="$JAVA_HOME/bin/java"
+  JAVA="$JAVA_HOME/bin/java"
 else
-    JAVA=java
+  JAVA=java
 fi
 
 cd $(dirname $0)/..
 WIDEBASE_NOTIFY_HOME=$PWD
 
-$JAVA \
+"$JAVA" \
   -Xmx1000m \
   -XX:+UseFastAccessorMethods \
-  -Dsbt.boot.directory=$WIDEBASE_NOTIFY_HOME/var/sbt/boot \
-  -Dwidebase.log=$WIDEBASE_NOTIFY_HOME/var/log \
-  -jar $WIDEBASE_NOTIFY_HOME/lib/sbt-launch.jar \
-  @$WIDEBASE_NOTIFY_HOME/etc/widebase.notify.configuration \
+  -Dsbt.boot.directory="$WIDEBASE_NOTIFY_HOME/var/sbt/boot" \
+  -Dwidebase.log="$WIDEBASE_NOTIFY_HOME/var/log" \
+  -jar "$WIDEBASE_NOTIFY_HOME/lib/sbt-launch.jar" \
+  @"$WIDEBASE_NOTIFY_HOME/etc/widebase.notify.configuration" \
   "$@"
 
