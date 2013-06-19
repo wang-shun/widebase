@@ -2,6 +2,8 @@ package widebase.workspace
 
 import scala.collection.mutable.LinkedHashMap
 
+import widebase.ui.swing.Menu
+
 /* A menu bar with and id/menu map.
  *
  * @author myst3r10n

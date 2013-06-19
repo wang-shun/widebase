@@ -8,6 +8,8 @@ import moreswing.swing.i18n.LCheckMenuItem
 import scala.swing. { Alignment, CheckMenuItem, TabbedPane }
 import scala.swing.event.ButtonClicked
 
+import widebase.ui.swing. { Action, Menu, MenuItem, MenuLike, PopupMenu }
+
 /* A page menu with and id/menu map.
  *
  * @author myst3r10n
